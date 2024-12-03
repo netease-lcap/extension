@@ -40,7 +40,7 @@ const TEMPLATES: Template[] = [
   },
 ];
 
-const defaultTargetDir = 'vue-lcap-extension';
+const defaultTargetDir = 'vue_lcap_extension';
 
 async function init() {
   let targetDir = defaultTargetDir;
@@ -62,7 +62,7 @@ async function init() {
             return !!value;
           },
           onState: (state) => {
-            targetDir = snakeCase(formatTargetDir(state.validate)) || defaultTargetDir;
+            targetDir = snakeCase(formatTargetDir(state.value)) || defaultTargetDir;
           },
         },
         {
