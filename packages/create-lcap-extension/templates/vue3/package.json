@@ -16,11 +16,11 @@
   "scripts": {
     "dev": "npm run start",
     "start": "storybook dev -p 8008",
-    "build": "vite build",
-    "test": "vitest",
+    "build": "lcap-scripts build",
+    "create": "lcap-scripts create",
+    "watch": "lcap-scripts watch",
     "release": "lcap publish",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "test": "vitest"
   },
   "keywords": [
     "Vue"
@@ -30,7 +30,7 @@
   "dependencies": {
   },
   "devDependencies": {
-    "@lcap/builder": "^1.3.2",
+    "@lcap/builder": "^1.4.0-beta.8",
     "@chromatic-com/storybook": "^3.2.2",
     "@nasl/types": "^0.1.10",
     "@storybook/addon-essentials": "^8.4.6",
