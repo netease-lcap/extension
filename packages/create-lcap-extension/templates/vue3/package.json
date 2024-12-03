@@ -1,0 +1,57 @@
+{
+  "name": "vue3_demo",
+  "private": true,
+  "version": "1.0.0",
+  "lcapIdeVersion": "3.12",
+  "files": [
+    "dist-theme"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist-theme/index.mjs",
+      "require": "./dist-theme/index.cjs",
+      "default": "./dist-theme/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "npm run start",
+    "start": "storybook dev -p 8008",
+    "build": "vite build",
+    "test": "vitest",
+    "release": "lcap publish",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "keywords": [
+    "Vue"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@lcap/builder": "^1.3.2",
+    "@chromatic-com/storybook": "^3.2.2",
+    "@nasl/types": "^0.1.10",
+    "@storybook/addon-essentials": "^8.4.6",
+    "@storybook/addon-interactions": "^8.4.6",
+    "@storybook/addon-onboarding": "^8.4.6",
+    "@storybook/blocks": "^8.4.6",
+    "@storybook/test": "^8.4.6",
+    "@storybook/vue3": "^8.4.6",
+    "@storybook/vue3-vite": "^8.4.6",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vitejs/plugin-vue-jsx": "^4.1.1",
+    "autoprefixer": "^10.4.16",
+    "vue": "^3.5.13",
+    "fs-extra": "^11.2.0",
+    "storybook": "^8.4.6",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.1",
+    "vitest": "^1.1.0",
+    "vue-tsc": "^2.1.10"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  }
+}
