@@ -1,27 +1,23 @@
 import { useState, useEffect, useContext, useMemo, useCallback } from 'react'
 import { ComponentMetaInfo, createComponent, getComponentDetail, getComponentList, removeComponent } from '../../services';
-import { ProjectContext, useSocket } from '../../hooks';
-import { NaslComponent } from '../../types/component';
+import { ProjectContext, useHandleNaslChange } from '../../hooks';
+import { APIUpdateOptions, NaslComponent } from '../../types/component';
 
 export const useComponentList = () => {
   const { schema } = useContext(ProjectContext);
   const [componentList, setComponentList] = useState<ComponentMetaInfo[]>([]);
 
-  useEffect(() => {
+  const loadComponentList = useCallback(() => {
     getComponentList().then((list) => {
       setComponentList(list);
     });
   }, []);
 
-  const handleSocketMessage = useCallback((message: string) => {
-    if (message === 'nasl.ui' || message === 'nasl.extension') {
-      getComponentList().then((list) => {
-        setComponentList(list);
-      });
-    }
+  useEffect(() => {
+    loadComponentList();
   }, []);
 
-  useSocket(handleSocketMessage);
+  useHandleNaslChange(loadComponentList);
 
   const hiddenList = useMemo(() => {
     if (!schema || schema.components.length === 0) {
@@ -43,6 +39,7 @@ export const useComponentControl = (componentList: ComponentMetaInfo[]) => {
   const [selected, setSelected] = useState<string>('');
   const [component, setComponent] = useState<NaslComponent | null>(null);
   const [editingName, setEditingName] = useState<string>(selected);
+  const [editingModule, setEditingModule] = useState<APIUpdateOptions['module']>('info');
 
   useEffect(() => {
     if (componentList.length > 0 && (!selected || !componentList.some((item) => selected === item.name))) {
@@ -59,6 +56,10 @@ export const useComponentControl = (componentList: ComponentMetaInfo[]) => {
   };
 
   const loadComponent = async (name: string) => {
+    if (!name) {
+      return;
+    }
+
     const component = await getComponentDetail(name);
     setComponent(component);
   };
@@ -73,14 +74,55 @@ export const useComponentControl = (componentList: ComponentMetaInfo[]) => {
     setEditingName(selected);
   }, [selected]);
 
+  useHandleNaslChange(
+    useCallback(() => loadComponent(selected), [selected]),
+  );
+
+  useEffect(() => {
+    setEditingModule('info');
+  }, [editingName]);
+
+  const editTabs = useMemo(() => {
+    return [
+      {
+        key: 'info',
+        label: '组件信息',
+      },
+      {
+        key: 'prop',
+        label: '属性',
+      },
+      {
+        key: 'event',
+        label: '事件',
+      },
+      {
+        key: 'slot',
+        label: '插槽',
+      },
+      {
+        key: 'readableProp',
+        label: '变量',
+      },
+      {
+        key: 'method',
+        label: '方法',
+      },
+    ]
+  }, []);
+
+
 
   return {
     component,
     selected,
     editingName: editingName || selected,
+    editingModule,
     setSelected,
+    setEditingModule,
     addComponent: handleAdd,
     removeComponent: handleRemove,
     setEditingName,
+    editTabs,
   };
 };

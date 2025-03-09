@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback, useMemo } from 'react';
-import { Button, Dropdown, Menu, MenuProps, Modal } from 'antd';
+import { Button, Dropdown, Menu, MenuProps, Modal, Tabs } from 'antd';
 import { Allotment, AllotmentHandle } from 'allotment';
 import styles from './index.module.less';
 import { IconDoubleArrowLeft, IconList, IconArrowDown } from '../../components/icons';
@@ -7,6 +7,7 @@ import { ComponentList } from '../../components/ComponentList';
 import { APICodeView } from '../../components/APICodeView';
 import { ComponentTabs } from '../../components/ComponentTabs';
 import { useToggle } from '../../hooks';
+import ComponentContext from '../../hooks/useComponentContext';
 import { useComponentList, useComponentControl } from './hooks';
 
 const minSize = 32;
@@ -20,11 +21,14 @@ export const ComponentApiEditor = () => {
   const {
     selected,
     editingName,
+    editingModule,
     component,
     addComponent,
     removeComponent,
     setSelected,
     setEditingName,
+    setEditingModule,
+    editTabs,
   } = useComponentControl(componentList);
 
   const componentListRef = useRef<AllotmentHandle>(null);
@@ -97,80 +101,86 @@ export const ComponentApiEditor = () => {
     });
   };
 
+  const contextValue = useMemo(() => ({ componentList, hiddenList }), [componentList, hiddenList]);
   return (
     <>
-      <div className={`${styles.editor}  ${collapsed ? styles.collapsed : ''}`}>
-        <div className={styles.componentList}>
-          <Allotment vertical defaultSizes={componentSizes} ref={componentListRef} onChange={setComponentSizes} separator={false}>
-            <Allotment.Pane minSize={minSize}>
-              <div className={styles.configListPanel}>
-                <div className={styles.listPanelHeader}>
-                  <span className={styles.title}>组件（{componentList.length}）</span>
-                </div>
-                <div className={styles.listPanelContent}>
-                  <ComponentList value={selected} action="remove" onRemove={handleRemoveComponent} componentList={componentList} onChange={setSelected} />
-                </div>
-              </div>
-            </Allotment.Pane>
-            <Allotment.Pane minSize={minSize}>
-              <div className={styles.configListPanel}>
-                <div className={`${styles.listPanelHeader} ${styles.collapse}`} onClick={handleComponentClick}>
-                  <span className={styles.title}>隐藏组件 ({hiddenList.length})</span>
-                  <div className={`${styles.action} ${componentSizes[1] > minSize ? styles.up : ''}`}>
-                    <IconArrowDown />
+      <ComponentContext.Provider value={contextValue}>
+        <div className={`${styles.editor}  ${collapsed ? styles.collapsed : ''}`}>
+          <div className={styles.componentList}>
+            <Allotment vertical defaultSizes={componentSizes} ref={componentListRef} onChange={setComponentSizes} separator={false}>
+              <Allotment.Pane minSize={minSize}>
+                <div className={styles.configListPanel}>
+                  <div className={styles.listPanelHeader}>
+                    <span className={styles.title}>组件（{componentList.length}）</span>
+                  </div>
+                  <div className={styles.listPanelContent}>
+                    <ComponentList value={selected} action="remove" onRemove={handleRemoveComponent} componentList={componentList} onChange={setSelected} />
                   </div>
                 </div>
-                <div className={styles.listPanelContent}>
-                  <ComponentList action="add" onAdd={addComponent} componentList={hiddenList} selectable={false} />
+              </Allotment.Pane>
+              <Allotment.Pane minSize={minSize}>
+                <div className={styles.configListPanel}>
+                  <div className={`${styles.listPanelHeader} ${styles.collapse}`} onClick={handleComponentClick}>
+                    <span className={styles.title}>隐藏组件 ({hiddenList.length})</span>
+                    <div className={`${styles.action} ${componentSizes[1] > minSize ? styles.up : ''}`}>
+                      <IconArrowDown />
+                    </div>
+                  </div>
+                  <div className={styles.listPanelContent}>
+                    <ComponentList action="add" onAdd={addComponent} componentList={hiddenList} selectable={false} />
+                  </div>
                 </div>
-              </div>
-            </Allotment.Pane>
-          </Allotment>
-        </div>
-        <div className={styles.componentDetail}>
-          {
-            collapsed ? (
-              <Dropdown
-                menu={componentMenuProps}
-                dropdownRender={renderDropdownMenu}
-                trigger={['click']}
-              >
-                <Button className={styles.toggleBtn}>
-                  <IconList />
+              </Allotment.Pane>
+            </Allotment>
+          </div>
+          <div className={styles.componentDetail}>
+            {
+              collapsed ? (
+                <Dropdown
+                  menu={componentMenuProps}
+                  dropdownRender={renderDropdownMenu}
+                  trigger={['click']}
+                >
+                  <Button className={styles.toggleBtn}>
+                    <IconList />
+                  </Button>
+                </Dropdown>
+              ) : (
+                <Button className={styles.toggleBtn} onClick={toggleCollapsed}>
+                  <IconDoubleArrowLeft />
                 </Button>
-              </Dropdown>
-            ) : (
-              <Button className={styles.toggleBtn} onClick={toggleCollapsed}>
-                <IconDoubleArrowLeft />
-              </Button>
-            )
-          }
-          <Allotment vertical defaultSizes={apiDetailSizes} ref={apiDetailRef} onChange={setApiDetailSizes} separator={false}>
-            <Allotment.Pane minSize={minSize}>
-              <div className={styles.detailPanel}>
-                <div className={styles.panelHeader}>
-                  {component && <ComponentTabs component={component} activeKey={editingName} onChange={setEditingName} />}
-                </div>
-              </div>
-            </Allotment.Pane>
-            <Allotment.Pane minSize={minSize}>
-              <div className={styles.apiDetailPanel}>
-                <div className={styles.panelHeader} onClick={handleApiDetailClick}>
-                  <span className={styles.title}>在线代码生成</span>
-
-                  <div className={`${styles.action} ${apiDetailSizes[1] > minSize ? styles.up : ''}`}>
-                    <IconArrowDown />
+              )
+            }
+            <Allotment vertical defaultSizes={apiDetailSizes} ref={apiDetailRef} onChange={setApiDetailSizes} separator={false}>
+              <Allotment.Pane minSize={minSize}>
+                <div className={styles.detailPanel}>
+                  <div className={styles.panelHeader}>
+                    {component && <ComponentTabs component={component} activeKey={editingName} onChange={setEditingName} />}
+                  </div>
+                  <Tabs size="small" className={styles.panelSubHeader} items={editTabs} activeKey={editingModule} onChange={setEditingModule as any} />
+                  <div className={styles.detailPanel}>
                   </div>
                 </div>
-                <div className={styles.apiDetailContent}>
-                  <APICodeView name={selected} />
+              </Allotment.Pane>
+              <Allotment.Pane minSize={minSize}>
+                <div className={styles.apiDetailPanel}>
+                  <div className={styles.panelHeader} onClick={handleApiDetailClick}>
+                    <span className={styles.title}>在线代码生成</span>
+
+                    <div className={`${styles.action} ${apiDetailSizes[1] > minSize ? styles.up : ''}`}>
+                      <IconArrowDown />
+                    </div>
+                  </div>
+                  <div className={styles.apiDetailContent}>
+                    <APICodeView name={selected} />
+                  </div>
                 </div>
-              </div>
-            </Allotment.Pane>
-          </Allotment>
+              </Allotment.Pane>
+            </Allotment>
+          </div>
+          <div className={styles.preview}></div>
         </div>
-        <div className={styles.preview}></div>
-      </div>
+      </ComponentContext.Provider>
       {modalContextHolder}
     </>
   );

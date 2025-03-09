@@ -36,7 +36,7 @@ export const Header: FC<HTMLAttributes<HTMLDivElement>> = (props) => {
         <Divider type="vertical" className={styles.divider} />
         <Button type="primary" className={styles.btn}>
           <IconHelp color="#7A8599" />
-          反馈
+          帮助文档
         </Button>
         <Button type="primary">
           <IconSend />

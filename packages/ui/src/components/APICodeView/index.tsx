@@ -5,6 +5,7 @@ import 'highlight.js/styles/github.css'; // 引入样式文件
 import typescript from 'highlight.js/lib/languages/typescript'; // 引入语言包
 import { uid } from 'uid';
 import { getAPIContent } from '../../services';
+import { useHandleNaslChange } from '../../hooks';
 import styles from './index.module.less';
 
 hljs.registerLanguage('typescript', typescript); // 注册语言包
@@ -27,6 +28,8 @@ export const APICodeView = ({ name }: { name: string }) => {
   useEffect(() => {
     loadCode();
   }, [name]);
+
+  useHandleNaslChange(loadCode);
 
   useEffect(() => {
     const pre = preRef.current;

@@ -19,6 +19,11 @@ export const theme: ThemeConfig = {
     },
     Tabs: {
       cardPadding: '5px 8px 6px',
+      horizontalItemGutter: 24,
     },
+    Modal: {
+      borderRadiusSM: 8,
+      padding: 12,
+    }
   },
 };
