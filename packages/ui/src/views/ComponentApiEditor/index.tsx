@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react';
-import { Button } from 'antd';
+import { useRef, useState, useCallback, useMemo } from 'react';
+import { Button, Dropdown, Menu, MenuProps } from 'antd';
 import { Allotment, AllotmentHandle } from 'allotment';
 import styles from './index.module.less';
 import { IconDoubleArrowLeft, IconList, IconArrowDown } from '../../components/icons';
@@ -48,6 +48,45 @@ export const ComponentApiEditor = () => {
     }
   };
 
+  const componentMenuProps = useMemo(() => {
+    const items = componentList.map((item) => ({
+      key: item.name,
+      label: item.name,
+      onClick: () => setSelected(item.name),
+    }));
+
+    return {
+      items,
+    };
+  }, [componentList]);
+
+  const renderDropdownMenu = useCallback((menu: React.ReactNode) => {
+    const actionMenus: MenuProps['items'] = [
+      {
+        key: 'divider',
+        type: 'divider',
+      },
+      {
+        key: 'collapsed',
+        label: '展开组件列表',
+        onClick: toggleCollapsed,
+      },
+    ];
+
+
+    return (
+      <div className={styles.toggleMenu}>
+        <div className={styles.header}>
+          组件（{componentList.length}）
+        </div>
+        <div className={styles.menus}>
+          {menu}
+        </div>
+        <Menu items={actionMenus}/>
+      </div>
+    )
+  }, [toggleCollapsed, componentList]);
+
   return (
     <div className={`${styles.editor}  ${collapsed ? styles.collapsed : ''}`}>
       <div className={styles.componentList}>
@@ -78,9 +117,23 @@ export const ComponentApiEditor = () => {
         </Allotment>
       </div>
       <div className={styles.componentDetail}>
-        <Button className={styles.toggleBtn} onClick={toggleCollapsed}>
-          { collapsed ? <IconList /> : <IconDoubleArrowLeft /> }
-        </Button>
+        {
+          collapsed ? (
+            <Dropdown
+              menu={componentMenuProps}
+              dropdownRender={renderDropdownMenu}
+              trigger={['click']}
+            >
+              <Button className={styles.toggleBtn}>
+                <IconList />
+              </Button>
+            </Dropdown>
+          ) : (
+            <Button className={styles.toggleBtn} onClick={toggleCollapsed}>
+              <IconDoubleArrowLeft />
+            </Button>
+          )
+        }
         <Allotment vertical defaultSizes={apiDetailSizes} ref={apiDetailRef} onChange={setApiDetailSizes} separator={false}>
           <Allotment.Pane minSize={minSize}>
             <div className={styles.detailPanel}>
