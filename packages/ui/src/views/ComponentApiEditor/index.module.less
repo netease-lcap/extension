@@ -19,6 +19,10 @@
     left: 4px;
     top: 4px;
   }
+
+  .detailPanel .panelHeader {
+    padding-left: 32px;
+  }
 }
 
 
@@ -61,6 +65,10 @@
   }
 }
 
+.detailPanel .panelHeader {
+  padding-left: 16px;
+}
+
 .listPanelHeader {
   display: flex;
   align-items: center;
@@ -98,8 +106,16 @@
 }
 
 .configListPanel {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   .listPanelHeader {
+    flex-shrink: 0;
     border-top: 1px solid #E5E6EB;
+  }
+
+  .listPanelContent {
+    flex: 1;
   }
 }
 
@@ -142,4 +158,17 @@
       }
     }
   }
+}
+
+
+.listPanelContent {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 12px;
+}
+
+.apiDetailContent {
+  height: 100%;
+  overflow: auto;
 }

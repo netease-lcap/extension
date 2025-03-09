@@ -4,3 +4,7 @@ export * from './IconFeedback';
 export * from './IconDoubleArrowLeft';
 export * from './IconList';
 export * from './IconArrowDown';
+export * from './IconRemove';
+export * from './IconAdd';
+export * from './IconAddCircle';
+export * from './IconMore';

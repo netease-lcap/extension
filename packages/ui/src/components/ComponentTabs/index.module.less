@@ -1,0 +1,54 @@
+.tabs {
+  :global {
+    .ant-tabs-nav {
+      margin: 0;
+    }
+
+    .ant-tabs-nav-add {
+      border: none !important;
+    }
+  }
+}
+
+.tabItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  margin-right: 4px;
+
+  &.primary {
+    background-color: #3377FF;
+    color: #fff;
+  }
+
+  &.secondary {
+    background-color: #3377FF1A;
+    color: #3377FF;
+  }
+}
+
+.addTab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  color: #4E5969;
+  margin-left: 8px;
+  cursor: pointer;
+  position: relative;
+  &:hover {
+    background-color: #1D212914;
+  }
+}

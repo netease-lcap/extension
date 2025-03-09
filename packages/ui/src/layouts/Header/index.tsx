@@ -1,9 +1,12 @@
-import { FC, HTMLAttributes } from 'react';
+import { FC, HTMLAttributes, useContext } from 'react';
 import { Button, Divider } from 'antd';
 import styles from './index.module.less';
 import { IconSend, IconFeedback, IconHelp } from '../../components/icons';
+import { ProjectContext } from '../../hooks/useProjectContext';
 
 export const Header: FC<HTMLAttributes<HTMLDivElement>> = (props) => {
+  const { schema } = useContext(ProjectContext);
+
   return (
     <div {...props} className={styles.header}>
       <div className={styles.meta}>
@@ -16,10 +19,14 @@ export const Header: FC<HTMLAttributes<HTMLDivElement>> = (props) => {
             API配置
           </div>
         </div>
-        <div className={styles.source}>
-          <div className={styles.sourceTitle}>来源：npm</div>
-          <div className={styles.sourcePkg}>包名：echarts@12.2.3</div>
-        </div>
+        {
+          schema && (
+            <div className={styles.source}>
+              <div className={styles.sourceTitle}>来源：npm</div>
+              <div className={styles.sourcePkg}>包名：{schema.name}@{schema.version} </div>
+            </div>
+          )
+        }
       </div>
       <div className={styles.actions}>
         <Button type="primary" className={styles.btn}>

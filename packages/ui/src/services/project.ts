@@ -41,7 +41,7 @@ export async function getProjectMetaInfo() {
 }
 
 export async function getProjectSchema() {
-  const response = await http.get<MaterialSchema>('/api/project/schema');
+  const response = await http.get<MaterialSchema>('/api/project/source');
 
   if (!response || !response.data) {
     return null;

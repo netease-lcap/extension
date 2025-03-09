@@ -1,4 +1,4 @@
-import { http } from './http';
+import http from './http';
 import type { NaslComponent, APIUpdateOptions } from '../types/component';
 
 export interface ComponentMetaInfo {
@@ -7,6 +7,7 @@ export interface ComponentMetaInfo {
   show?: boolean;
   group?: string;
   icon?: string;
+  sourceName?: string;
   tsPath: string;
   children?: ComponentMetaInfo[];
 }
@@ -21,7 +22,7 @@ export async function getComponentList() {
 }
 
 export async function getComponentDetail(name: string) {
-  const response = await http.get<NaslComponent>(`/api/component/detail?name=${name}`);
+  const response = await http.get<NaslComponent>(`/api/component/info?name=${name}`);
   if (!response || !response.data) {
     return null;
   }
@@ -31,7 +32,7 @@ export async function getComponentDetail(name: string) {
 
 
 export async function getAPIContent(name: string) {
-  const response = await http.get<string>(`/api/component/api?name=${name}`);
+  const response = await http.get<string>(`/api/component/api/file?name=${name}`);
   if (!response || !response.data) {
     return '';
   }

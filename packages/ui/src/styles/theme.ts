@@ -17,5 +17,8 @@ export const theme: ThemeConfig = {
     Button: {
       paddingInline: 8,
     },
+    Tabs: {
+      cardPadding: '5px 8px 6px',
+    },
   },
 };
