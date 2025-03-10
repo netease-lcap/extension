@@ -1,10 +1,13 @@
 import type { ViewComponentDeclaration } from '@nasl/types/nasl.ui.ast.d.ts';
 
-export interface NaslComponent extends ViewComponentDeclaration {
+export interface NaslComponent extends Omit<ViewComponentDeclaration, 'children'> {
   ideusage: Record<string, any>;
   extends?: any;
   order?: number;
   type?: 'pc' | 'h5' | 'both';
+  sourceName?: string;
+  children?: NaslComponent[];
+  isChild?: boolean;
 }
 
 export interface APIEditorBaseOptions {

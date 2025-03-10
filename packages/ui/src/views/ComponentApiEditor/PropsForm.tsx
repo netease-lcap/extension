@@ -12,6 +12,7 @@ export const groups = [
   '样式属性',
   '工具属性',
 ];
+
 export const PropsForm = () => {
   const { component } = useComponentContext();
 

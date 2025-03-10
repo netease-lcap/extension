@@ -3,7 +3,7 @@ import { FC, useMemo, useCallback, useState } from 'react';
 import { NaslComponent } from '../../types/component';
 import styles from './index.module.less';
 import classNames from 'classnames';
-import { IconAdd } from '../icons';
+import { IconAdd, IconMore } from '../icons';
 import { camelCase, upperFirst } from 'lodash';
 import { useComponentContext } from '../../hooks';
 
@@ -11,6 +11,7 @@ export interface ComponentTabsProps {
   component: NaslComponent;
   activeKey: string;
   onChange: (key: string) => void;
+  onRemove: (name: string) => void;
 }
 
 const AddSubComponent = ({ name: componentName }: { name?: string }) => {
@@ -76,7 +77,11 @@ const AddSubComponent = ({ name: componentName }: { name?: string }) => {
   )
 }
 
-export const ComponentTabs: FC<ComponentTabsProps> = ({ component, activeKey, onChange }) => {
+const stopPropagation = (e: any) => {
+  e?.stopPropagation();
+}
+
+export const ComponentTabs: FC<ComponentTabsProps> = ({ component, activeKey, onChange, onRemove }) => {
   const items = useMemo(() => {
     const list: TabsProps['items'] = [{
       label: (
@@ -96,6 +101,31 @@ export const ComponentTabs: FC<ComponentTabsProps> = ({ component, activeKey, on
             <div className={styles.tabItem}>
               <span className={classNames(styles.badge, styles.secondary)}>子</span>
               <span className={styles.name}>{child.name}</span>
+              <Dropdown
+                trigger={['click']}
+                menu={{
+                  items: [
+                    {
+                      key: 'delete',
+                      label: '删除子组件',
+                      danger: true,
+                      onClick: (e) => {
+                        onRemove(child.name);
+                      },
+                    },
+                  ],
+                  style: {
+                    width: 120,
+                  },
+                }}
+                dropdownRender={(menu) => (
+                  <div onClick={stopPropagation}>{menu}</div>
+                )}
+              >
+                <div className={styles.more} onClick={stopPropagation}>
+                  <IconMore />
+                </div>
+              </Dropdown>
             </div>
           ),
           key: child.name,
@@ -105,7 +135,7 @@ export const ComponentTabs: FC<ComponentTabsProps> = ({ component, activeKey, on
     }
 
     return list;
-  }, [component]);
+  }, [component, onRemove]);
 
   const tabBarExtraContent = useMemo(() => ({
     right: (

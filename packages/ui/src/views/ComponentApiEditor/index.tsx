@@ -105,6 +105,32 @@ export const ComponentApiEditor = () => {
     });
   };
 
+  const handleRemoveChildComponent = useCallback((name: string) => {
+    if (!component) {
+      return;
+    }
+
+    modal.confirm({
+      title: `确定删除子组件“${name}”吗？`,
+      onOk: async () => {
+        await updateComponent({
+          type: 'remove',
+          module: 'subComponent',
+          name: component.name,
+          data: {
+            name,
+          },
+        });
+
+        setEditingName(component.name);
+      },
+    });
+
+  }, [
+    component?.name,
+    updateComponent,
+  ]);
+
   const contextValue = useMemo(() => ({
     componentList,
     hiddenList,
@@ -170,7 +196,16 @@ export const ComponentApiEditor = () => {
               <Allotment.Pane minSize={minSize}>
                 <div className={styles.detailPanel}>
                   <div className={styles.panelHeader}>
-                    {component && <ComponentTabs component={component} activeKey={editingName} onChange={setEditingName} />}
+                    {
+                      component && (
+                        <ComponentTabs
+                          component={component}
+                          activeKey={editingName}
+                          onChange={setEditingName}
+                          onRemove={handleRemoveChildComponent}
+                        />
+                      )
+                    }
                   </div>
                   <Tabs size="small" className={styles.panelSubHeader} items={editTabs} activeKey={editingModule} onChange={setEditingModule as any} />
                   <div className={styles.detailPanelContent}>
@@ -180,7 +215,7 @@ export const ComponentApiEditor = () => {
                         关于{editTabs.find((tab) => tab.key === editingModule)?.label}
                       </Button>
                     </div>
-                    {editingModule === 'info' && <BaseInfo />}
+                    {editingModule === 'info' && <BaseInfo removeSubComponent={handleRemoveChildComponent} />}
                     {editingModule === 'prop' && <PropsForm />}
                   </div>
                 </div>

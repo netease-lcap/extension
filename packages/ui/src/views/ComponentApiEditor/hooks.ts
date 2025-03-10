@@ -120,7 +120,16 @@ export const useComponentControl = (componentList: ComponentMetaInfo[]) => {
       return component;
     }
 
-    return (component.children || []).find((item) => item.name === editingName);
+    let child = (component.children || []).find((item) => item.name === editingName);
+
+    if (child) {
+      child = {
+        ...child,
+        isChild: true,
+      };
+    }
+
+    return child;
   }, [component, editingName]);
 
   const tsPath = useMemo(() => {
@@ -144,8 +153,12 @@ export const useComponentControl = (componentList: ComponentMetaInfo[]) => {
       actions: actions,
     });
 
+    if (successed) {
+      loadComponent(selected);
+    }
+
     return successed;
-  }, [tsPath, editComponent?.name]);
+  }, [tsPath, editComponent?.name, selected, loadComponent]);
 
   return {
     component,
