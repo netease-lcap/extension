@@ -28,6 +28,7 @@ export const ComponentApiEditor = () => {
     component,
     addComponent,
     removeComponent,
+    updateComponent,
     setSelected,
     setEditingName,
     setEditingModule,
@@ -104,7 +105,17 @@ export const ComponentApiEditor = () => {
     });
   };
 
-  const contextValue = useMemo(() => ({ componentList, hiddenList, component: editComponent }), [componentList, hiddenList, editComponent]);
+  const contextValue = useMemo(() => ({
+    componentList,
+    hiddenList,
+    component: editComponent,
+    updateComponent,
+  }), [
+    componentList,
+    hiddenList,
+    editComponent,
+    updateComponent,
+  ]);
 
   return (
     <>

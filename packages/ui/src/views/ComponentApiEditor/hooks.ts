@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext, useMemo, useCallback } from 'react'
-import { ComponentMetaInfo, createComponent, getComponentDetail, getComponentList, removeComponent } from '../../services';
+import { useState, useEffect, useContext, useMemo, useCallback, useRef } from 'react'
+import { ComponentMetaInfo, createComponent, getComponentDetail, getComponentList, removeComponent, updateComponent } from '../../services';
 import { ProjectContext, useHandleNaslChange } from '../../hooks';
 import { APIUpdateOptions, NaslComponent } from '../../types/component';
 
@@ -123,6 +123,30 @@ export const useComponentControl = (componentList: ComponentMetaInfo[]) => {
     return (component.children || []).find((item) => item.name === editingName);
   }, [component, editingName]);
 
+  const tsPath = useMemo(() => {
+    const comp = componentList.find((item) => item.name === selected);
+
+    if (!comp) {
+      return '';
+    }
+
+    return comp.tsPath;
+  }, [componentList, selected]);
+
+  const handleUpdate = useCallback(async (options: APIUpdateOptions | APIUpdateOptions[]) => {
+    if (!tsPath || !editComponent?.name) {
+      return;
+    }
+
+    const actions = Array.isArray(options) ? options : [options];
+    const successed = await updateComponent({
+      tsPath,
+      actions: actions,
+    });
+
+    return successed;
+  }, [tsPath, editComponent?.name]);
+
   return {
     component,
     selected,
@@ -133,6 +157,7 @@ export const useComponentControl = (componentList: ComponentMetaInfo[]) => {
     setEditingModule,
     addComponent: handleAdd,
     removeComponent: handleRemove,
+    updateComponent: handleUpdate,
     setEditingName,
     editTabs,
   };

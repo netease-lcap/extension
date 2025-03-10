@@ -58,8 +58,13 @@ export async function removeComponent(name: string) {
   return response.data;
 }
 
-export async function updateComponent(options: APIUpdateOptions) {
-  const response = await http.post<boolean>(`/api/component/update`, options);
+export interface UpdateComponentParams {
+  tsPath: string;
+  actions: APIUpdateOptions[];
+}
+
+export async function updateComponent(params: UpdateComponentParams) {
+  const response = await http.post<boolean>('/api/component/update', params);
 
   if (!response || !response.data) {
     return false;

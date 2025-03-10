@@ -5,6 +5,7 @@ import styles from './index.module.less';
 import classNames from 'classnames';
 import { IconAdd } from '../icons';
 import { camelCase, upperFirst } from 'lodash';
+import { useComponentContext } from '../../hooks';
 
 export interface ComponentTabsProps {
   component: NaslComponent;
@@ -12,9 +13,10 @@ export interface ComponentTabsProps {
   onChange: (key: string) => void;
 }
 
-const AddSubComponent = () => {
+const AddSubComponent = ({ name: componentName }: { name?: string }) => {
+  const { updateComponent } = useComponentContext();
   const [open, setOpen] = useState(false);
-  // const [adding, setAdding] = useState(false);
+  const [adding, setAdding] = useState(false);
   const [value, setValue] = useState('');
 
   const handleOpenChange = (op: boolean) => {
@@ -25,17 +27,26 @@ const AddSubComponent = () => {
     setOpen(op);
   }
 
-  const handleConfirm = useCallback(() => {
+  const handleConfirm = useCallback(async() => {
     const name = upperFirst(camelCase(value.trim()));
-    if (!name) {
+    if (!name || !componentName) {
       setOpen(false);
       return;
     }
 
     setValue(name);
+    setAdding(true);
 
-    // todo options
-
+    await updateComponent({
+      type: 'add',
+      module: 'subComponent',
+      name: componentName,
+      data: {
+        name,
+      },
+    });
+    setAdding(false);
+    setOpen(false);
   }, [value, setOpen]);
 
   const close = useCallback(() => setOpen(false), []);
@@ -44,13 +55,13 @@ const AddSubComponent = () => {
     return (
       <div className={styles.addConfirm}>
         <Input
-          placeholder="请输入组件名称 (例如： ElSelectOption)"
+          placeholder={`请输入组件名称 (例如： ${componentName}Item)`}
           value={value}
           onChange={(e) => setValue(e.target.value)}
         />
         <Flex justify="flex-end" align="center" gap={8} className={styles.footer}>
           <Button onClick={close}>取消</Button>
-          <Button type="primary" onClick={handleConfirm}>确定</Button>
+          <Button type="primary" loading={adding} onClick={handleConfirm}>确定</Button>
         </Flex>
       </div>
     )
@@ -96,15 +107,17 @@ export const ComponentTabs: FC<ComponentTabsProps> = ({ component, activeKey, on
     return list;
   }, [component]);
 
+  const tabBarExtraContent = useMemo(() => ({
+    right: (
+      <AddSubComponent name={component.name} />
+    ),
+  }), []);
+
   return (
     <Tabs
       type="card"
       items={items}
-      tabBarExtraContent={{
-        right: (
-          <AddSubComponent />
-        ),
-      }}
+      tabBarExtraContent={tabBarExtraContent}
       className={styles.tabs}
       activeKey={activeKey}
       onChange={onChange}
