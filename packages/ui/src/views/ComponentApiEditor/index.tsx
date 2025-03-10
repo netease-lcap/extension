@@ -2,13 +2,15 @@ import { useRef, useState, useCallback, useMemo } from 'react';
 import { Button, Dropdown, Menu, MenuProps, Modal, Tabs } from 'antd';
 import { Allotment, AllotmentHandle } from 'allotment';
 import styles from './index.module.less';
-import { IconDoubleArrowLeft, IconList, IconArrowDown } from '../../components/icons';
+import { IconDoubleArrowLeft, IconList, IconArrowDown, IconHelpVariant } from '../../components/icons';
 import { ComponentList } from '../../components/ComponentList';
 import { APICodeView } from '../../components/APICodeView';
 import { ComponentTabs } from '../../components/ComponentTabs';
 import { useToggle } from '../../hooks';
 import ComponentContext from '../../hooks/useComponentContext';
 import { useComponentList, useComponentControl } from './hooks';
+import { BaseInfo } from './BaseInfoForm';
+import { PropsForm } from './PropsForm';
 
 const minSize = 32;
 
@@ -22,6 +24,7 @@ export const ComponentApiEditor = () => {
     selected,
     editingName,
     editingModule,
+    editComponent,
     component,
     addComponent,
     removeComponent,
@@ -101,10 +104,11 @@ export const ComponentApiEditor = () => {
     });
   };
 
-  const contextValue = useMemo(() => ({ componentList, hiddenList }), [componentList, hiddenList]);
+  const contextValue = useMemo(() => ({ componentList, hiddenList, component: editComponent }), [componentList, hiddenList, editComponent]);
+
   return (
     <>
-      <ComponentContext.Provider value={contextValue}>
+      <ComponentContext.Provider value={contextValue as any}>
         <div className={`${styles.editor}  ${collapsed ? styles.collapsed : ''}`}>
           <div className={styles.componentList}>
             <Allotment vertical defaultSizes={componentSizes} ref={componentListRef} onChange={setComponentSizes} separator={false}>
@@ -158,7 +162,15 @@ export const ComponentApiEditor = () => {
                     {component && <ComponentTabs component={component} activeKey={editingName} onChange={setEditingName} />}
                   </div>
                   <Tabs size="small" className={styles.panelSubHeader} items={editTabs} activeKey={editingModule} onChange={setEditingModule as any} />
-                  <div className={styles.detailPanel}>
+                  <div className={styles.detailPanelContent}>
+                    <div className={styles.helpBlock}>
+                      <Button color="primary" size="small" variant="link" className={styles.helpBtn}>
+                        <IconHelpVariant />
+                        关于{editTabs.find((tab) => tab.key === editingModule)?.label}
+                      </Button>
+                    </div>
+                    {editingModule === 'info' && <BaseInfo />}
+                    {editingModule === 'prop' && <PropsForm />}
                   </div>
                 </div>
               </Allotment.Pane>

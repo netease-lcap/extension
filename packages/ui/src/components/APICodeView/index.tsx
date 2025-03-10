@@ -1,19 +1,17 @@
 
 import { useEffect, useRef, useState } from 'react';
-import hljs from 'highlight.js';
-import 'highlight.js/styles/github.css'; // 引入样式文件
-import typescript from 'highlight.js/lib/languages/typescript'; // 引入语言包
-import { uid } from 'uid';
+import { basicSetup } from 'codemirror';
+import { EditorState } from '@codemirror/state';
+import { EditorView } from '@codemirror/view';
+import { javascript } from '@codemirror/lang-javascript';
 import { getAPIContent } from '../../services';
 import { useHandleNaslChange } from '../../hooks';
 import styles from './index.module.less';
 
-hljs.registerLanguage('typescript', typescript); // 注册语言包
-
 export const APICodeView = ({ name }: { name: string }) => {
   const [code, setCode] = useState('');
-  const preRef = useRef<HTMLPreElement>(null);
-  const [reviewId, setReviewId] = useState<string | null>(null);
+  const preRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<EditorView>(null);
 
   const loadCode = async () => {
     if (!name) {
@@ -22,7 +20,6 @@ export const APICodeView = ({ name }: { name: string }) => {
 
     const code = await getAPIContent(name);
     setCode(code);
-    setReviewId(uid());
   };
 
   useEffect(() => {
@@ -38,11 +35,33 @@ export const APICodeView = ({ name }: { name: string }) => {
       return;
     }
 
-    hljs.highlightBlock(pre);
+    const extensions = [
+      basicSetup,
+      javascript({ typescript: true }),
+      EditorState.readOnly.of(true),
+      EditorView.editable.of(false),
+      EditorView.contentAttributes.of({tabindex: '0'}),
+    ];
+
+    if (editorRef.current) {
+      const state = EditorState.create({
+        doc: code,
+        extensions,
+      });
+
+      editorRef.current.setState(state);
+      return;
+    }
+
+    editorRef.current = new EditorView({
+      extensions,
+      parent: pre,
+      doc: code,
+    });
   }, [code]); // 确保在组件加载后高亮代码
 
     return (
-      <pre ref={preRef} key={reviewId} className={styles.codeView}><code>{code}</code></pre>
+      <div ref={preRef} className={styles.codeView}></div>
     );
 };
 

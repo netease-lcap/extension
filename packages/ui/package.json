@@ -20,6 +20,10 @@
   "author": "NetEase CodeWave FE Team",
   "license": "MIT",
   "devDependencies": {
+    "@codemirror/lang-javascript": "^6.2.3",
+    "@codemirror/lang-json": "^6.0.1",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/view": "^6.36.4",
     "@eslint/js": "^9.21.0",
     "@nasl/types": "^0.1.10",
     "@types/lodash": "^4.14.202",
@@ -29,6 +33,7 @@
     "antd": "^5.24.3",
     "axios": "^1.8.1",
     "classnames": "^2.5.1",
+    "codemirror": "^6.0.1",
     "eslint": "^9.21.0",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
@@ -44,7 +49,6 @@
   },
   "dependencies": {
     "allotment": "^1.20.3",
-    "highlight.js": "^11.11.1",
     "uid": "^2.0.2"
   }
 }

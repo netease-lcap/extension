@@ -111,13 +111,24 @@ export const useComponentControl = (componentList: ComponentMetaInfo[]) => {
     ]
   }, []);
 
+  const editComponent = useMemo(() => {
+    if (!component) {
+      return null;
+    }
 
+    if (component.name === editingName) {
+      return component;
+    }
+
+    return (component.children || []).find((item) => item.name === editingName);
+  }, [component, editingName]);
 
   return {
     component,
     selected,
     editingName: editingName || selected,
     editingModule,
+    editComponent,
     setSelected,
     setEditingModule,
     addComponent: handleAdd,

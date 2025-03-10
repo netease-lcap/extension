@@ -24,6 +24,12 @@ export const theme: ThemeConfig = {
     Modal: {
       borderRadiusSM: 8,
       padding: 12,
+    },
+    Form: {
+      itemMarginBottom: 16,
+      labelColor: 'rgb(78,89,105)',
+      labelRequiredMarkColor: 'rgb(242,73,87)',
+      verticalLabelPadding: '0 0 4px',
     }
   },
 };
