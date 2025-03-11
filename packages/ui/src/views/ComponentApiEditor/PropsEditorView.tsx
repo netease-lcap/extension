@@ -1,9 +1,12 @@
-import { Button, Collapse } from 'antd';
+import { useMemo, useCallback, useState } from 'react';
+import { Button, Collapse, Divider, Dropdown, Input } from 'antd';
 import { useComponentContext } from '../../hooks';
-import { useMemo } from 'react';
 import styles from './index.module.less';
 import { IconAdd } from '../../components';
 import { Empty } from '../../components/Empty';
+import { useProjectContext } from '../../hooks/useProjectContext';
+import { NaslComponent } from '../../types/component';
+import { isCamelCase } from '../../utils/check';
 // import { ComponentField } from '../../components';
 
 export const groups = [
@@ -22,6 +25,152 @@ const IconArrowRight = ({ isActive }: { isActive?: boolean }) => {
     </svg>
   )
 }
+
+const AddProp = ({ group, sourceName }: { group: string, sourceName?: string }) => {
+  const { getComponentSchema } = useProjectContext();
+  const { component, updateComponent } = useComponentContext();
+  const [adding, setAdding] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [name, setName] = useState('');
+  const [error, setError] = useState('');
+
+  const schemaAttrs = useMemo(() => {
+    if (!sourceName) {
+      return [];
+    }
+
+    const schema = getComponentSchema(sourceName);
+    if (!schema) {
+      return [];
+    }
+
+    return schema.attrs || [];
+  }, [sourceName, getComponentSchema]);
+
+
+
+  const handleAddConfirm = useCallback(async(name: string) => {
+    if (!component?.name) {
+      return;
+    }
+
+    if (!isCamelCase(name)) {
+      setError('请输入小驼峰的属性名称，例如：myName');
+      return;
+    }
+
+    if (component?.props.some((prop: any) => prop.name === name)) {
+      setError('该属性名称已存在');
+      return;
+    }
+
+    setError('');
+
+    await updateComponent({
+      type: 'add',
+      module: 'prop',
+      name: component.name,
+      data: {
+        name,
+        group,
+      },
+    });
+
+    setVisible(false);
+  }, [component?.props, component?.name, updateComponent]);
+
+  const handleAddSchemaProp = useCallback(async (propSchema: any) => {
+    if (!component?.name) {
+      return;
+    }
+
+    await updateComponent({
+      type: 'add',
+      module: 'prop',
+      name: component.name,
+      data: {
+        name: propSchema.name,
+        group,
+        schema: propSchema,
+      },
+    });
+  }, [component?.name, updateComponent, group]);
+
+  const handleOpenChange = useCallback((open: boolean) => {
+    if (open) {
+      setAdding(false);
+      setName('');
+      setError('');
+    }
+
+    setVisible(open);
+  }, []);
+
+  const menuProps = useMemo(() => {
+    const items = schemaAttrs.map((item: any) => ({
+      key: item.name,
+      label: item.name,
+      disabled: component?.props.some((prop: any) => prop.name === item.name),
+      onClick: () => handleAddSchemaProp(item),
+    }));
+
+    return {
+      items,
+    };
+  }, [schemaAttrs, component?.props, handleAddSchemaProp]);
+
+
+  const renderDropdownMenu = useCallback((menu: React.ReactNode) => {
+    return (
+      <div className={styles.toggleMenu}>
+        <div className={styles.menus}>
+          {menu}
+        </div>
+        <Divider style={{ margin: 0 }} />
+        <div className={styles.footer}>
+          {
+            adding ? (
+              <>
+                <Input size="small" status={error ? 'error' : ''} name={name} onChange={(e) => setName(e.target.value)} style={{ width: 92 }} placeholder="请输入属性名称" />
+                {error && <div className={styles.error}>{error}</div>}
+                <Button variant="text" color="primary" className={styles.textBtn} onClick={() => handleAddConfirm(name)}>
+                  <span>确定</span>
+                </Button>
+                <Button variant="text" color="primary" className={styles.textBtn} onClick={() => setAdding(false)}>
+                  <span>取消</span>
+                </Button>
+              </>
+            ) : (
+              <Button onClick={() => setAdding(true)} variant="text" color="primary" className={styles.textBtn}>
+                <IconAdd />
+                <span>添加{group}</span>
+              </Button>
+            )
+          }
+        </div>
+      </div>
+    )
+  }, [
+    group,
+    adding,
+    setAdding,
+    handleAddConfirm,
+    name,
+    setName,
+    error,
+  ]);
+
+  return (
+    <Dropdown open={visible} onOpenChange={handleOpenChange} trigger={['click']} menu={menuProps} dropdownRender={renderDropdownMenu}>
+      <Button variant="text" className={styles.addBtn} color="primary">
+        <IconAdd />
+        <span>添加{group}</span>
+      </Button>
+    </Dropdown>
+  )
+};
+
+const stop = (e: any) => e.stopPropagation();
 
 export const PropsEditorView = () => {
   const { component } = useComponentContext();
@@ -54,10 +203,9 @@ export const PropsEditorView = () => {
             },
           },
           extra: (
-            <Button variant="text" className={styles.addBtn} color="primary">
-              <IconAdd />
-              <span>添加{label}</span>
-            </Button>
+            <div onClick={stop}>
+              <AddProp sourceName={component?.sourceName} group={label} />
+            </div>
           ),
         },
       ];

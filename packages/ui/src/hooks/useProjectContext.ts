@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useState } from 'react';
+import { createContext, useCallback, useEffect, useContext, useState } from 'react';
 import { MaterialSchema, ProjectMetaInfo, getProjectMetaInfo, getProjectSchema } from '../services';
 
 const helpModalSrcMap = {
@@ -64,5 +64,18 @@ export const useProjectContextProvider = () => {
     closeHelpModal,
     helpModalVisible,
     helpSrc,
+  };
+};
+
+export const useProjectContext = () => {
+  const context = useContext(ProjectContext);
+
+  const getComponentSchema = useCallback((sourceName: string) => {
+    return context.schema?.components.find((component) => component.name === sourceName);
+  }, [context.schema]);
+
+  return {
+    context,
+    getComponentSchema,
   };
 };
