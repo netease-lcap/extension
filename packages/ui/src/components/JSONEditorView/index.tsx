@@ -3,16 +3,18 @@ import { basicSetup } from 'codemirror';
 import { EditorView } from '@codemirror/view';
 import { EditorState } from '@codemirror/state';
 import { json } from '@codemirror/lang-json';
+import JSON from 'json5';
 import { isNil } from 'lodash';
 
 export interface JSONEditorViewProps extends HTMLAttributes<HTMLDivElement> {
   value?: any;
   onChange?: (value: any) => void;
+  onBlur?: (e: any) => void;
 }
 
 const stringify = (value: any) => !isNil(value) ? JSON.stringify(value, null, '  ') : '';
 
-export const JSONEditorView = ({ value, onChange = () => {}, ...rest }: JSONEditorViewProps) => {
+export const JSONEditorView = ({ value, onChange = () => {}, onBlur = () => {}, ...rest }: JSONEditorViewProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const editorViewRef = useRef<EditorView>(null);
   const onChangeRef = useRef<(v: any) => void>(null);
@@ -24,6 +26,7 @@ export const JSONEditorView = ({ value, onChange = () => {}, ...rest }: JSONEdit
         if (stringify(obj) !== stringify(value)) {
           onChange(obj);
         }
+
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e: any) {
         return;
@@ -42,13 +45,13 @@ export const JSONEditorView = ({ value, onChange = () => {}, ...rest }: JSONEdit
       EditorView.domEventHandlers({
         blur: (e, v) => {
           onChangeRef.current?.(v.state.doc.toString());
+          onBlur?.(e);
         }
       }),
     ];
 
     if (editorViewRef.current) {
       const str = editorViewRef.current.state.doc.toString();
-      console.log('change', str, value);
       try {
         const obj = str ? JSON.parse(str) : {};
         if (stringify(obj) !== stringify(value)) {

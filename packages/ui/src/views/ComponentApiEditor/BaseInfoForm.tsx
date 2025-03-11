@@ -1,5 +1,6 @@
-import { useEffect, useContext, useCallback } from 'react';
+import { useEffect, useContext, useCallback, useRef } from 'react';
 import { Button, Form, Input, Radio } from 'antd';
+import { pick } from 'lodash';
 import { JSONEditorView } from '../../components/JSONEditorView';
 import { useComponentContext } from '../../hooks/useComponentContext';
 import { IconHelpVariant } from '../../components/icons';
@@ -17,10 +18,12 @@ export interface BaseInfoFormData {
 export const BaseInfo = ({ removeSubComponent }: { removeSubComponent: (name: string) => void }) => {
   const [form] = Form.useForm();
   const { openHelpModal } = useContext(ProjectContext);
-  const { component } = useComponentContext();
+  const changedRef = useRef<boolean>(false);
+  const { component, updateComponent } = useComponentContext();
+
   useEffect(() => {
     if (component) {
-      form.setFieldsValue(component);
+      form.setFieldsValue(pick(component, ['name', 'title', 'description', 'type', 'ideusage']));
     }
   }, [component, form]);
 
@@ -28,21 +31,39 @@ export const BaseInfo = ({ removeSubComponent }: { removeSubComponent: (name: st
     openHelpModal('ComponentIdeUsage');
   }, [openHelpModal]);
 
+  const handleFieldsChange = useCallback(() => {
+    changedRef.current = true;
+  }, []);
+
+  const handleChange = useCallback(async () => {
+    if (!component?.name || !changedRef.current) {
+      return;
+    }
+
+    await updateComponent({
+      type: 'update',
+      module: 'info',
+      name: component?.name,
+      data: form.getFieldsValue(),
+    });
+    changedRef.current = false;
+  }, [component?.name, form, updateComponent]);
+
   return (
-   <Form layout="vertical" form={form}>
+   <Form layout="vertical" form={form} onFieldsChange={handleFieldsChange}>
     <Form.Item label="组件名称" required name="name">
       <Input disabled />
     </Form.Item>
     <Form.Item label="组件标题" name="title">
-      <Input />
+      <Input onBlur={handleChange} />
     </Form.Item>
     <Form.Item label="组件描述" name="description">
-      <Input />
+      <Input onBlur={handleChange} />
     </Form.Item>
     {
       component && !component.isChild && (
         <Form.Item label="组件端" name="type">
-          <Radio.Group>
+          <Radio.Group onChange={handleChange}>
             <Radio value="pc">PC</Radio>
             <Radio value="h5">H5</Radio>
             <Radio value="both">通用</Radio>
@@ -59,7 +80,7 @@ export const BaseInfo = ({ removeSubComponent }: { removeSubComponent: (name: st
         </Button>
       </div>
      } name="ideusage">
-      <JSONEditorView />
+      <JSONEditorView onBlur={handleChange} />
     </Form.Item>
     {
       component?.isChild && (
