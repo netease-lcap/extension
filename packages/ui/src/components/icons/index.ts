@@ -8,3 +8,5 @@ export * from './IconRemove';
 export * from './IconAdd';
 export * from './IconAddCircle';
 export * from './IconMore';
+export * from './IconDragHandle';
+export * from './IconTrash';

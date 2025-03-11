@@ -13,10 +13,13 @@ import { BaseInfo } from './BaseInfoForm';
 import { PropsForm } from './PropsForm';
 
 const minSize = 32;
+const defaultSidebarSize = 500;
 
 export const ComponentApiEditor = () => {
   const [modal, modalContextHolder] = Modal.useModal();
   const [collapsed, toggleCollapsed] = useToggle(false);
+  const layoutRef = useRef<AllotmentHandle>(null);
+  const sidebarSizeRef = useRef<number>(defaultSidebarSize);
   const [componentSizes, setComponentSizes] = useState([100, 0]);
   const [apiDetailSizes, setApiDetailSizes] = useState([100, 0]);
   const { componentList, hiddenList } = useComponentList();
@@ -37,6 +40,15 @@ export const ComponentApiEditor = () => {
 
   const componentListRef = useRef<AllotmentHandle>(null);
   const apiDetailRef = useRef<AllotmentHandle>(null);
+
+  const handleLayoutChange = useCallback((sizes: number[]) => {
+    if (sizes[0] < defaultSidebarSize && !collapsed) {
+      toggleCollapsed();
+    }
+
+    sidebarSizeRef.current = sizes[0];
+  }, [collapsed, toggleCollapsed]);
+
   const handleComponentClick = () => {
     const maxContent = componentSizes[0] + componentSizes[1];
     const size = Math.floor(maxContent / 2);
@@ -78,7 +90,12 @@ export const ComponentApiEditor = () => {
       {
         key: 'collapsed',
         label: '展开组件列表',
-        onClick: toggleCollapsed,
+        onClick: () => {
+          toggleCollapsed();
+          if (sidebarSizeRef.current < defaultSidebarSize) {
+            layoutRef.current?.resize([defaultSidebarSize, window.innerWidth - defaultSidebarSize]);
+          }
+        },
       },
     ];
 
@@ -146,98 +163,104 @@ export const ComponentApiEditor = () => {
   return (
     <>
       <ComponentContext.Provider value={contextValue as any}>
-        <div className={`${styles.editor}  ${collapsed ? styles.collapsed : ''}`}>
-          <div className={styles.componentList}>
-            <Allotment vertical defaultSizes={componentSizes} ref={componentListRef} onChange={setComponentSizes} separator={false}>
-              <Allotment.Pane minSize={minSize}>
-                <div className={styles.configListPanel}>
-                  <div className={styles.listPanelHeader}>
-                    <span className={styles.title}>组件（{componentList.length}）</span>
-                  </div>
-                  <div className={styles.listPanelContent}>
-                    <ComponentList value={selected} action="remove" onRemove={handleRemoveComponent} componentList={componentList} onChange={setSelected} />
-                  </div>
+          <Allotment ref={layoutRef} separator={false} onChange={handleLayoutChange}>
+            <Allotment.Pane minSize={320}>
+              <div className={`${styles.editor}  ${collapsed ? styles.collapsed : ''}`}>
+                <div className={styles.componentList}>
+                  <Allotment vertical defaultSizes={componentSizes} ref={componentListRef} onChange={setComponentSizes} separator={false}>
+                    <Allotment.Pane minSize={minSize}>
+                      <div className={styles.configListPanel}>
+                        <div className={styles.listPanelHeader}>
+                          <span className={styles.title}>组件（{componentList.length}）</span>
+                        </div>
+                        <div className={styles.listPanelContent}>
+                          <ComponentList value={selected} action="remove" onRemove={handleRemoveComponent} componentList={componentList} onChange={setSelected} />
+                        </div>
+                      </div>
+                    </Allotment.Pane>
+                    <Allotment.Pane minSize={minSize}>
+                      <div className={styles.configListPanel}>
+                        <div className={`${styles.listPanelHeader} ${styles.collapse}`} onClick={handleComponentClick}>
+                          <span className={styles.title}>隐藏组件 ({hiddenList.length})</span>
+                          <div className={`${styles.action} ${componentSizes[1] > minSize ? styles.up : ''}`}>
+                            <IconArrowDown />
+                          </div>
+                        </div>
+                        <div className={styles.listPanelContent}>
+                          <ComponentList action="add" onAdd={addComponent} componentList={hiddenList} selectable={false} />
+                        </div>
+                      </div>
+                    </Allotment.Pane>
+                  </Allotment>
                 </div>
-              </Allotment.Pane>
-              <Allotment.Pane minSize={minSize}>
-                <div className={styles.configListPanel}>
-                  <div className={`${styles.listPanelHeader} ${styles.collapse}`} onClick={handleComponentClick}>
-                    <span className={styles.title}>隐藏组件 ({hiddenList.length})</span>
-                    <div className={`${styles.action} ${componentSizes[1] > minSize ? styles.up : ''}`}>
-                      <IconArrowDown />
-                    </div>
-                  </div>
-                  <div className={styles.listPanelContent}>
-                    <ComponentList action="add" onAdd={addComponent} componentList={hiddenList} selectable={false} />
-                  </div>
-                </div>
-              </Allotment.Pane>
-            </Allotment>
-          </div>
-          <div className={styles.componentDetail}>
-            {
-              collapsed ? (
-                <Dropdown
-                  menu={componentMenuProps}
-                  dropdownRender={renderDropdownMenu}
-                  trigger={['click']}
-                >
-                  <Button className={styles.toggleBtn}>
-                    <IconList />
-                  </Button>
-                </Dropdown>
-              ) : (
-                <Button className={styles.toggleBtn} onClick={toggleCollapsed}>
-                  <IconDoubleArrowLeft />
-                </Button>
-              )
-            }
-            <Allotment vertical defaultSizes={apiDetailSizes} ref={apiDetailRef} onChange={setApiDetailSizes} separator={false}>
-              <Allotment.Pane minSize={minSize}>
-                <div className={styles.detailPanel}>
-                  <div className={styles.panelHeader}>
-                    {
-                      component && (
-                        <ComponentTabs
-                          component={component}
-                          activeKey={editingName}
-                          onChange={setEditingName}
-                          onRemove={handleRemoveChildComponent}
-                        />
-                      )
-                    }
-                  </div>
-                  <Tabs size="small" className={styles.panelSubHeader} items={editTabs} activeKey={editingModule} onChange={setEditingModule as any} />
-                  <div className={styles.detailPanelContent}>
-                    <div className={styles.helpBlock}>
-                      <Button color="primary" size="small" variant="link" className={styles.helpBtn}>
-                        <IconHelpVariant />
-                        关于{editTabs.find((tab) => tab.key === editingModule)?.label}
+                <div className={styles.componentDetail}>
+                  {
+                    collapsed ? (
+                      <Dropdown
+                        menu={componentMenuProps}
+                        dropdownRender={renderDropdownMenu}
+                        trigger={['click']}
+                      >
+                        <Button className={styles.toggleBtn}>
+                          <IconList />
+                        </Button>
+                      </Dropdown>
+                    ) : (
+                      <Button className={styles.toggleBtn} onClick={toggleCollapsed}>
+                        <IconDoubleArrowLeft />
                       </Button>
-                    </div>
-                    {editingModule === 'info' && <BaseInfo removeSubComponent={handleRemoveChildComponent} />}
-                    {editingModule === 'prop' && <PropsForm />}
-                  </div>
-                </div>
-              </Allotment.Pane>
-              <Allotment.Pane minSize={minSize}>
-                <div className={styles.apiDetailPanel}>
-                  <div className={styles.panelHeader} onClick={handleApiDetailClick}>
-                    <span className={styles.title}>在线代码生成</span>
+                    )
+                  }
+                  <Allotment vertical defaultSizes={apiDetailSizes} ref={apiDetailRef} onChange={setApiDetailSizes} separator={false}>
+                    <Allotment.Pane minSize={minSize}>
+                      <div className={styles.detailPanel}>
+                        <div className={styles.panelHeader}>
+                          {
+                            component && (
+                              <ComponentTabs
+                                component={component}
+                                activeKey={editingName}
+                                onChange={setEditingName}
+                                onRemove={handleRemoveChildComponent}
+                              />
+                            )
+                          }
+                        </div>
+                        <Tabs size="small" className={styles.panelSubHeader} items={editTabs} activeKey={editingModule} onChange={setEditingModule as any} />
+                        <div className={styles.detailPanelContent}>
+                          <div className={styles.helpBlock}>
+                            <Button color="primary" size="small" variant="link" className={styles.helpBtn}>
+                              <IconHelpVariant />
+                              关于{editTabs.find((tab) => tab.key === editingModule)?.label}
+                            </Button>
+                          </div>
+                          {editingModule === 'info' && <BaseInfo removeSubComponent={handleRemoveChildComponent} />}
+                          {editingModule === 'prop' && <PropsForm />}
+                        </div>
+                      </div>
+                    </Allotment.Pane>
+                    <Allotment.Pane minSize={minSize}>
+                      <div className={styles.apiDetailPanel}>
+                        <div className={styles.panelHeader} onClick={handleApiDetailClick}>
+                          <span className={styles.title}>在线代码生成</span>
 
-                    <div className={`${styles.action} ${apiDetailSizes[1] > minSize ? styles.up : ''}`}>
-                      <IconArrowDown />
-                    </div>
-                  </div>
-                  <div className={styles.apiDetailContent}>
-                    <APICodeView name={selected} />
-                  </div>
+                          <div className={`${styles.action} ${apiDetailSizes[1] > minSize ? styles.up : ''}`}>
+                            <IconArrowDown />
+                          </div>
+                        </div>
+                        <div className={styles.apiDetailContent}>
+                          <APICodeView name={selected} />
+                        </div>
+                      </div>
+                    </Allotment.Pane>
+                  </Allotment>
                 </div>
-              </Allotment.Pane>
-            </Allotment>
-          </div>
-          <div className={styles.preview}></div>
-        </div>
+              </div>
+            </Allotment.Pane>
+            <Allotment.Pane>
+              <div className={styles.preview}></div>
+            </Allotment.Pane>
+          </Allotment>
       </ComponentContext.Provider>
       {modalContextHolder}
     </>
