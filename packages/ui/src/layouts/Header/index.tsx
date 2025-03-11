@@ -5,7 +5,7 @@ import { IconSend, IconFeedback, IconHelp } from '../../components/icons';
 import { ProjectContext } from '../../hooks/useProjectContext';
 
 export const Header: FC<HTMLAttributes<HTMLDivElement>> = (props) => {
-  const { schema } = useContext(ProjectContext);
+  const { schema, openHelpModal } = useContext(ProjectContext);
 
   return (
     <div {...props} className={styles.header}>
@@ -34,7 +34,7 @@ export const Header: FC<HTMLAttributes<HTMLDivElement>> = (props) => {
           吐槽
         </Button>
         <Divider type="vertical" className={styles.divider} />
-        <Button type="primary" className={styles.btn}>
+        <Button type="primary" className={styles.btn} onClick={() => openHelpModal()}>
           <IconHelp color="#7A8599" />
           帮助文档
         </Button>

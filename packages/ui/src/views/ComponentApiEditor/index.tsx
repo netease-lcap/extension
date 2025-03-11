@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useMemo } from 'react';
+import { useRef, useState, useCallback, useMemo, useContext } from 'react';
 import { Button, Dropdown, Menu, MenuProps, Modal, Tabs } from 'antd';
 import { Allotment, AllotmentHandle } from 'allotment';
 import styles from './index.module.less';
@@ -11,6 +11,8 @@ import ComponentContext from '../../hooks/useComponentContext';
 import { useComponentList, useComponentControl } from './hooks';
 import { BaseInfo } from './BaseInfoForm';
 import { PropsEditorView } from './PropsEditorView';
+import { ProjectContext } from '../../hooks/useProjectContext';
+import { upperFirst } from 'lodash';
 
 const minSize = 32;
 const defaultSidebarSize = 500;
@@ -24,6 +26,7 @@ export const ComponentApiEditor = () => {
   const [componentSizes, setComponentSizes] = useState([100, 0]);
   const [apiDetailSizes, setApiDetailSizes] = useState([100, 0]);
   const { componentList, hiddenList } = useComponentList();
+  const { openHelpModal } = useContext(ProjectContext);
   const {
     selected,
     editingName,
@@ -150,6 +153,10 @@ export const ComponentApiEditor = () => {
     updateComponent,
   ]);
 
+  const handleOpenHelp = useCallback(() => {
+    openHelpModal(`Component${upperFirst(editingModule)}`);
+  }, [editingModule, openHelpModal]);
+
   const contextValue = useMemo(() => ({
     componentList,
     hiddenList,
@@ -231,7 +238,7 @@ export const ComponentApiEditor = () => {
                         <Tabs size="small" className={styles.panelSubHeader} items={editTabs} activeKey={editingModule} onChange={setEditingModule as any} />
                         <div className={styles.detailPanelContent}>
                           <div className={styles.helpBlock}>
-                            <Button color="primary" size="small" variant="link" className={styles.helpBtn}>
+                            <Button color="primary" size="small" variant="link" className={styles.helpBtn} onClick={handleOpenHelp}>
                               <IconHelpVariant />
                               关于{editTabs.find((tab) => tab.key === editingModule)?.label}
                             </Button>

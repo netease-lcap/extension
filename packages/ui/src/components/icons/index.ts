@@ -10,3 +10,6 @@ export * from './IconAddCircle';
 export * from './IconMore';
 export * from './IconDragHandle';
 export * from './IconTrash';
+export * from './IconClose';
+export * from './IconWindowed';
+export * from './IconCancelWindowed';

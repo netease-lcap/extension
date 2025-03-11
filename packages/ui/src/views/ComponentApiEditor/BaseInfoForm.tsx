@@ -1,7 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useContext, useCallback } from 'react';
 import { Button, Form, Input, Radio } from 'antd';
 import { JSONEditorView } from '../../components/JSONEditorView';
 import { useComponentContext } from '../../hooks/useComponentContext';
+import { IconHelpVariant } from '../../components/icons';
+import styles from './index.module.less';
+import { ProjectContext } from '../../hooks/useProjectContext';
 
 export interface BaseInfoFormData {
   name?: string;
@@ -13,13 +16,17 @@ export interface BaseInfoFormData {
 
 export const BaseInfo = ({ removeSubComponent }: { removeSubComponent: (name: string) => void }) => {
   const [form] = Form.useForm();
+  const { openHelpModal } = useContext(ProjectContext);
   const { component } = useComponentContext();
-
   useEffect(() => {
     if (component) {
       form.setFieldsValue(component);
     }
-  }, [component]);
+  }, [component, form]);
+
+  const handleOpenHelp = useCallback(() => {
+    openHelpModal('ComponentIdeUsage');
+  }, [openHelpModal]);
 
   return (
    <Form layout="vertical" form={form}>
@@ -43,7 +50,15 @@ export const BaseInfo = ({ removeSubComponent }: { removeSubComponent: (name: st
         </Form.Item>
       )
     }
-    <Form.Item required label="页面设计器适配" name="ideusage">
+    <Form.Item required className={styles.ideusageItem} label={
+      <div className={styles.ideusageLabel}>
+        页面设计器适配
+         <Button color="primary" size="small" variant="link" className={styles.helpBtn} onClick={handleOpenHelp}>
+          <IconHelpVariant />
+          关于页面设计器适配
+        </Button>
+      </div>
+     } name="ideusage">
       <JSONEditorView />
     </Form.Item>
     {
