@@ -23,7 +23,7 @@ const IconArrowRight = ({ isActive }: { isActive?: boolean }) => {
   )
 }
 
-export const PropsForm = () => {
+export const PropsEditorView = () => {
   const { component } = useComponentContext();
 
   const groupItems = useMemo(() => {

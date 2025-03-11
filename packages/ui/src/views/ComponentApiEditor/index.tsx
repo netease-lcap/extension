@@ -10,10 +10,11 @@ import { useToggle } from '../../hooks';
 import ComponentContext from '../../hooks/useComponentContext';
 import { useComponentList, useComponentControl } from './hooks';
 import { BaseInfo } from './BaseInfoForm';
-import { PropsForm } from './PropsForm';
+import { PropsEditorView } from './PropsEditorView';
 
 const minSize = 32;
 const defaultSidebarSize = 500;
+const listPanelWidth = 180;
 
 export const ComponentApiEditor = () => {
   const [modal, modalContextHolder] = Modal.useModal();
@@ -69,6 +70,12 @@ export const ComponentApiEditor = () => {
     }
   };
 
+  const handleToggleCollapsed = useCallback(() => {
+    toggleCollapsed();
+    const sidebarSize = collapsed ? sidebarSizeRef.current + listPanelWidth : sidebarSizeRef.current - listPanelWidth;
+    layoutRef.current?.resize([sidebarSize, window.innerWidth - sidebarSize]);
+  }, [collapsed]);
+
   const componentMenuProps = useMemo(() => {
     const items = componentList.map((item) => ({
       key: item.name,
@@ -90,12 +97,7 @@ export const ComponentApiEditor = () => {
       {
         key: 'collapsed',
         label: '展开组件列表',
-        onClick: () => {
-          toggleCollapsed();
-          if (sidebarSizeRef.current < defaultSidebarSize) {
-            layoutRef.current?.resize([defaultSidebarSize, window.innerWidth - defaultSidebarSize]);
-          }
-        },
+        onClick: handleToggleCollapsed,
       },
     ];
 
@@ -111,7 +113,7 @@ export const ComponentApiEditor = () => {
         <Menu items={actionMenus}/>
       </div>
     )
-  }, [toggleCollapsed, componentList]);
+  }, [handleToggleCollapsed, componentList]);
 
   const handleRemoveComponent = (name: string) => {
     modal.confirm({
@@ -206,7 +208,7 @@ export const ComponentApiEditor = () => {
                         </Button>
                       </Dropdown>
                     ) : (
-                      <Button className={styles.toggleBtn} onClick={toggleCollapsed}>
+                      <Button className={styles.toggleBtn} onClick={handleToggleCollapsed}>
                         <IconDoubleArrowLeft />
                       </Button>
                     )
@@ -235,7 +237,7 @@ export const ComponentApiEditor = () => {
                             </Button>
                           </div>
                           {editingModule === 'info' && <BaseInfo removeSubComponent={handleRemoveChildComponent} />}
-                          {editingModule === 'prop' && <PropsForm />}
+                          {editingModule === 'prop' && <PropsEditorView />}
                         </div>
                       </div>
                     </Allotment.Pane>
