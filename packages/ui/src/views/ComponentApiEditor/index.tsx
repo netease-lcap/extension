@@ -1,7 +1,8 @@
 import { useRef, useState, useCallback, useMemo, useContext } from 'react';
 import { Button, Dropdown, Menu, MenuProps, Modal, Tabs } from 'antd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 import { Allotment, AllotmentHandle } from 'allotment';
-import styles from './index.module.less';
 import { IconDoubleArrowLeft, IconList, IconArrowDown, IconHelpVariant } from '../../components/icons';
 import { ComponentList } from '../../components/ComponentList';
 import { APICodeView } from '../../components/APICodeView';
@@ -13,6 +14,7 @@ import { BaseInfo } from './BaseInfoForm';
 import { PropsEditorView } from './PropsEditorView';
 import { ProjectContext } from '../../hooks/useProjectContext';
 import { upperFirst } from 'lodash';
+import styles from './index.module.less';
 
 const minSize = 32;
 const defaultSidebarSize = 500;
@@ -162,11 +164,13 @@ export const ComponentApiEditor = () => {
     hiddenList,
     component: editComponent,
     updateComponent,
+    modal
   }), [
     componentList,
     hiddenList,
     editComponent,
     updateComponent,
+    modal,
   ]);
 
   return (
@@ -244,7 +248,7 @@ export const ComponentApiEditor = () => {
                             </Button>
                           </div>
                           {editingModule === 'info' && <BaseInfo removeSubComponent={handleRemoveChildComponent} />}
-                          {editingModule === 'prop' && <PropsEditorView />}
+                          {editingModule === 'prop' && <DndProvider backend={HTML5Backend}><PropsEditorView /></DndProvider>}
                         </div>
                       </div>
                     </Allotment.Pane>

@@ -1,12 +1,14 @@
-import { useMemo, useCallback, useState } from 'react';
+import { useMemo, useCallback, useState, useEffect, useRef } from 'react';
 import { Button, Collapse, Divider, Dropdown, Input } from 'antd';
 import { useComponentContext } from '../../hooks';
+import { useDrop } from 'react-dnd';
 import styles from './index.module.less';
-import { IconAdd } from '../../components';
+import { ComponentField, IconAdd } from '../../components';
 import { Empty } from '../../components/Empty';
 import { useProjectContext } from '../../hooks/useProjectContext';
-import { NaslComponent } from '../../types/component';
+import { PropForm } from '../../components/PropForm';
 import { isCamelCase } from '../../utils/check';
+import { APIUpdateOptions } from '../../types/component';
 // import { ComponentField } from '../../components';
 
 export const groups = [
@@ -172,57 +174,198 @@ const AddProp = ({ group, sourceName }: { group: string, sourceName?: string }) 
 
 const stop = (e: any) => e.stopPropagation();
 
-export const PropsEditorView = () => {
+interface PropGroupProps {
+  group: string;
+  onRemove: (name: string) => void;
+  onMove?: (source: { name: string, group: string }, target: { name?: string, group: string }) => void;
+  items?: any[];
+}
+
+const PropGroup = ({ group, onRemove = () => {}, onMove = () => {}, items: props = [] }: PropGroupProps) => {
   const { component } = useComponentContext();
+  const [activeKeys, setActiveKeys] = useState<string[]>([groups[1]]);
+  const ref = useRef<any>(null);
 
-  const groupItems = useMemo(() => {
-    const compProps = component && component.props ? component.props : [];
-    return groups.map((label) => {
-      const props = compProps.filter((comp) => {
-        const compGroup = comp.group || '主要属性';
-        return compGroup === label;
-      });
+  const [{ handlerId, isOver }, drop] = useDrop({
+    accept: 'card',
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId(),
+        isOver: monitor.isOver(),
+      };
+    },
+    hover() {
+      if (activeKeys.includes(group)) {
+        return;
+      }
 
-      return [
-        {
-          key: label,
-          label: `${label}（${props.length}）`,
-          children: (
+      setActiveKeys([group]);
+    },
+    drop(item: any) {
+      onMove({ name: item.name, group: item.group }, { group });
+      item.group = group;
+    },
+  });
+
+  drop(ref);
+
+  const collapseItems = useMemo(() => {
+    return [
+      {
+        key: group,
+        label: `${group}（${props.length}）`,
+        children: (
+          props.length > 0 ? (
+            props.map((prop) => (
+              <ComponentField key={prop.name} group={group} name={prop.name} onRemove={onRemove} onMove={onMove}>
+                <PropForm propData={prop} />
+              </ComponentField>
+            ))
+          ) : (
             <Empty text="请点击右上方按钮添加属性" />
-          ),
-          styles: {
-            header: {
-              backgroundColor: 'rgba(247, 248, 250, 1)',
-              color: 'rgba(29, 33, 41, 1)',
-              fontSize: 12,
-              fontWeight: 500,
-              padding: '6px 8px',
-            },
-            body: {
-              padding: 16,
-            },
+          )
+        ),
+        styles: {
+          header: {
+            backgroundColor: 'rgba(247, 248, 250, 1)',
+            color: 'rgba(29, 33, 41, 1)',
+            fontSize: 12,
+            fontWeight: 500,
+            padding: '6px 8px',
           },
-          extra: (
-            <div onClick={stop}>
-              <AddProp sourceName={component?.sourceName} group={label} />
-            </div>
-          ),
+          body: {
+            padding: 16,
+            backgroundColor: isOver ? 'rgba(245, 245, 245, 1)' : 'transparent',
+          },
         },
-      ];
-    });
-  }, [component])
+        extra: (
+          <div onClick={stop}>
+            <AddProp sourceName={component?.sourceName} group={group} />
+          </div>
+        ),
+      },
+    ];
+  }, [props, component?.sourceName, onRemove, onMove, group, isOver]);
 
   return (
-    <>
+    <Collapse
+      size="small"
+      ref={ref}
+      expandIcon={({ isActive }) => <IconArrowRight isActive={isActive} />}
+      className={styles.propGroup}
+      items={collapseItems}
+      activeKey={activeKeys}
+      onChange={setActiveKeys}
+      data-handler-id={handlerId}
+    />
+  );
+};
+
+export const PropsEditorView = () => {
+  const { component, updateComponent, modal } = useComponentContext();
+  const [groupPropMap, setGroupPropMap] = useState<Record<string, any[]>>({});
+
+  const handleRemoveProp = useCallback((name: string) => {
+    if (!component?.name) {
+      return;
+    }
+
+    modal.confirm({
+      title: `确定删除属性 ”${name}“ 吗？`,
+      onOk: async () => {
+        await updateComponent({
+          type: 'remove',
+          module: 'prop',
+          name: component.name,
+          propName: name,
+        });
+      },
+    });
+  }, [component?.name, updateComponent, modal]);
+
+  const handleMoveProp = useCallback(async (sourceItem: { group: string, name: string }, target: { group: string, name?: string }) => {
+    if (
+      (sourceItem.name === target.name)
+      || (sourceItem.group === target.group && !target.name)
+    ) {
+      return;
+    }
+
+    const map: Record<string, any[]> = {
+      ...groupPropMap,
+    };
+
+    if (sourceItem.group === target.group) {
+      const items = [...groupPropMap[sourceItem.group]];
+      const sourceIndex = items.findIndex((prop: any) => prop.name === sourceItem.name);
+      const targetIndex = items.findIndex((prop: any) => prop.name === target.name);
+
+      if (sourceIndex === targetIndex) {
+        return;
+      }
+
+      const temp = items[sourceIndex];
+      items[sourceIndex] = items[targetIndex];
+      items[targetIndex] = temp;
+
+      map[sourceItem.group] = items;
+      setGroupPropMap(map);
+    } else {
+      const sourceGroupItems = [...groupPropMap[sourceItem.group]];
+      const targetGroupItems = [...groupPropMap[target.group]];
+
+      const sourceItemIndex = sourceGroupItems.findIndex((prop: any) => prop.name === sourceItem.name);
+      const targetItemIndex = target.name ? targetGroupItems.findIndex((prop: any) => prop.name === target.name) : targetGroupItems.length;
+      if (sourceItemIndex === -1 || targetItemIndex === -1) {
+        return;
+      }
+
+      sourceGroupItems.splice(sourceItemIndex, 1);
+      targetGroupItems.splice(targetItemIndex, 0, sourceItem);
+      map[sourceItem.group] = sourceGroupItems;
+      map[target.group] = targetGroupItems;
+    }
+
+    const actions: APIUpdateOptions[] = [
       {
-        groupItems.map((items) => (
-          <Collapse
-            size="small"
-            expandIcon={({ isActive }) => <IconArrowRight isActive={isActive} />}
-            className={styles.propGroup}
-            items={items}
-            defaultActiveKey={groups[1]}
-          />
+        type: 'order',
+        module: 'prop',
+        name: component?.name || '',
+        data: {
+          isOptions: true,
+          names: ([] as string[]).concat(groups.map((group) => (map[group] || []).map((prop: any) => prop.name)).flat()),
+        },
+      }
+    ];
+
+    if (sourceItem.group !== target.group) {
+      actions.unshift({
+        type: 'update',
+        module: 'prop',
+        name: component?.name || '',
+        propName: sourceItem.name,
+        data: {
+          group: target.group,
+        },
+      });
+    }
+
+    await updateComponent(actions);
+  }, [component?.name, updateComponent, groupPropMap]);
+
+  useEffect(() => {
+    const map: Record<string, any[]> = {};
+    groups.forEach((group) => {
+      map[group] = component?.props.filter((prop) => (prop.group || '主要属性') === group) || [];
+    });
+
+    setGroupPropMap(map);
+  }, [component?.props]);
+  return (
+   <>
+      {
+        groups.map((group) => (
+          <PropGroup key={group} group={group} items={groupPropMap[group]} onRemove={handleRemoveProp} onMove={handleMoveProp} />
         ))
       }
     </>
