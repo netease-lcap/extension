@@ -1,11 +1,13 @@
 
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, message } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { AppLayout } from './layouts';
 import { ComponentApiEditor } from './views';
 import { theme } from './styles/theme';
 import { useProjectContextProvider, ProjectContext } from './hooks/useProjectContext'
 import { HelpModal } from './components/HelpModal';
+import { initMessage } from './utils/message';
+
 function App() {
   const {
     helpModalVisible,
@@ -13,15 +15,18 @@ function App() {
     closeHelpModal,
     ...projectContextValue
   } = useProjectContextProvider();
+  const [messageApi, messageContextHolder] = message.useMessage();
+  initMessage(messageApi);
 
   return (
     <ConfigProvider locale={zhCN} theme={theme}>
-      <ProjectContext.Provider value={projectContextValue}>
+      <ProjectContext.Provider value={projectContextValue as any}>
         <AppLayout>
           <ComponentApiEditor />
           <HelpModal src={helpSrc} visible={helpModalVisible} onClose={closeHelpModal} />
         </AppLayout>
       </ProjectContext.Provider>
+      {messageContextHolder}
     </ConfigProvider>
   )
 }

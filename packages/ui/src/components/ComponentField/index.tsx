@@ -151,6 +151,7 @@ export const ComponentField: FC<ComponentFieldProps> = (props) => {
         expandIconPosition="end"
         size="small"
         items={items}
+        style={{ backgroundColor: 'transparent' }}
       />
     </div>
   );

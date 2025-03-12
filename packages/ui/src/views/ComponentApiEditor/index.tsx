@@ -24,6 +24,7 @@ const minSize = 32;
 const defaultSidebarSize = 500;
 const listPanelWidth = 180;
 const defaultLayoutSizes = [defaultSidebarSize, window.innerWidth - defaultSidebarSize];
+const stop = (e: React.WheelEvent<HTMLIFrameElement>) => e.stopPropagation();
 
 export const ComponentApiEditor = () => {
   const [modal, modalContextHolder] = Modal.useModal();
@@ -281,8 +282,8 @@ export const ComponentApiEditor = () => {
                 </div>
               </div>
             </Allotment.Pane>
-            <Allotment.Pane>
-              <div className={styles.preview}></div>
+            <Allotment.Pane minSize={204}>
+              <iframe width="100%" onWheel={stop} onWheelCapture={stop} height="100%" style={{ border: 'none' }} src={`https://localhost:3000/designer/uidev?appId=demo&branch=feauter-uidev314`} />
             </Allotment.Pane>
           </Allotment>
       </ComponentContext.Provider>

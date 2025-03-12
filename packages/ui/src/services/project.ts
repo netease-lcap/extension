@@ -11,6 +11,7 @@ export interface ProjectLibUIInfo {
 export interface ProjectMetaInfo {
   framework: 'vue2' | 'react' | 'vue3' | 'taro';
   name: string;
+  title: string;
   version: string;
   libUIInfo: ProjectLibUIInfo | null;
 }
@@ -54,7 +55,7 @@ export async function getLcapConfig() {
   const response = await http.get<LcapConfig>('/api/project/lcap');
 
   if (!response || !response.data) {
-    return {};
+    return {} as LcapConfig;
   }
 
   return response.data;

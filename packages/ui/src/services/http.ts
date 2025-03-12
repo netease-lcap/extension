@@ -1,5 +1,5 @@
 import Axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { message } from 'antd';
+import { getMessageApi } from '../utils/message';
 
 export interface HttpResponse<T> {
   code: number;
@@ -16,7 +16,7 @@ export const http = Axios.create({
 
 function handleResponse<T>(response: AxiosResponse<HttpResponse<T>>) {
   if (response.status !== 200 || (response.data && response.data.code !== 200)) {
-    message.error(response.data && response.data.message ? response.data.message : '请求失败');
+    getMessageApi()?.error(response.data && response.data.message ? response.data.message : '请求失败');
     return null;
   }
 

@@ -4,3 +4,4 @@ export * from './ComponentTabs';
 export * from './icons';
 export * from './ComponentField';
 export * from './EditorForms';
+export * from './PublishModal';
