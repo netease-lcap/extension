@@ -3,10 +3,9 @@ import { Button, Collapse, Divider, Dropdown, Input } from 'antd';
 import { useComponentContext } from '../../hooks';
 import { useDrop } from 'react-dnd';
 import styles from './index.module.less';
-import { ComponentField, IconAdd } from '../../components';
+import { ComponentField, IconAdd, PropForm } from '../../components';
 import { Empty } from '../../components/Empty';
 import { useProjectContext } from '../../hooks/useProjectContext';
-import { PropForm } from '../../components/PropForm';
 import { isCamelCase } from '../../utils/check';
 import { APIUpdateOptions } from '../../types/component';
 // import { ComponentField } from '../../components';
@@ -100,7 +99,7 @@ const AddProp = ({ group, sourceName }: { group: string, sourceName?: string }) 
 
   const handleOpenChange = useCallback((open: boolean) => {
     if (open) {
-      setAdding(false);
+      setAdding(schemaAttrs.length > 0 ? false : true);
       setName('');
       setError('');
     }
@@ -133,12 +132,12 @@ const AddProp = ({ group, sourceName }: { group: string, sourceName?: string }) 
           {
             adding ? (
               <>
-                <Input size="small" status={error ? 'error' : ''} name={name} onChange={(e) => setName(e.target.value)} style={{ width: 92 }} placeholder="请输入属性名称" />
+                <Input size="small" status={error ? 'error' : ''} value={name} onChange={(e) => setName(e.target.value)} style={{ width: 92, flex: 1 }} placeholder="请输入属性名称" />
                 {error && <div className={styles.error}>{error}</div>}
                 <Button variant="text" color="primary" className={styles.textBtn} onClick={() => handleAddConfirm(name)}>
                   <span>确定</span>
                 </Button>
-                <Button variant="text" color="primary" className={styles.textBtn} onClick={() => setAdding(false)}>
+                <Button variant="text" color="primary" className={styles.textBtn} onClick={() => schemaAttrs.length > 0 ? setAdding(false) : setVisible(false)}>
                   <span>取消</span>
                 </Button>
               </>
@@ -157,6 +156,7 @@ const AddProp = ({ group, sourceName }: { group: string, sourceName?: string }) 
     adding,
     setAdding,
     handleAddConfirm,
+    schemaAttrs,
     name,
     setName,
     error,

@@ -10,15 +10,20 @@ import { ComponentTabs } from '../../components/ComponentTabs';
 import { useToggle } from '../../hooks';
 import ComponentContext from '../../hooks/useComponentContext';
 import { useComponentList, useComponentControl } from './hooks';
+import { ProjectContext } from '../../hooks/useProjectContext';
 import { BaseInfo } from './BaseInfoForm';
 import { PropsEditorView } from './PropsEditorView';
-import { ProjectContext } from '../../hooks/useProjectContext';
+import { EventsEditorView } from './EventsEditorView';
+import { SlotsEditorView } from './SlotsEditorView';
+import { MethodsEditorView } from './MethodsEditorView';
+import { ReadablePropsEditorView } from './ReadablePropForm';
 import { upperFirst } from 'lodash';
 import styles from './index.module.less';
 
 const minSize = 32;
 const defaultSidebarSize = 500;
 const listPanelWidth = 180;
+const defaultLayoutSizes = [defaultSidebarSize, window.innerWidth - defaultSidebarSize];
 
 export const ComponentApiEditor = () => {
   const [modal, modalContextHolder] = Modal.useModal();
@@ -176,7 +181,7 @@ export const ComponentApiEditor = () => {
   return (
     <>
       <ComponentContext.Provider value={contextValue as any}>
-          <Allotment ref={layoutRef} separator={false} onChange={handleLayoutChange}>
+          <Allotment ref={layoutRef} defaultSizes={defaultLayoutSizes} separator={false} onChange={handleLayoutChange}>
             <Allotment.Pane minSize={320}>
               <div className={`${styles.editor}  ${collapsed ? styles.collapsed : ''}`}>
                 <div className={styles.componentList}>
@@ -240,16 +245,22 @@ export const ComponentApiEditor = () => {
                           }
                         </div>
                         <Tabs size="small" className={styles.panelSubHeader} items={editTabs} activeKey={editingModule} onChange={setEditingModule as any} />
-                        <div className={styles.detailPanelContent}>
-                          <div className={styles.helpBlock}>
-                            <Button color="primary" size="small" variant="link" className={styles.helpBtn} onClick={handleOpenHelp}>
-                              <IconHelpVariant />
-                              关于{editTabs.find((tab) => tab.key === editingModule)?.label}
-                            </Button>
+                        <DndProvider backend={HTML5Backend}>
+                          <div className={styles.detailPanelContent}>
+                            <div className={styles.helpBlock}>
+                              <Button color="primary" size="small" variant="link" className={styles.helpBtn} onClick={handleOpenHelp}>
+                                <IconHelpVariant />
+                                关于{editTabs.find((tab) => tab.key === editingModule)?.label}
+                              </Button>
+                            </div>
+                            {editingModule === 'info' && <BaseInfo removeSubComponent={handleRemoveChildComponent} />}
+                            {editingModule === 'prop' && <PropsEditorView />}
+                            {editingModule === 'event' && <EventsEditorView />}
+                            {editingModule === 'slot' && <SlotsEditorView />}
+                            {editingModule === 'method' && <MethodsEditorView />}
+                            {editingModule === 'readableProp' && <ReadablePropsEditorView />}
                           </div>
-                          {editingModule === 'info' && <BaseInfo removeSubComponent={handleRemoveChildComponent} />}
-                          {editingModule === 'prop' && <DndProvider backend={HTML5Backend}><PropsEditorView /></DndProvider>}
-                        </div>
+                        </DndProvider>
                       </div>
                     </Allotment.Pane>
                     <Allotment.Pane minSize={minSize}>

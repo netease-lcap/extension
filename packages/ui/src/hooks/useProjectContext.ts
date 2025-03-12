@@ -2,11 +2,11 @@ import { createContext, useCallback, useEffect, useContext, useState } from 'rea
 import { MaterialSchema, ProjectMetaInfo, getProjectMetaInfo, getProjectSchema } from '../services';
 
 const helpModalSrcMap = {
-  ComponentInfo: 'https://netease-lcap.github.io/extension/frontend/component/api.html#%E7%BB%84%E4%BB%B6%E6%8F%8F%E8%BF%B0',
-  ComponentProp: 'https://netease-lcap.github.io/extension/frontend/component/api.html#%E5%B1%9E%E6%80%A7%E6%8F%8F%E8%BF%B0-%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE',
-  ComponentEvent: 'https://netease-lcap.github.io/extension/frontend/component/api.html#%E4%BA%8B%E4%BB%B6%E6%8F%8F%E8%BF%B0',
-  ComponentSlot: 'https://netease-lcap.github.io/extension/frontend/component/api.html#%E6%8F%92%E6%A7%BD%E6%8F%8F%E8%BF%B0',
-  ComponentMethod: 'https://netease-lcap.github.io/extension/frontend/component/api.html#%E6%96%B9%E6%B3%95%E6%8F%8F%E8%BF%B0',
+  ComponentInfo: 'https://netease-lcap.github.io/extension/frontend/component/api.html#_1-%E7%BB%84%E4%BB%B6%E6%8F%8F%E8%BF%B0',
+  ComponentProp: 'https://netease-lcap.github.io/extension/frontend/component/api.html#_2-%E5%B1%9E%E6%80%A7%E6%8F%8F%E8%BF%B0',
+  ComponentEvent: 'https://netease-lcap.github.io/extension/frontend/component/api.html#_3-%E4%BA%8B%E4%BB%B6%E6%8F%8F%E8%BF%B0',
+  ComponentSlot: 'https://netease-lcap.github.io/extension/frontend/component/api.html#_4-%E6%8F%92%E6%A7%BD%E6%8F%8F%E8%BF%B0',
+  ComponentMethod: 'https://netease-lcap.github.io/extension/frontend/component/api.html#_5-%E6%96%B9%E6%B3%95%E6%8F%8F%E8%BF%B0',
   ComponentReadableProp: 'https://netease-lcap.github.io/extension/frontend/component/platform/accessibility.html',
   ComponentIdeUsage: 'https://netease-lcap.github.io/extension/frontend/component/ide.html',
 };

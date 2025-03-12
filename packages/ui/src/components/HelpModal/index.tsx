@@ -117,7 +117,7 @@ export const HelpModal = ({ visible, src = defaultSrc, onClose }: HelpModalProps
     <Draggable
       disabled={disableDrag}
       bounds={bounds}
-      nodeRef={draggleRef}
+      nodeRef={draggleRef as any}
       onStart={handleDragStart}
     >
       {Modal}

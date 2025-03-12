@@ -92,7 +92,7 @@ export const ComponentField: FC<ComponentFieldProps> = (props) => {
         key: '1',
         styles: {
           header: {
-            backgroundColor: isOver ? 'rgba(245, 245, 245, 0.7)' : '#fff',
+            backgroundColor: isOver ? 'rgba(245, 245, 245, 0.7)' : 'transparent',
             color: 'rgba(29, 33, 41, 1)',
             fontSize: 12,
             fontWeight: 500,
