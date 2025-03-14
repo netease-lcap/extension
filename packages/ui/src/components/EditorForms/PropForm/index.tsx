@@ -5,7 +5,7 @@ import { NTypeSetter } from '../../NTypeSetter';
 import { useComponentContext } from '../../../hooks';
 import styles from './index.module.less';
 import { NType } from '../../../types';
-import { transformNType } from '../../../utils/transform';
+import { transformNType, transformDefaultValue } from '../../../utils/transform';
 import { useTypeAST } from '../hooks';
 
 export interface PropFormProps {
@@ -17,7 +17,10 @@ export const PropForm = ({ propData }: PropFormProps) => {
   const { updateComponent, component } = useComponentContext();
 
   useEffect(() => {
-    form.setFieldsValue(propData);
+    form.setFieldsValue({
+      ...propData,
+      defaultValue: transformDefaultValue(propData.defaultValue),
+    });
   }, [form, propData]);
 
   const handleRequestChange = useCallback((name: keyof PropDeclaration, value: any) => {
@@ -55,6 +58,7 @@ export const PropForm = ({ propData }: PropFormProps) => {
       'settable',
       'bindHide',
       'bindOpen',
+      'defaultValue',
     ].reduce((acc, key) => {
       return {
         ...acc,
@@ -75,6 +79,13 @@ export const PropForm = ({ propData }: PropFormProps) => {
       </Form.Item>
       <Form.Item label="类型">
         <NTypeSetter type={typeAST} onChange={handleChangeType} />
+      </Form.Item>
+      <Form.Item name="defaultValue" label="默认值">
+        <Input
+          addonBefore={<span> const {propData.name} = </span>}
+          placeholder="请输入默认值, 例如: '123' true false null 3"
+          onBlur={handleMap.defaultValue}
+        />
       </Form.Item>
       <Form.Item name="sync" className={styles.horizontalItem} layout="horizontal" label="是否支持双向绑定">
         <Switch onChange={handleMap.sync} />

@@ -1,4 +1,6 @@
+import { isNil } from 'lodash';
 import { NType, NArrayType, NStructType, NMapType, NUnionType, NFunctionType, NUnknowType } from '../types';
+import { DefaultValue } from '@nasl/types/nasl.ui.ast';
 
 export function transformNType(type: NType): string {
   switch (type.type) {
@@ -30,5 +32,26 @@ export function transformNType(type: NType): string {
       return (type as NUnknowType).raw;
     default:
       return 'any';
+  }
+}
+
+export function transformDefaultValue(defaultValue?: DefaultValue): string {
+  if (!defaultValue?.expression) {
+    return '';
+  }
+
+  switch (defaultValue.expression?.concept) {
+    case 'NullLiteral':
+      return 'null';
+    case 'BooleanLiteral':
+      return defaultValue.expression.value;
+    case 'StringLiteral':
+      return `'${defaultValue.expression.value}'`;
+    case 'NumericLiteral':
+      return defaultValue.expression.value;
+    case 'NewList':
+      return `[${defaultValue.expression.items.map((item) => transformDefaultValue({ expression: item } as DefaultValue)).filter((v) => !isNil(v)).join(', ')}]`;
+    default:
+      return '';
   }
 }
