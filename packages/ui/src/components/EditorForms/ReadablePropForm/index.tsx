@@ -2,6 +2,11 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { Form, Input } from 'antd';
 import { PropDeclaration } from '@nasl/types/nasl.ui.ast';
 import { useComponentContext } from '../../../hooks';
+import { NTypeSetter } from '../../NTypeSetter';
+import { useTypeAST } from '../hooks';
+import { NType } from '../../../types';
+import { transformNType } from '../../../utils/transform';
+
 export interface ReadablePropFormProps {
   propData: PropDeclaration;
 }
@@ -45,6 +50,13 @@ export const ReadablePropForm = ({ propData }: ReadablePropFormProps) => {
     }, {} as Record<keyof PropDeclaration, () => void>);
   }, [form, handleRequestChange]);
 
+  const [typeAST, handleChangeType] = useTypeAST(
+    component?.typeMap.readableProp[propData.name],
+    useCallback((type: NType) => {
+      handleRequestChange('tsType', transformNType(type));
+    }, [handleRequestChange]),
+  );
+
   return (
     <Form form={form} layout="vertical" colon={false}>
       <Form.Item name="title" label="标题">
@@ -54,7 +66,7 @@ export const ReadablePropForm = ({ propData }: ReadablePropFormProps) => {
         <Input onBlur={handleMap.description} />
       </Form.Item>
       <Form.Item name="tsType" label="类型">
-        <Input onBlur={handleMap.tsType} />
+        <NTypeSetter type={typeAST} onChange={handleChangeType} />
       </Form.Item>
     </Form>
   );

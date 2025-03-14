@@ -283,7 +283,7 @@ export const ComponentApiEditor = () => {
               </div>
             </Allotment.Pane>
             <Allotment.Pane minSize={204}>
-              <iframe width="100%" onWheel={stop} onWheelCapture={stop} height="100%" style={{ border: 'none' }} src={`https://localhost:3000/designer/uidev?appId=demo&branch=feauter-uidev314`} />
+              {/* <iframe width="100%" onWheel={stop} onWheelCapture={stop} height="100%" style={{ border: 'none' }} src={`https://localhost:3000/designer/uidev?appId=demo&branch=feauter-uidev314`} /> */}
             </Allotment.Pane>
           </Allotment>
       </ComponentContext.Provider>

@@ -1,8 +1,13 @@
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Form, Input, Switch } from 'antd';
 import { PropDeclaration } from '@nasl/types/nasl.ui.ast';
+import { NTypeSetter } from '../../NTypeSetter';
 import { useComponentContext } from '../../../hooks';
 import styles from './index.module.less';
+import { NType } from '../../../types';
+import { transformNType } from '../../../utils/transform';
+import { useTypeAST } from '../hooks';
+
 export interface PropFormProps {
   propData: PropDeclaration;
 }
@@ -20,6 +25,10 @@ export const PropForm = ({ propData }: PropFormProps) => {
       return;
     }
 
+    if (value === propData[name]) {
+      return;
+    }
+
     updateComponent({
       type: 'update',
       module: 'prop',
@@ -29,13 +38,19 @@ export const PropForm = ({ propData }: PropFormProps) => {
         [name]: value,
       },
     });
-  }, [propData.name, component?.name, updateComponent]);
+  }, [propData, component?.name, updateComponent]);
+
+  const [typeAST, handleChangeType] = useTypeAST(
+    component?.typeMap.prop[propData.name],
+    useCallback((type: NType) => {
+      handleRequestChange('tsType', transformNType(type));
+    }, [handleRequestChange]),
+  );
 
   const handleMap: Record<keyof PropDeclaration, () => void> = useMemo(() => {
     return [
       'title',
       'description',
-      'tsType',
       'sync',
       'settable',
       'bindHide',
@@ -58,8 +73,8 @@ export const PropForm = ({ propData }: PropFormProps) => {
       <Form.Item name="description" label="描述">
         <Input onBlur={handleMap.description} />
       </Form.Item>
-      <Form.Item name="tsType" label="类型">
-        <Input onBlur={handleMap.tsType} />
+      <Form.Item label="类型">
+        <NTypeSetter type={typeAST} onChange={handleChangeType} />
       </Form.Item>
       <Form.Item name="sync" className={styles.horizontalItem} layout="horizontal" label="是否支持双向绑定">
         <Switch onChange={handleMap.sync} />
