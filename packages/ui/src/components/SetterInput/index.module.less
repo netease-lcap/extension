@@ -1,0 +1,48 @@
+.setterInput {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+
+  .input {
+    flex: 1;
+  }
+
+  .action {
+    flex-shrink: 0;
+  }
+}
+
+.setterPopContent {
+  width: 256px;
+  max-height: 400px;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .optionsSetting {
+    margin-top: 8px;
+  }
+}
+
+.optionsSetting {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.optionsSettingItem {
+  display: flex;
+  align-items: flex-start;
+
+  .label {
+    height: 28px;
+    line-height: 28px;
+    font-size: 12px;
+    width: 80px;
+  }
+
+  .input {
+    flex: 1;
+  }
+}
