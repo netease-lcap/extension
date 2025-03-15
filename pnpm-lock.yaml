@@ -466,6 +466,9 @@ importers:
 
   packages/ui:
     dependencies:
+      '@ant-design/icons':
+        specifier: ^5.6.1
+        version: 5.6.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       allotment:
         specifier: ^1.20.3
         version: 1.20.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)

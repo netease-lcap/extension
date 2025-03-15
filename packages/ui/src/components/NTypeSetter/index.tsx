@@ -4,6 +4,7 @@ import { cloneDeep } from 'lodash';
 import { NTypeInput } from './NTypeInput';
 import { NType } from '../../types';
 import classNames from 'classnames';
+import { SettingOutlined } from '@ant-design/icons';
 import { transformNType } from '../../utils/transform';
 import styles from './index.module.less';
 
@@ -63,7 +64,9 @@ export const NTypeSetter = ({ type, onChange = () => {}, className = '', style =
         placement="bottomRight"
         onConfirm={handleConfirm}
       >
-        <Button className={styles.action}>设置类型</Button>
+        <Button className={styles.action}>
+          <SettingOutlined style={{ width: 16, height: 16, justifyContent: 'center' }} />
+        </Button>
       </Popconfirm>
     </div>
   );

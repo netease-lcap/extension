@@ -23,7 +23,8 @@ import styles from './index.module.less';
 const minSize = 32;
 const defaultSidebarSize = 500;
 const listPanelWidth = 180;
-const defaultLayoutSizes = [defaultSidebarSize, window.innerWidth - defaultSidebarSize];
+const viewPanelWidth = Math.max(window.innerWidth, 1200);
+const defaultLayoutSizes = [defaultSidebarSize, viewPanelWidth - defaultSidebarSize];
 const stop = (e: React.WheelEvent<HTMLIFrameElement>) => e.stopPropagation();
 
 export const ComponentApiEditor = () => {
@@ -84,7 +85,7 @@ export const ComponentApiEditor = () => {
   const handleToggleCollapsed = useCallback(() => {
     toggleCollapsed();
     const sidebarSize = collapsed ? sidebarSizeRef.current + listPanelWidth : sidebarSizeRef.current - listPanelWidth;
-    layoutRef.current?.resize([sidebarSize, window.innerWidth - sidebarSize]);
+    layoutRef.current?.resize([sidebarSize, viewPanelWidth - sidebarSize]);
   }, [collapsed]);
 
   const componentMenuProps = useMemo(() => {
