@@ -28,7 +28,7 @@ export const PropForm = ({ propData }: PropFormProps) => {
       return;
     }
 
-    if (value === propData[name]) {
+    if (value === (name === 'defaultValue' ? transformDefaultValue(propData.defaultValue) : propData[name])) {
       return;
     }
 
