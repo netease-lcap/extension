@@ -7,9 +7,8 @@ import { theme } from './styles/theme';
 import { useProjectContextProvider, ProjectContext } from './hooks/useProjectContext'
 import { HelpModal } from './components/HelpModal';
 import { initMessage } from './utils/message';
-import json5 from 'json5';
 
-window.json5 = json5;
+const onlyEditor = new URL(location.href).searchParams.get('editor') === '1';
 
 function App() {
   const {
@@ -21,11 +20,12 @@ function App() {
   const [messageApi, messageContextHolder] = message.useMessage();
   initMessage(messageApi);
 
+
   return (
     <ConfigProvider locale={zhCN} theme={theme}>
       <ProjectContext.Provider value={projectContextValue as any}>
-        <AppLayout>
-          <ComponentApiEditor />
+        <AppLayout hiddenHeader={onlyEditor}>
+          <ComponentApiEditor hiddenPreview={onlyEditor} />
           <HelpModal src={helpSrc} visible={helpModalVisible} onClose={closeHelpModal} />
         </AppLayout>
       </ProjectContext.Provider>
