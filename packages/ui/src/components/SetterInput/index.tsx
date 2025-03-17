@@ -83,20 +83,21 @@ export const SetterInput = (props: SetterInputProps) => {
   } = props;
   const [setter, setSetter] = useState<BaseSetter>({ concept: 'InputSetter' });
 
-  useEffect(() => {
-    const v = value || { concept: 'InputSetter' };
-    if (JSON.stringify(setter) !== JSON.stringify(v)) {
-      const setterOptions = cloneDeep(v);
-      if (['EnumSelectSetter', 'CapsulesSetter'].includes(setterOptions.concept)) {
-        (setterOptions as EnumSelectSetter | CapsulesSetter).options = (setterOptions as EnumSelectSetter | CapsulesSetter).options.map((op) => ({
-          ...op,
-          value: JSON.stringify(op.value),
-        }));
-      }
-
-      setSetter(setterOptions);
+  const handleSetSetter = useCallback((v: BaseSetter) => {
+    const setOpt = cloneDeep(v || { concept: 'InputSetter' });
+    if (['EnumSelectSetter', 'CapsulesSetter'].includes(setOpt.concept)) {
+      (setOpt as EnumSelectSetter | CapsulesSetter).options = (setOpt as EnumSelectSetter | CapsulesSetter).options.map((op) => ({
+        ...op,
+        value: JSON.stringify(op.value),
+      }));
     }
-  }, [value]);
+
+    setSetter(setOpt);
+  }, []);
+
+  useEffect(() => {
+    handleSetSetter(value);
+  }, [value, handleSetSetter]);
 
   const rootClassName = useMemo(() => {
     return classNames(styles.setterInput, className);
@@ -111,9 +112,9 @@ export const SetterInput = (props: SetterInputProps) => {
 
   const handleOpenChange = useCallback((open: boolean) => {
     if (open) {
-      setSetter(cloneDeep(value || { concept: 'InputSetter' }));
+      handleSetSetter(value);
     }
-  }, [value]);
+  }, [value, handleSetSetter]);
 
   const handleConfirm = useCallback(() => {
     onChange(setter);
