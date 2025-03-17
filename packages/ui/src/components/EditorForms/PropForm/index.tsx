@@ -67,6 +67,50 @@ export const PropForm = ({ propData }: PropFormProps) => {
     });
   }, [form, propData]);
 
+  const requestChangeSetter = useCallback((value: any) => {
+    if (!component?.name) {
+      return;
+    }
+
+    let tsType = '';
+    if (['EnumSelectSetter', 'CapsulesSetter'].includes(value.concept)) {
+      const vals: string[] = [];
+      value = {
+        ...value,
+        options: value.options.map((item: any) => {
+          const a = { ...item };
+          vals.push(a.value);
+          delete a.value;
+          return a;
+        }),
+      };
+
+      if (vals.length > 0) {
+        tsType = transformNType(getUnionType(vals, component?.typeMap.prop[propData.name]));
+      }
+    }
+
+    value = JSON.stringify(value);
+    if (tsType) {
+      const data: any = {
+        setter: value,
+      };
+
+      if (tsType) {
+        data.tsType = tsType;
+      }
+
+      updateComponent({
+        type: 'update',
+        module: 'prop',
+        name: component.name,
+        propName: propData.name,
+        data,
+      });
+      return;
+    }
+  }, [component?.name, propData.name, updateComponent, component?.typeMap.prop]);
+
   const handleRequestChange = useCallback((name: keyof PropDeclaration, value: any) => {
     if (!component?.name) {
       return;
@@ -77,43 +121,7 @@ export const PropForm = ({ propData }: PropFormProps) => {
     }
 
     if (name === 'setter') {
-      let tsType = '';
-      if (['EnumSelectSetter', 'CapsulesSetter'].includes(value.concept)) {
-        const vals: string[] = [];
-        value = {
-          ...value,
-          options: value.options.map((item: any) => {
-            const a = { ...item };
-            vals.push(a.value);
-            delete a.value;
-            return a;
-          }),
-        };
-
-        if (vals.length > 0) {
-          tsType = transformNType(getUnionType(vals, component?.typeMap.prop[propData.name]));
-        }
-      }
-
-      value = JSON.stringify(value);
-      if (tsType) {
-        const data: any = {
-          setter: value,
-        };
-
-        if (tsType) {
-          data.tsType = tsType;
-        }
-
-        updateComponent({
-          type: 'update',
-          module: 'prop',
-          name: component.name,
-          propName: propData.name,
-          data,
-        });
-        return;
-      }
+      return requestChangeSetter(value);
     }
 
     updateComponent({
@@ -129,7 +137,7 @@ export const PropForm = ({ propData }: PropFormProps) => {
     propData,
     component?.name,
     updateComponent,
-    component?.typeMap.prop[propData.name],
+    requestChangeSetter,
   ]);
 
   const [typeAST, handleChangeType] = useTypeAST(
