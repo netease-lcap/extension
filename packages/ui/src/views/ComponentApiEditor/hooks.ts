@@ -47,22 +47,22 @@ export const useComponentControl = (componentList: ComponentMetaInfo[]) => {
     }
   }, [componentList, selected]);
 
-  const handleAdd = async (name: string) => {
+  const handleAdd = useCallback(async (name: string) => {
     await createComponent(name);
-  };
+  }, []);
 
-  const handleRemove = async (name: string) => {
+  const handleRemove = useCallback(async (name: string) => {
     await removeComponent(name);
-  };
+  }, []);
 
-  const loadComponent = async (name: string) => {
+  const loadComponent = useCallback(async (name: string) => {
     if (!name) {
       return;
     }
 
     const component = await getComponentDetail(name);
     setComponent(component);
-  };
+  }, []);
 
   useEffect(() => {
     if (selected) {
@@ -72,10 +72,10 @@ export const useComponentControl = (componentList: ComponentMetaInfo[]) => {
     }
 
     setEditingName(selected);
-  }, [selected]);
+  }, [selected, loadComponent]);
 
   useHandleNaslChange(
-    useCallback(() => loadComponent(selected), [selected]),
+    useCallback(() => loadComponent(selected), [selected, loadComponent]),
   );
 
   useEffect(() => {

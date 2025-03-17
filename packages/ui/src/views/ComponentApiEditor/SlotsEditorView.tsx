@@ -6,6 +6,62 @@ import { ComponentField, IconAdd, SlotForm } from '../../components';
 import { isCamelCase } from '../../utils/check';
 import { normalizeEventName, normalizeSlotName } from '../../utils/nasl';
 import styles from './index.module.less';
+import { APIUpdateOptions } from '../../types/component';
+
+const useSlotActionHook = () => {
+  const { component } = useComponentContext();
+
+  return useCallback((action: APIUpdateOptions) => {
+    if (!component?.name) {
+      return [];
+    }
+
+    const actions: APIUpdateOptions[] = [
+      action,
+    ];
+
+   if (action.type === 'add') {
+    if (!component.ideusage) {
+      actions.push({
+        type: 'update',
+        module: 'info',
+        name: component.name,
+        data: {
+          ideusage: {
+            idetype: 'container',
+          },
+        },
+      });
+    } else if (component.ideusage.idetype === 'element') {
+      actions.push({
+        type: 'update',
+        module: 'info',
+        name: component.name,
+        data: {
+          ideusage: {
+            ...component.ideusage,
+            idetype: 'container',
+          },
+        },
+        });
+      }
+    } else if (action.type === 'remove' && component.ideusage && component.ideusage.idetype === 'container') {
+      actions.push({
+        type: 'update',
+        module: 'info',
+        name: component.name,
+        data: {
+          ideusage: {
+            ...component.ideusage,
+            idetype: 'element',
+          },
+        },
+      });
+    }
+
+    return actions;
+  }, [component?.name, component?.ideusage]);
+};
 
 export const AddSlot = ({ sourceName }: { sourceName?: string }) => {
   const { getComponentSchema } = useProjectContext();
@@ -28,6 +84,8 @@ export const AddSlot = ({ sourceName }: { sourceName?: string }) => {
     return schema.slots || [];
   }, [sourceName, getComponentSchema]);
 
+  const getSlotOptionActions = useSlotActionHook();
+
   const handleAddConfirm = useCallback(async(name: string) => {
     if (!component?.name) {
       return;
@@ -45,24 +103,27 @@ export const AddSlot = ({ sourceName }: { sourceName?: string }) => {
 
     setError('');
 
-    await updateComponent({
+    await updateComponent(getSlotOptionActions({
       type: 'add',
       module: 'slot',
       name: component.name,
-      data: {
-        name,
-      },
-    });
+      data: { name },
+    }));
 
     setVisible(false);
-  }, [component?.slots, component?.name, updateComponent]);
+  }, [
+    component?.slots,
+    component?.name,
+    updateComponent,
+    getSlotOptionActions,
+  ]);
 
   const handleAddSchemaProp = useCallback(async (propSchema: any) => {
     if (!component?.name) {
       return;
     }
 
-    await updateComponent({
+    await updateComponent(getSlotOptionActions({
       type: 'add',
       module: 'slot',
       name: component.name,
@@ -70,8 +131,8 @@ export const AddSlot = ({ sourceName }: { sourceName?: string }) => {
         name: propSchema.name,
         schema: propSchema,
       },
-    });
-  }, [component?.name, updateComponent]);
+    }));
+  }, [component?.name, updateComponent, getSlotOptionActions]);
 
   const handleOpenChange = useCallback((open: boolean) => {
     if (open) {
@@ -152,6 +213,8 @@ export const SlotsEditorView = () => {
   const { component, updateComponent, modal } = useComponentContext();
   const [slots, setSlots] = useState<SlotDeclaration[]>([]);
 
+  const getSlotOptionActions = useSlotActionHook();
+
   useEffect(() => {
     setSlots(component?.slots || []);
   }, [component?.slots]);
@@ -164,15 +227,15 @@ export const SlotsEditorView = () => {
     modal.confirm({
       title: `确定删除插槽 ”${name}“ 吗？`,
       onOk: async () => {
-        await updateComponent({
+        await updateComponent(getSlotOptionActions({
           type: 'remove',
           module: 'slot',
           name: component.name,
           propName: name,
-        });
+        }));
       },
     });
-  }, [component?.name, updateComponent, modal]);
+  }, [component?.name, updateComponent, modal, getSlotOptionActions]);
 
   const handleMoveProp = useCallback(async (sourceItem: { group: string, name: string }, target: { group: string, name?: string }) => {
     if (!component || !component.name) {
