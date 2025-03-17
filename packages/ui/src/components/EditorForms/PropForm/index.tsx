@@ -5,13 +5,55 @@ import { NTypeSetter } from '../../NTypeSetter';
 import { SetterInput } from '../../SetterInput';
 import { useComponentContext } from '../../../hooks';
 import styles from './index.module.less';
-import { NType } from '../../../types';
+import { NType, NUnionType, NUnknowType } from '../../../types';
 import { transformNType, transformDefaultValue } from '../../../utils/transform';
 import { getInputValueStringify } from '../../../utils/nasl';
 import { useTypeAST } from '../hooks';
 
 export interface PropFormProps {
   propData: PropDeclaration;
+}
+
+function getUnionType(vals: string[], type?: NType | undefined) {
+  const uType = {
+    type: 'union',
+    value: vals.map((v) => ({
+      type: 'unknow',
+      raw: v,
+    })),
+  } as NUnionType;
+
+  if (!type) {
+    return uType;
+  }
+
+  if (type.type === 'union') {
+    uType.value = [
+      ...uType.value,
+      ...(type as NUnionType).value.filter((n) => {
+        if (n.type !== 'unknow') {
+          return true;
+        }
+
+        return !uType.value.some((v) => {
+          let v1, v2;
+          try {
+            v1 = eval((v as NUnknowType).raw);
+            v2 = eval((n as NUnknowType).raw);
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          } catch (e) {
+            return false;
+          }
+
+          return v1 === v2;
+        });
+      }),
+    ];
+  } else {
+    uType.value = [...uType.value, type];
+  }
+
+  return uType;
 }
 
 export const PropForm = ({ propData }: PropFormProps) => {
@@ -35,8 +77,43 @@ export const PropForm = ({ propData }: PropFormProps) => {
     }
 
     if (name === 'setter') {
+      let tsType = '';
+      if (['EnumSelectSetter', 'CapsulesSetter'].includes(value.concept)) {
+        const vals: string[] = [];
+        value = {
+          ...value,
+          options: value.options.map((item: any) => {
+            const a = { ...item };
+            vals.push(a.value);
+            delete a.value;
+            return a;
+          }),
+        };
+
+        if (vals.length > 0) {
+          tsType = transformNType(getUnionType(vals, component?.typeMap.prop[propData.name]));
+        }
+      }
+
       value = JSON.stringify(value);
-      // TODO set tstype
+      if (tsType) {
+        const data: any = {
+          setter: value,
+        };
+
+        if (tsType) {
+          data.tsType = tsType;
+        }
+
+        updateComponent({
+          type: 'update',
+          module: 'prop',
+          name: component.name,
+          propName: propData.name,
+          data,
+        });
+        return;
+      }
     }
 
     updateComponent({
@@ -48,7 +125,12 @@ export const PropForm = ({ propData }: PropFormProps) => {
         [name]: value,
       },
     });
-  }, [propData, component?.name, updateComponent]);
+  }, [
+    propData,
+    component?.name,
+    updateComponent,
+    component?.typeMap.prop[propData.name],
+  ]);
 
   const [typeAST, handleChangeType] = useTypeAST(
     component?.typeMap.prop[propData.name],
@@ -102,7 +184,7 @@ export const PropForm = ({ propData }: PropFormProps) => {
         />
       </Form.Item>
       <Form.Item name="setter" label="设置器">
-        <SetterInput value={propData.setter} onChange={handleMap.setter} />
+        <SetterInput value={propData.setter} type={typeAST} onChange={handleMap.setter} />
       </Form.Item>
       <Form.Item name="sync" className={styles.horizontalItem} layout="horizontal" label="是否支持双向绑定">
         <Switch onChange={handleMap.sync} />

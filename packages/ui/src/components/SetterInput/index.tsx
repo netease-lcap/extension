@@ -1,5 +1,5 @@
 import { HTMLAttributes, useCallback, useEffect, useMemo, useState } from 'react';
-import type { BaseSetter, EnumSelectSetter, CapsulesSetter } from '@nasl/types/nasl.ui.ast';
+import type { BaseSetter, EnumSelectSetter, CapsulesSetter, SetterOption } from '@nasl/types/nasl.ui.ast';
 import { Input, Popconfirm, Button, Select, Divider } from 'antd';
 import { SettingOutlined } from '@ant-design/icons';
 import cloneDeep from 'lodash/cloneDeep';
@@ -11,10 +11,12 @@ import {
   IconSetterOptions,
   SelectOptions,
 } from './SetterOptions';
+import { NType, NArrayType, NUnionType, NUnknowType } from '../../types';
 import styles from './index.module.less';
 
 export interface SetterInputProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
   value: BaseSetter;
+  type: NType;
   onChange: (value: BaseSetter) => void;
 }
 
@@ -26,16 +28,59 @@ const OptionsMap = {
   CapsulesSetter: SelectOptions,
 };
 
+function genNormalVal(v: string) {
+  try {
+    return eval(v);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e) {
+    return null;
+  }
+}
+
+const getSetterOptions = (type: NType, multiple: boolean) => {
+  let utype: NUnionType | undefined;
+
+  if (type.type === 'array' && multiple && (type as NArrayType).value && (type as NArrayType).value.type === 'union' && ((type as NArrayType).value as NUnionType).value.length > 0) {
+    utype = (type as NArrayType).value as NUnionType;
+  } else if (type.type === 'union' && (type as NUnionType).value.length > 0 && !multiple) {
+    utype = type as NUnionType;
+  }
+
+  if (!utype) {
+    return [] as SetterOption[];
+  }
+
+  let end = utype.value.findIndex((n) => {
+    if (n.type !== 'unknow') {
+      return true;
+    }
+
+    const val = genNormalVal((n as NUnknowType).raw);
+    return typeof val !== 'string' && typeof val !== 'number';
+  });
+
+  if (end === -1) {
+    end = utype.value.length;
+  }
+
+  return utype.value.slice(0, end).map((n) => {
+    const v = eval((n as NUnknowType).raw);
+    return {
+      title: String(v),
+      value: JSON.stringify(v),
+    } as SetterOption;
+  });
+}
 
 export const SetterInput = (props: SetterInputProps) => {
   const {
     value,
+    type,
     onChange,
     className = '',
     style = {},
     ...rest
   } = props;
-
   const [setter, setSetter] = useState<BaseSetter>({ concept: 'InputSetter' });
 
   useEffect(() => {
@@ -71,14 +116,14 @@ export const SetterInput = (props: SetterInputProps) => {
     switch (v) {
       case 'EnumSelectSetter':
       case 'CapsulesSetter':
-        (s as EnumSelectSetter | CapsulesSetter).options = [];
+        (s as EnumSelectSetter | CapsulesSetter).options = getSetterOptions(type, false);
         break;
       default:
         break;
     }
 
     setSetter(s);
-  }, []);
+  }, [type]);
 
   const handleChangeOptions = useCallback((name: string, v: any) => {
     setSetter({

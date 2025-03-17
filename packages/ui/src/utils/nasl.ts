@@ -29,6 +29,6 @@ export function getInputValueStringify(value: string) {
     return JSON.stringify(json5.parse(value));
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (e) {
-    return value;
+    return JSON.stringify(value);
   }
 }

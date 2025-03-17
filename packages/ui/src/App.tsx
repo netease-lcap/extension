@@ -7,6 +7,9 @@ import { theme } from './styles/theme';
 import { useProjectContextProvider, ProjectContext } from './hooks/useProjectContext'
 import { HelpModal } from './components/HelpModal';
 import { initMessage } from './utils/message';
+import json5 from 'json5';
+
+window.json5 = json5;
 
 function App() {
   const {

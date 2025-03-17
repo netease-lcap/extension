@@ -1,8 +1,9 @@
 import { useMemo, useCallback } from 'react';
-import { Form, Input, Switch, Button, Flex } from 'antd';
+import { Form, Input, Button, Flex } from 'antd';
 import type { EnumSelectSetter, CapsulesSetter, SetterOption } from '@nasl/types/nasl.ui.ast';
 import styles from './index.module.less';
 import { IconAdd, IconTrash } from '../../icons';
+import { getInputValueStringify } from '../../../utils/nasl';
 
 type SelectSetter = EnumSelectSetter | CapsulesSetter;
 export interface SelectOptionsProps {
@@ -50,7 +51,7 @@ const OptionInput = ({ value, showIcon, onChange }: { value: SelectSetterOption[
             }
             <Flex gap={8}>
               <span className={styles.optionLabel}>值</span>
-              <Input value={item.value} onChange={(e) => handleChangeOption(index, { ...item, value: e.target.value || '\'\'' })} />
+              <Input value={item.value} onChange={(e) => handleChangeOption(index, { ...item, value: getInputValueStringify(e.target.value) || '\'\'' })} />
             </Flex>
           </Flex>
         ))
@@ -76,14 +77,14 @@ export const SelectOptions = (props: SelectOptionsProps) => {
   return (
     <Form layout="vertical">
       <Form.Item label="选项">
-        <OptionInput value={setter.options} showIcon={setter.concept === 'EnumSelectSetter'} onChange={changeActions.options} />
+        <OptionInput value={setter.options} showIcon={setter.concept === 'CapsulesSetter'} onChange={changeActions.options} />
       </Form.Item>
-      <Form.Item label="是否多选">
+      {/* <Form.Item label="是否多选">
         <Switch
           checked={setter.multiple}
           onChange={changeActions.multiple}
         />
-      </Form.Item>
+      </Form.Item> */}
     </Form>
   );
 };

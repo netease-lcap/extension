@@ -25,7 +25,7 @@ export function transformNType(type: NType): string {
     case 'map':
       return `nasl.collection.Map<${transformNType((type as NMapType).key)}, ${transformNType((type as NMapType).value)}>`;
     case 'union':
-      return (type as NUnionType).value.map((item) => ['function', 'unknow'].includes(item.type) ? `(${transformNType(item)})` : transformNType(item)).join(' | ');
+      return (type as NUnionType).value.map((item) => ['function'].includes(item.type) ? `(${transformNType(item)})` : transformNType(item)).join(' | ');
     case 'function':
       return `(${(type as NFunctionType).params.map((item) => `${item.name}: ${transformNType(item.type)}`).join(', ')}) => ${!(type as NFunctionType).returnType || (type as NFunctionType).returnType === 'void' ? 'void' : transformNType((type as NFunctionType).returnType as NType)}`;
     case 'unknow':
