@@ -5,8 +5,10 @@ import { useComponentContext } from '../../../hooks';
 import { IconAdd, IconTrash } from '../../icons';
 import { NFunctionParam, NType, TypeMap } from '../../../types';
 import { transformNType } from '../../../utils/transform';
+import { getInputValueStringify } from '../../../utils/nasl';
 import { NTypeSetter } from '../../NTypeSetter';
 import styles from './index.module.css';
+
 export interface MethodFormProps {
   methodData: LogicDeclaration;
 }
@@ -162,7 +164,7 @@ export const MethodForm = ({ methodData }: MethodFormProps) => {
                     placeholder="默认值"
                     style={{ flex: 1 }}
                     value={param.defaultValue}
-                    onChange={(e) => typeASTActions.updateParam(index, { ...param, defaultValue: e.target.value }, false)}
+                    onChange={(e) => typeASTActions.updateParam(index, { ...param, defaultValue: getInputValueStringify(e.target.value) }, false)}
                     onBlur={() => typeASTActions.updateParam(index, { ...param })}
                   />
                 </Flex>

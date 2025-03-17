@@ -7,6 +7,7 @@ import { useComponentContext } from '../../../hooks';
 import styles from './index.module.less';
 import { NType } from '../../../types';
 import { transformNType, transformDefaultValue } from '../../../utils/transform';
+import { getInputValueStringify } from '../../../utils/nasl';
 import { useTypeAST } from '../hooks';
 
 export interface PropFormProps {
@@ -70,7 +71,13 @@ export const PropForm = ({ propData }: PropFormProps) => {
       return {
         ...acc,
         [key]: () => {
-          handleRequestChange(key as keyof PropDeclaration, form.getFieldValue(key));
+          let val = form.getFieldValue(key);
+
+          if (key === 'defaultValue') {
+            val = getInputValueStringify(val);
+          }
+
+          handleRequestChange(key as keyof PropDeclaration, val);
         },
       }
     }, {} as Record<keyof PropDeclaration, () => void>);

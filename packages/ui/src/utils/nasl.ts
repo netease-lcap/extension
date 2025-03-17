@@ -1,3 +1,4 @@
+import json5 from 'json5';
 import { upperFirst } from "lodash";
 
 const eventRegex = /^on[A-Z].*/;
@@ -17,4 +18,17 @@ export function normalizeSlotName(name: string) {
   }
 
   return name.includes('-') ? `slot-${name}` : `slot${upperFirst(name)}`;
+}
+
+export function getInputValueStringify(value: string) {
+  if (!value) {
+    return '';
+  }
+
+  try {
+    return JSON.stringify(json5.parse(value));
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (e) {
+    return value;
+  }
 }
