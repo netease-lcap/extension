@@ -20,7 +20,19 @@ export function normalizeSlotName(name: string) {
   return name.includes('-') ? `slot-${name}` : `slot${upperFirst(name)}`;
 }
 
-export function getInputValueStringify(value: string) {
+export function formatInputValue(value: string) {
+  if (!value) {
+    return '';
+  }
+
+  if (/^'|".*'|"$/.test(value)) {
+    return value.substring(1, value.length - 1);
+  }
+
+  return JSON.stringify(json5.parse(value));
+}
+
+export function getInputValueStringify(value?: string) {
   if (!value) {
     return '';
   }

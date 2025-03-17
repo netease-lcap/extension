@@ -8,6 +8,7 @@ import { transformNType } from '../../../utils/transform';
 import { getInputValueStringify } from '../../../utils/nasl';
 import { NTypeSetter } from '../../NTypeSetter';
 import styles from './index.module.css';
+import { SettingInput } from '../../SettingInput';
 
 export interface MethodFormProps {
   methodData: LogicDeclaration;
@@ -160,12 +161,11 @@ export const MethodForm = ({ methodData }: MethodFormProps) => {
                 </Flex>
                 <Flex align="center" gap={8}>
                   <span className={styles.paramLabel}>默认值</span>
-                  <Input
-                    placeholder="默认值"
+                  <SettingInput
+                    placeholder="请输入默认值"
                     style={{ flex: 1 }}
                     value={param.defaultValue}
-                    onChange={(e) => typeASTActions.updateParam(index, { ...param, defaultValue: getInputValueStringify(e.target.value) }, false)}
-                    onBlur={() => typeASTActions.updateParam(index, { ...param })}
+                    onChange={(v) => typeASTActions.updateParam(index, { ...param, defaultValue: getInputValueStringify(v) })}
                   />
                 </Flex>
               </Flex>

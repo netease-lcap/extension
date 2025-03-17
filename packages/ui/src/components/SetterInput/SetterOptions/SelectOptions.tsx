@@ -4,6 +4,7 @@ import type { EnumSelectSetter, CapsulesSetter, SetterOption } from '@nasl/types
 import styles from './index.module.less';
 import { IconAdd, IconTrash } from '../../icons';
 import { getInputValueStringify } from '../../../utils/nasl';
+import { SettingInput } from '../../SettingInput';
 
 type SelectSetter = EnumSelectSetter | CapsulesSetter;
 export interface SelectOptionsProps {
@@ -51,7 +52,7 @@ const OptionInput = ({ value, showIcon, onChange }: { value: SelectSetterOption[
             }
             <Flex gap={8}>
               <span className={styles.optionLabel}>值</span>
-              <Input value={item.value} onChange={(e) => handleChangeOption(index, { ...item, value: getInputValueStringify(e.target.value) || '\'\'' })} />
+              <SettingInput value={item.value} onChange={(v) => handleChangeOption(index, { ...item, value: getInputValueStringify(v) || '\'\'' })} />
             </Flex>
           </Flex>
         ))
