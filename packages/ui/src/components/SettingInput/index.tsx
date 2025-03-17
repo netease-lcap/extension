@@ -33,6 +33,7 @@ export const SettingInput = forwardRef((props: SetInputProps, ref: Ref<InputRef>
   return (
     <Input
       {...rest}
+      value={stateValue}
       onChange={handleChange}
       onBlur={handleBlur}
       ref={ref}

@@ -86,7 +86,15 @@ export const SetterInput = (props: SetterInputProps) => {
   useEffect(() => {
     const v = value || { concept: 'InputSetter' };
     if (JSON.stringify(setter) !== JSON.stringify(v)) {
-      setSetter(cloneDeep(v));
+      const setterOptions = cloneDeep(v);
+      if (['EnumSelectSetter', 'CapsulesSetter'].includes(setterOptions.concept)) {
+        (setterOptions as EnumSelectSetter | CapsulesSetter).options = (setterOptions as EnumSelectSetter | CapsulesSetter).options.map((op) => ({
+          ...op,
+          value: JSON.stringify(op.value),
+        }));
+      }
+
+      setSetter(setterOptions);
     }
   }, [value]);
 
