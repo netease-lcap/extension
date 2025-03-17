@@ -1,12 +1,19 @@
 import { FC, HTMLAttributes, useContext, useState } from 'react';
 import { Button, Divider } from 'antd';
 import styles from './index.module.less';
-import { IconSend, IconFeedback, IconHelp, PublishModal } from '../../components';
+import {
+  IconSend,
+  IconFeedback,
+  IconHelp,
+  PublishModal,
+  FeedbackDialog,
+} from '../../components';
 import { ProjectContext } from '../../hooks/useProjectContext';
 
 export const Header: FC<HTMLAttributes<HTMLDivElement>> = (props) => {
   const { schema, openHelpModal } = useContext(ProjectContext);
   const [open, setOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   return (
     <>
@@ -31,7 +38,7 @@ export const Header: FC<HTMLAttributes<HTMLDivElement>> = (props) => {
           }
         </div>
         <div className={styles.actions}>
-          <Button type="primary" className={styles.btn}>
+          <Button type="primary" className={styles.btn} onClick={() => setFeedbackOpen(true)}>
             <IconFeedback color="#7A8599" />
             吐槽
           </Button>
@@ -47,6 +54,7 @@ export const Header: FC<HTMLAttributes<HTMLDivElement>> = (props) => {
         </div>
       </div>
       <PublishModal open={open} onClose={() => setOpen(false)} />
+      <FeedbackDialog open={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </>
   );
 };
