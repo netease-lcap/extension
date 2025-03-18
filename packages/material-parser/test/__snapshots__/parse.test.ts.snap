@@ -87310,6 +87310,7 @@ exports[`parse ant-design ts 1`] = `
   "framework": "react",
   "frameworkVersion": "16.9.0",
   "name": "antd",
+  "style": undefined,
   "version": "5.23.2",
 }
 `;
@@ -87655,6 +87656,7 @@ exports[`parse react-colors dynamic 1`] = `
   "framework": "react",
   "frameworkVersion": "15.4.1",
   "name": "react-colors",
+  "style": undefined,
   "version": "0.1.2",
 }
 `;
@@ -91984,6 +91986,7 @@ exports[`parse vue2 ant-design-vue js 1`] = `
   "framework": "vue2",
   "frameworkVersion": "2.6.0",
   "name": "ant-design-vue",
+  "style": undefined,
   "version": "1.7.8",
 }
 `;
@@ -100413,6 +100416,7 @@ Accepted values: \`sizes\`, \`prev\`, \`pager\`, \`next\`, \`jumper\`, \`-&gt;\`
   "framework": "vue2",
   "frameworkVersion": "2.5.17",
   "name": "element-ui",
+  "style": "lib/theme-chalk/index.css",
   "version": "2.15.14",
 }
 `;
@@ -120153,6 +120157,7 @@ exports[`parse vue3 element-plus 1`] = `
   "framework": "vue3",
   "frameworkVersion": "3.2.0",
   "name": "element-plus",
+  "style": "dist/index.css",
   "version": "2.9.3",
 }
 `;
