@@ -22,6 +22,7 @@ export function resolveSchema(
     description: scanMeta.description || '',
     framework: scanMeta.framework,
     frameworkVersion: scanMeta.frameworkVersion,
+    style: scanMeta.style,
     components: [],
   };
 

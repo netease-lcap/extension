@@ -21,6 +21,10 @@ export async function parseMeta(root: string): Promise<MaterialScanMeta> {
   scanMeta.framework = framework.name;
   scanMeta.frameworkVersion = framework.version;
 
+  if (pkgJson.style && fs.existsSync(path.join(root, pkgJson.style))) {
+    scanMeta.style = pkgJson.style;
+  }
+
   if (pkgJson['web-types']) {
     const webTypeFileAbsolutePath = path.join(root, pkgJson['web-types']);
     if (fs.existsSync(webTypeFileAbsolutePath)) {

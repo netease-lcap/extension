@@ -22,6 +22,8 @@ export interface MaterialScanMeta {
   framework: FrameworkType | 'unknow';
   /** 框架版本 */
   frameworkVersion?: string;
+  /** 样式文件 */
+  style?: string;
   /** cwd 目录 */
   workDir: string;
   /** npm 包目录 */
@@ -142,5 +144,6 @@ export interface MaterialSchema {
   description: string;
   framework: FrameworkType | 'unknow';
   frameworkVersion?: string;
+  style?: string;
   components: MaterialComponent[];
 }
