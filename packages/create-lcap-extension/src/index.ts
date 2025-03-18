@@ -257,6 +257,18 @@ async function init() {
 
   write('package.json', JSON.stringify(pkg, null, 2) + '\n');
 
+  if (template === 'vue2') {
+    const entry = path.join(root, 'src', 'index.ts');
+    if (fs.existsSync(entry)) {
+      let entryContent = fs.readFileSync(entry, 'utf-8').toString();
+      replaceTemplateList.forEach(({ reg, text }) => {
+        entryContent = entryContent?.replace(reg, text);
+      });
+
+      fs.writeFileSync(entry, entryContent, 'utf-8');
+    }
+  }
+
   if (template !== 'vue3') {
     const answers = await prompts([
       {
