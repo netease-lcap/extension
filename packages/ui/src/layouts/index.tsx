@@ -10,7 +10,7 @@ export const AppLayout: FC<AppLayoutProps> = ({ children, hiddenHeader = false, 
   return (
     <div className={styles.app} {...rest}>
       {!hiddenHeader && <Header />}
-      <div className={styles.content}>
+      <div className={[styles.content, hiddenHeader && styles.hiddenHeader].join(' ')}>
         {children}
       </div>
     </div>
