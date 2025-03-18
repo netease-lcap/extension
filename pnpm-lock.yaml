@@ -466,16 +466,13 @@ importers:
 
   packages/ui:
     dependencies:
+      send:
+        specifier: ^1.1.0
+        version: 1.1.0
+    devDependencies:
       '@ant-design/icons':
         specifier: ^5.6.1
         version: 5.6.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      allotment:
-        specifier: ^1.20.3
-        version: 1.20.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      uid:
-        specifier: ^2.0.2
-        version: 2.0.2
-    devDependencies:
       '@codemirror/lang-javascript':
         specifier: ^6.2.3
         version: 6.2.3
@@ -509,6 +506,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.3.4
         version: 4.3.4(vite@6.2.0(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.0))
+      allotment:
+        specifier: ^1.20.3
+        version: 1.20.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       antd:
         specifier: ^5.24.3
         version: 5.24.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -572,6 +572,9 @@ importers:
       typescript-eslint:
         specifier: ^8.24.1
         version: 8.26.0(eslint@9.21.0(jiti@2.4.2))(typescript@5.7.3)
+      uid:
+        specifier: ^2.0.2
+        version: 2.0.2
       vite:
         specifier: ^6.2.0
         version: 6.2.0(@types/node@22.10.5)(jiti@2.4.2)(less@4.2.0)
@@ -8998,8 +9001,8 @@ packages:
   vue-component-type-helpers@2.1.10:
     resolution: {integrity: sha512-lfgdSLQKrUmADiSV6PbBvYgQ33KF3Ztv6gP85MfGaGaSGMTXORVaHT1EHfsqCgzRNBstPKYDmvAV9Do5CmJ07A==}
 
-  vue-component-type-helpers@2.2.8:
-    resolution: {integrity: sha512-4bjIsC284coDO9om4HPA62M7wfsTvcmZyzdfR0aUlFXqq4tXxM1APyXpNVxPC8QazKw9OhmZNHBVDA6ODaZsrA==}
+  vue-component-type-helpers@3.0.0-alpha.2:
+    resolution: {integrity: sha512-dv9YzsuJFLnpRNxKU0exwIlCIA/v+rXrgCsEtaENsFJLPFMw1Sr4IRctilwfjnjCzoJGgGACHRZfxo6ZwlH2fQ==}
 
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
@@ -9457,7 +9460,7 @@ snapshots:
       '@babel/traverse': 7.25.7
       '@babel/types': 7.26.3
       convert-source-map: 2.0.0
-      debug: 4.3.7
+      debug: 4.4.0
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -9477,7 +9480,7 @@ snapshots:
       '@babel/traverse': 7.26.4
       '@babel/types': 7.26.5
       convert-source-map: 2.0.0
-      debug: 4.3.7
+      debug: 4.4.0
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -10641,7 +10644,7 @@ snapshots:
       '@babel/parser': 7.26.3
       '@babel/template': 7.25.7
       '@babel/types': 7.26.3
-      debug: 4.3.7
+      debug: 4.4.0
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -13811,7 +13814,7 @@ snapshots:
       ts-dedent: 2.2.0
       type-fest: 2.19.0
       vue: 3.5.13(typescript@5.6.3)
-      vue-component-type-helpers: 2.2.8
+      vue-component-type-helpers: 3.0.0-alpha.2
 
   '@storybook/vue@7.6.17(@babel/core@7.25.8)(css-loader@7.1.2)(vue@2.6.12)':
     dependencies:
@@ -19622,7 +19625,7 @@ snapshots:
   vite-node@1.6.0(@types/node@22.10.5)(less@4.2.0):
     dependencies:
       cac: 6.7.14
-      debug: 4.3.7
+      debug: 4.4.0
       pathe: 1.1.2
       picocolors: 1.1.1
       vite: 5.4.8(@types/node@22.10.5)(less@4.2.0)
@@ -19777,7 +19780,7 @@ snapshots:
 
   vue-component-type-helpers@2.1.10: {}
 
-  vue-component-type-helpers@2.2.8: {}
+  vue-component-type-helpers@3.0.0-alpha.2: {}
 
   vue-demi@0.14.10(vue@3.5.10(typescript@5.7.3)):
     dependencies:

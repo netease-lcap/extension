@@ -52,7 +52,7 @@ export const HelpModal = ({ visible, src = defaultSrc, onClose }: HelpModalProps
     return disabled || !isWindowed;
   }, [disabled, isWindowed]);
 
-  const handleResize = useCallback((event: any, data: any) => {
+  const handleResize = useCallback((_event: any, data: any) => {
     setSize({
       width: data.size.width,
       height: data.size.height,

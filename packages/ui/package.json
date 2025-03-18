@@ -7,6 +7,7 @@
     "build": "tsc -b && vite build",
     "watch": "vite build --watch",
     "lint": "eslint .",
+    "prepublishOnly": "npm run build",
     "preview": "vite preview"
   },
   "files": [
@@ -63,5 +64,6 @@
     "vite": "^6.2.0"
   },
   "dependencies": {
+    "send": "^1.1.0"
   }
 }

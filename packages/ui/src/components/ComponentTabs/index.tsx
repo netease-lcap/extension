@@ -109,7 +109,7 @@ export const ComponentTabs: FC<ComponentTabsProps> = ({ component, activeKey, on
                       key: 'delete',
                       label: '删除子组件',
                       danger: true,
-                      onClick: (e) => {
+                      onClick: () => {
                         onRemove(child.name);
                       },
                     },

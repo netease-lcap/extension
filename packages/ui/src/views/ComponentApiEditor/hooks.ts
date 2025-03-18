@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useMemo, useCallback, useRef } from 'react'
+import { useState, useEffect, useContext, useMemo, useCallback } from 'react'
 import { ComponentMetaInfo, createComponent, getComponentDetail, getComponentList, removeComponent, updateComponent } from '../../services';
 import { ProjectContext, useHandleNaslChange } from '../../hooks';
 import { APIUpdateOptions, NaslComponent } from '../../types/component';
