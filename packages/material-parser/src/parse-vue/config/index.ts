@@ -47,9 +47,8 @@ export default async function (
       comp.exportName = comp.name;
     } else if (exportNames.includes(aliasName)) {
       comp.exportName = aliasName;
-    } else {
-      comp.exportName = comp.name;
     }
+
     return {
       ...comp,
       attrs: removeRepeatItem(comp.attrs),
@@ -57,5 +56,5 @@ export default async function (
       events: removeRepeatItem(comp.events),
       methods: removeRepeatItem(comp.methods),
     };
-  });
+  }).filter((c) => !!c.exportName);
 }
