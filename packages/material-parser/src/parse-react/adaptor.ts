@@ -6,6 +6,7 @@ import {
   MaterialComponentMethod,
   MaterialComponentSlot,
   McArrayType,
+  McFunctionType,
   McMapType,
   McStructType,
   McType,
@@ -146,6 +147,10 @@ function transformType(propType: PropType | undefined | null): McType {
     case 'objectOf':
       (mcType as McMapType).value = transformType(propType.value);
       break;
+    case 'func':
+      (mcType as McFunctionType).params = resolveParams(propType);
+      (mcType as McFunctionType).returnType = transformType(propType.returns?.propType);
+      break;
     default:
       break;
   }
@@ -153,20 +158,35 @@ function transformType(propType: PropType | undefined | null): McType {
   return mcType;
 }
 
+function resolveParams(propType: PropType) {
+  if (typeof propType === 'string' || propType.type !== 'func' || !propType.params || propType.params.length === 0) {
+    return [];
+  }
+
+  return propType.params.map((p) => {
+    return {
+      name: p.name,
+      description: p.description,
+      type: transformType(p.propType),
+    };
+  });
+}
+
 function resolveEvent(prop: Prop, component: MaterialComponent) {
   if (!isEventProp(prop)) {
     return false;
   }
 
+  const params = resolveParams(prop.propType);
   component.events.push({
     name: prop.name,
     description: prop.description || '',
-    params: [
-      {
-        name: 'event',
-        type: transformType(prop.propType),
+    params: params.length === 0 ? [{
+      name: 'event',
+      type: {
+        type: 'any',
       },
-    ],
+    }] : params,
   });
 
   return true;
