@@ -221,7 +221,7 @@ async function init() {
 
   const replaceTemplateList = [{
     reg: /\{\{LIBRARY_NAME\}\}/g,
-    text: packageName,
+    text: packageName || getProjectName(),
   }]
 
   const write = (file: string, content?: string) => {
@@ -262,6 +262,7 @@ async function init() {
     if (fs.existsSync(entry)) {
       let entryContent = fs.readFileSync(entry, 'utf-8').toString();
       replaceTemplateList.forEach(({ reg, text }) => {
+        console.log('=========== replace ===============', text, packageName);
         entryContent = entryContent?.replace(reg, text);
       });
 
