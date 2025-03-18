@@ -114,7 +114,7 @@ export const APIEditor = ({ collapsed, toggleCollapsed, collapseEnable = true }:
     modal.confirm({
       title: `确定删除组件“${name}”吗？`,
       onOk: () => {
-        removeComponent(selected);
+        removeComponent(name);
       },
     });
   };
