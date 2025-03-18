@@ -17,6 +17,7 @@ const defaultSrc = 'https://netease-lcap.github.io/extension/frontend/introducti
 export const HelpModal = ({ visible, src = defaultSrc, onClose }: HelpModalProps) => {
   const [isWindowed, setIsWindowed] = useState(false);
   const [disabled, setDisabled] = useState(true);
+  const [resizing, setResizing] = useState(false);
   const [size, setSize] = useState({ width: 500, height: 510 });
   const [bounds, setBounds] = useState({ left: 0, top: 0, bottom: 0, right: 0 });
   const draggleRef = useRef<HTMLDivElement>(null);
@@ -61,6 +62,7 @@ export const HelpModal = ({ visible, src = defaultSrc, onClose }: HelpModalProps
   const content = (
     <div className={styles.content}>
       <iframe style={{ width: '100%', height: '100%', border: 'none' }} src={src} />
+      { resizing && <div className={styles.contentOverlay} /> }
     </div>
   );
 
@@ -100,6 +102,8 @@ export const HelpModal = ({ visible, src = defaultSrc, onClose }: HelpModalProps
           maxConstraints={[window.innerWidth - 64, window.innerHeight - 64]}
           onResize={handleResize}
           resizeHandles={['sw']}
+          onResizeStart={() => setResizing(true)}
+          onResizeStop={() => setResizing(false)}
         >
           {content}
         </ResizableBox>
@@ -114,6 +118,8 @@ export const HelpModal = ({ visible, src = defaultSrc, onClose }: HelpModalProps
   }
 
   return (
+    <>
+      {resizing && <div className={styles.resizingOverlay} />}
     <Draggable
       disabled={disableDrag}
       bounds={bounds}
@@ -122,5 +128,6 @@ export const HelpModal = ({ visible, src = defaultSrc, onClose }: HelpModalProps
     >
       {Modal}
     </Draggable>
+    </>
   );
 }

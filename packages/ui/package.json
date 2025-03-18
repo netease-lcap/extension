@@ -1,7 +1,7 @@
 {
   "name": "@lcap/extension-ui",
   "version": "1.0.0-alpha.1",
-  "type": "module",
+  "main": "node/index.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -9,6 +9,11 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "files": [
+    "dist",
+    "node",
+    "README.md"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/netease-lcap/extension.git"
@@ -20,6 +25,7 @@
   "author": "NetEase CodeWave FE Team",
   "license": "MIT",
   "devDependencies": {
+    "@ant-design/icons": "^5.6.1",
     "@codemirror/lang-javascript": "^6.2.3",
     "@codemirror/lang-json": "^6.0.1",
     "@codemirror/state": "^6.5.2",
@@ -31,6 +37,7 @@
     "@types/react-dom": "^19.0.4",
     "@types/react-resizable": "^3.0.8",
     "@vitejs/plugin-react": "^4.3.4",
+    "allotment": "^1.20.3",
     "antd": "^5.24.3",
     "axios": "^1.8.1",
     "classnames": "^2.5.1",
@@ -52,11 +59,9 @@
     "react-resizable": "^3.0.5",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
+    "uid": "^2.0.2",
     "vite": "^6.2.0"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.6.1",
-    "allotment": "^1.20.3",
-    "uid": "^2.0.2"
   }
 }

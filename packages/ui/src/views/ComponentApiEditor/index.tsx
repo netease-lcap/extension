@@ -2,6 +2,7 @@ import { useRef, useCallback } from 'react';
 import { Allotment, AllotmentHandle } from 'allotment';
 import { useToggle } from '../../hooks';
 import { APIEditor } from './APIEditor';
+import { IDEPreview } from '../../components';
 
 export interface ComponentApiEditorProps {
   hiddenPreview?: boolean;
@@ -11,7 +12,6 @@ const defaultSidebarSize = 500;
 const listPanelWidth = 180;
 const viewPanelWidth = Math.max(window.innerWidth, 1200);
 const defaultLayoutSizes = [defaultSidebarSize, viewPanelWidth - defaultSidebarSize];
-// const stop = (e: React.WheelEvent<HTMLIFrameElement>) => e.stopPropagation();
 
 export const ComponentApiEditor = ({ hiddenPreview = false }: ComponentApiEditorProps) => {
   const [collapsed, toggleCollapsed] = useToggle(false);
@@ -42,8 +42,7 @@ export const ComponentApiEditor = ({ hiddenPreview = false }: ComponentApiEditor
         <APIEditor collapsed={collapsed} toggleCollapsed={handleToggleCollapsed} />
       </Allotment.Pane>
       <Allotment.Pane minSize={204}>
-        <div />
-        {/* <iframe width="100%" onWheel={stop} onWheelCapture={stop} height="100%" style={{ border: 'none' }} src={`https://localhost:3000/designer/uidev?appId=demo&branch=feauter-uidev314`} /> */}
+        <IDEPreview />
       </Allotment.Pane>
     </Allotment>
   );

@@ -9,3 +9,4 @@ export * from './NTypeSetter';
 export * from './SetterInput';
 export * from './SettingInput';
 export * from './FeedbackDialog';
+export * from './IDEPreview';

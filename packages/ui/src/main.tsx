@@ -12,3 +12,8 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 );
+
+// 增加离开页面确认
+window.onbeforeunload = () => {
+  return '确定要离开当前页面吗？';
+};

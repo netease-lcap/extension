@@ -80,3 +80,13 @@ export async function releaseProject(params: ReleaseProjectParams) {
 
   return response.data;
 }
+
+export async function getProjectPreviewUrl() {
+  const response = await http.get<string>('/api/project/previewURL');
+
+  if (!response || !response.data) {
+    return '';
+  }
+
+  return response.data;
+}
