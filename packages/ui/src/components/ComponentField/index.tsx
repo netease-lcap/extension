@@ -126,9 +126,7 @@ export const ComponentField: FC<ComponentFieldProps> = (props) => {
     children,
     name,
     handleRemove,
-    handlerId,
     isOver,
-    group,
   ]);
 
   useEffect(() => {
