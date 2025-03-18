@@ -26,7 +26,7 @@
   "dependencies": {
   },
   "devDependencies": {
-    "@lcap/builder": "^1.6.0-alpha.2",
+    "@lcap/builder": "^1.6.0-alpha.4",
     "@chromatic-com/storybook": "^3.2.2",
     "@nasl/types": "^0.1.10",
     "@storybook/addon-essentials": "^8.4.6",
@@ -39,12 +39,13 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "autoprefixer": "^10.4.16",
-    "vue": "^3.5.13",
     "fs-extra": "^11.2.0",
+    "lcap-ide-server-proxy": "^0.1.0-beta",
     "storybook": "^8.4.6",
     "typescript": "~5.6.2",
     "vite": "^6.0.1",
     "vitest": "^1.1.0",
+    "vue": "^3.5.13",
     "vue-tsc": "^2.1.10"
   },
   "peerDependencies": {
