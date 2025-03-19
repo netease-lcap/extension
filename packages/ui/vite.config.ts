@@ -1,9 +1,17 @@
 import { defineConfig, PluginOption } from 'vite';
 import path from 'path';
+import fs from 'fs';
 import react from '@vitejs/plugin-react';
 import { spawnSync } from 'child_process';
 
 function copyDist() {
+  const copyConfigPath = path.resolve('./.copy.json');
+  if (!fs.existsSync(copyConfigPath)) {
+    return;
+  }
+
+  const copyConfig = JSON.parse(fs.readFileSync(copyConfigPath, 'utf-8'));
+  const { src, dist } = copyConfig;
   let watchCopy = false;
   return {
     configResolved(config) {
@@ -15,8 +23,8 @@ function copyDist() {
       }
       const command = [
         'cp', '-r',
-        '/Users/liuyuyang/Documents/projects/codewave/extension/packages/ui/dist/*',
-        '/Users/liuyuyang/Documents/test_element_plus/play',
+        src,
+        dist,
       ].join(' ');
       spawnSync(command, { shell: true, stdio: 'inherit' });
     },
