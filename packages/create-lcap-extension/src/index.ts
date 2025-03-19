@@ -7,6 +7,7 @@ import prompts from 'prompts';
 import colors from 'picocolors';
 import minimist from 'minimist';
 import { genFromNpmPkg } from './pkg';
+import { resolveMetaInfo, type FrameworkType } from './meta';
 
 const cliArgs = minimist(process.argv.slice(2));
 
@@ -68,6 +69,22 @@ async function init() {
     targetDir = snakeCase(formatTargetDir(cliArgs.name));
   }
 
+  let pkgMetaInfo: { name: string, version: string, framework: (FrameworkType | 'unknow') } | undefined;
+  try {
+    if (cliArgs.npm) {
+      pkgMetaInfo = await resolveMetaInfo(cliArgs.npm);
+    }
+  } catch(e) {
+    console.log(red(`解析 npm 包错误，找不到包 ${cliArgs.npm} 或包版本错误`));
+    console.log(e);
+    return;
+  }
+
+  if (pkgMetaInfo?.framework === 'unknow') {
+    console.log(red(`找不到 ${cliArgs.npm} 的框架信息，无法匹配项目模板`));
+    return;
+  }
+
   try {
     result = await prompts(
       [
@@ -75,7 +92,7 @@ async function init() {
           type: () => cliArgs.name ? null : 'text',
           name: 'projectName',
           message: reset('请输入依赖库包名：'),
-          initial: snakeCase(formatTargetDir(cliArgs.name)) || defaultTargetDir,
+          initial: snakeCase(formatTargetDir(cliArgs.name)) || (pkgMetaInfo?.name ? `cwx_${snakeCase(pkgMetaInfo.name)}` : defaultTargetDir),
           validate: (value) => {
             return !!value;
           },
@@ -131,7 +148,7 @@ async function init() {
           message: reset('请输入依赖库中文名：'),
         },
         {
-          type: 'select',
+          type: () => pkgMetaInfo && pkgMetaInfo.framework !== 'unknow' ? null : 'select',
           name: 'template',
           message: reset('请选择模板:'),
           initial: 0,
@@ -156,7 +173,13 @@ async function init() {
   }
 
   // user choice associated with prompts
-  const { overwrite, packageName, title, template } = result;
+  let { overwrite, packageName, title } = result;
+
+  let template = result.template;
+
+  if (pkgMetaInfo && (pkgMetaInfo.framework as any) !== 'unknow') {
+    template = pkgMetaInfo.framework;
+  }
 
   const root = path.join(cwd, targetDir);
 
@@ -262,7 +285,6 @@ async function init() {
     if (fs.existsSync(entry)) {
       let entryContent = fs.readFileSync(entry, 'utf-8').toString();
       replaceTemplateList.forEach(({ reg, text }) => {
-        console.log('=========== replace ===============', text, packageName);
         entryContent = entryContent?.replace(reg, text);
       });
 
@@ -288,9 +310,9 @@ async function init() {
     }
   }
 
-  if (cliArgs.npm && typeof cliArgs.npm === 'string') {
-    console.log('\n' + green('创建成功! ') + `目录 ${targetDir}，准备安装包，解析 ${cliArgs.npm}\n`);
-    await genFromNpmPkg(root, cliArgs.npm);
+  if (pkgMetaInfo) {
+    console.log('\n' + green('创建成功! ') + `目录 ${targetDir}，准备安装包，解析 ${pkgMetaInfo.name}${pkgMetaInfo.version ? `@${pkgMetaInfo.version}` : ''}\n`);
+    await genFromNpmPkg(root, pkgMetaInfo);
     return;
   }
 

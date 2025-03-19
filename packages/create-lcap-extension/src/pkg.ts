@@ -2,24 +2,9 @@ import spawn from 'cross-spawn';
 import { kebabCase } from 'lodash-es';
 import prompts from 'prompts';
 import colors from 'picocolors';
+import { FrameworkType } from './meta';
 
 type PkgManager = 'npm' | 'pnpm' | 'yarn';
-
-function getLibInfo(pkg: string) {
-  const i = pkg.indexOf('@');
-  let name, version;
-  if (i > 0) {
-    name = pkg.substring(0, i);
-    version = pkg.substring(i + 1);
-  } else {
-    name = pkg;
-  }
-
-  return {
-    name,
-    version,
-  };
-}
 
 function execCommand(command: string, root: string) {
   console.log(colors.cyan(`执行命令: ${command}`));
@@ -49,7 +34,7 @@ function execInstall(root: string, pkgManager: PkgManager) {
   }
 }
 
-export async function genFromNpmPkg(root: string, pkg: string) {
+export async function genFromNpmPkg(root: string, libInfo: { name: string, version: string, framework: FrameworkType | 'unknow' }) {
   const { pkgManager } = await prompts([
     {
       type: 'select',
@@ -73,8 +58,7 @@ export async function genFromNpmPkg(root: string, pkg: string) {
     }
   ]);
 
-  const libInfo = getLibInfo(pkg);
-
+  const pkg = `${libInfo.name}${libInfo.version ? `@${libInfo.version}` : ''}`;
   // 安装依赖
   execInstall(root, pkgManager);
 
