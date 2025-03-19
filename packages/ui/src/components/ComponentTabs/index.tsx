@@ -4,7 +4,7 @@ import { NaslComponent } from '../../types/component';
 import styles from './index.module.less';
 import classNames from 'classnames';
 import { IconAdd, IconMore } from '../icons';
-import { camelCase, upperFirst } from 'lodash';
+import { add, camelCase, upperFirst } from 'lodash';
 import { useComponentContext } from '../../hooks';
 
 export interface ComponentTabsProps {
@@ -48,7 +48,7 @@ const AddSubComponent = ({ name: componentName }: { name?: string }) => {
     });
     setAdding(false);
     setOpen(false);
-  }, [value, setOpen]);
+  }, [value, setOpen, updateComponent, componentName]);
 
   const close = useCallback(() => setOpen(false), []);
 
@@ -66,7 +66,7 @@ const AddSubComponent = ({ name: componentName }: { name?: string }) => {
         </Flex>
       </div>
     )
-  }, [value, close, handleConfirm]);
+  }, [value, close, handleConfirm, componentName, adding]);
 
   return (
     <div className={styles.addTab}>
