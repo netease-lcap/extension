@@ -31,7 +31,7 @@ export const APIEditor = ({ collapsed, toggleCollapsed, collapseEnable = true }:
   const [modal, modalContextHolder] = Modal.useModal();
   const [componentSizes, setComponentSizes] = useState([100, 0]);
   const [apiDetailSizes, setApiDetailSizes] = useState([100, 0]);
-  const { componentList, hiddenList } = useComponentList();
+  const { componentList, hiddenList, loadComponentList } = useComponentList();
   const { openHelpModal } = useContext(ProjectContext);
   const {
     selected,
@@ -46,7 +46,7 @@ export const APIEditor = ({ collapsed, toggleCollapsed, collapseEnable = true }:
     setEditingName,
     setEditingModule,
     editTabs,
-  } = useComponentControl(componentList);
+  } = useComponentControl(componentList, loadComponentList);
 
   const componentListRef = useRef<AllotmentHandle>(null);
   const apiDetailRef = useRef<AllotmentHandle>(null);

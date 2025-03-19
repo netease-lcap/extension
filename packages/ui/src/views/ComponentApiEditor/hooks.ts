@@ -32,10 +32,11 @@ export const useComponentList = () => {
   return {
     componentList,
     hiddenList,
+    loadComponentList,
   };
 };
 
-export const useComponentControl = (componentList: ComponentMetaInfo[]) => {
+export const useComponentControl = (componentList: ComponentMetaInfo[], loadComponentList: () => void) => {
   const [selected, setSelected] = useState<string>('');
   const [component, setComponent] = useState<NaslComponent | null>(null);
   const [editingName, setEditingName] = useState<string>(selected);
@@ -49,11 +50,14 @@ export const useComponentControl = (componentList: ComponentMetaInfo[]) => {
 
   const handleAdd = useCallback(async (name: string) => {
     await createComponent(name);
-  }, []);
+    loadComponentList();
+  }, [loadComponentList]);
+
 
   const handleRemove = useCallback(async (name: string) => {
     await removeComponent(name);
-  }, []);
+    loadComponentList();
+  }, [loadComponentList]);
 
   const loadComponent = useCallback(async (name: string) => {
     if (!name) {
