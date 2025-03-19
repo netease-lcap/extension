@@ -16,7 +16,7 @@
     "start": "storybook dev -p 8008",
     "build": "vite build",
     "watch": "lcap-scripts watch",
-    "play": "lcap-scripts play",
+    "play": "lcap-scripts play --https",
     "test": "vitest",
     "release": "lcap publish"
   },

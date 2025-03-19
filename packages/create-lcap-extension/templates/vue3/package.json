@@ -14,7 +14,7 @@
     "build": "lcap-scripts build",
     "create": "lcap-scripts create",
     "watch": "lcap-scripts watch",
-    "play": "lcap-scripts play",
+    "play": "lcap-scripts play --https",
     "release": "lcap publish",
     "test": "vitest"
   },
