@@ -7,6 +7,7 @@ import { Allotment, AllotmentHandle } from 'allotment';
 import { IconDoubleArrowLeft, IconList, IconArrowDown, IconHelpVariant } from '../../components/icons';
 import { ComponentList } from '../../components/ComponentList';
 import { APICodeView } from '../../components/APICodeView';
+import { Empty } from '../../components/Empty';
 import { ComponentTabs } from '../../components/ComponentTabs';
 import ComponentContext from '../../hooks/useComponentContext';
 import { useComponentList, useComponentControl } from './hooks';
@@ -229,23 +230,32 @@ export const APIEditor = ({ collapsed, toggleCollapsed, collapseEnable = true }:
                     )
                   }
                 </div>
-                <Tabs size="small" className={styles.panelSubHeader} items={editTabs} activeKey={editingModule} onChange={setEditingModule as any} />
-                <DndProvider backend={HTML5Backend}>
-                  <div className={styles.detailPanelContent}>
-                    <div className={styles.helpBlock}>
-                      <Button color="primary" size="small" variant="link" className={styles.helpBtn} onClick={handleOpenHelp}>
-                        <IconHelpVariant />
-                        关于{editTabs.find((tab) => tab.key === editingModule)?.label}
-                      </Button>
-                    </div>
-                    {editingModule === 'info' && <BaseInfo removeSubComponent={handleRemoveChildComponent} />}
-                    {editingModule === 'prop' && <PropsEditorView />}
-                    {editingModule === 'event' && <EventsEditorView />}
-                    {editingModule === 'slot' && <SlotsEditorView />}
-                    {editingModule === 'method' && <MethodsEditorView />}
-                    {editingModule === 'readableProp' && <ReadablePropsEditorView />}
-                  </div>
-                </DndProvider>
+                {
+                  component ? (
+                    <>
+                      <Tabs size="small" className={styles.panelSubHeader} items={editTabs} activeKey={editingModule} onChange={setEditingModule as any} />
+                      <DndProvider backend={HTML5Backend}>
+                        <div className={styles.detailPanelContent}>
+                          <div className={styles.helpBlock}>
+                            <Button color="primary" size="small" variant="link" className={styles.helpBtn} onClick={handleOpenHelp}>
+                              <IconHelpVariant />
+                              关于{editTabs.find((tab) => tab.key === editingModule)?.label}
+                            </Button>
+                          </div>
+                          {editingModule === 'info' && <BaseInfo removeSubComponent={handleRemoveChildComponent} />}
+                          {editingModule === 'prop' && <PropsEditorView />}
+                          {editingModule === 'event' && <EventsEditorView />}
+                          {editingModule === 'slot' && <SlotsEditorView />}
+                          {editingModule === 'method' && <MethodsEditorView />}
+                          {editingModule === 'readableProp' && <ReadablePropsEditorView />}
+                        </div>
+                      </DndProvider>
+                    </>
+                  ) : (
+                    <Empty text="请从左侧选择组件进行配置" />
+                  )
+                }
+
               </div>
             </Allotment.Pane>
             <Allotment.Pane minSize={minSize}>

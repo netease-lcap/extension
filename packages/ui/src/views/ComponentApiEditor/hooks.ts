@@ -15,7 +15,7 @@ export const useComponentList = () => {
 
   useEffect(() => {
     loadComponentList();
-  }, []);
+  }, [loadComponentList]);
 
   useHandleNaslChange(loadComponentList);
 

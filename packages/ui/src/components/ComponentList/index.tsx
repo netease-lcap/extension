@@ -2,6 +2,7 @@ import { FC, HTMLAttributes, MouseEvent } from 'react';
 import classNames from 'classnames';
 import styles from './index.module.less';
 import { IconAddCircle, IconRemove } from '../icons';
+import { Empty } from '../Empty';
 
 export interface ComponentListProps extends HTMLAttributes<HTMLDivElement> {
   componentList: ({ name: string, [key: string]: any })[];
@@ -47,6 +48,11 @@ export const ComponentList: FC<ComponentListProps> = (props: ComponentListProps)
 
   return (
     <div className={rootClass} {...rest}>
+      {
+        componentList.length === 0 && (
+          <Empty text="暂无组件" />
+        )
+      }
       {
         componentList.map((component) => {
           return (

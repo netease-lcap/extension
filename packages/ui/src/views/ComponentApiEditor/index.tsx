@@ -30,7 +30,7 @@ export const ComponentApiEditor = ({ hiddenPreview = false }: ComponentApiEditor
     toggleCollapsed();
     const sidebarSize = collapsed ? sidebarSizeRef.current + listPanelWidth : sidebarSizeRef.current - listPanelWidth;
     layoutRef.current?.resize([sidebarSize, viewPanelWidth - sidebarSize]);
-  }, [collapsed]);
+  }, [collapsed, toggleCollapsed]);
 
   if (hiddenPreview) {
     return <APIEditor collapseEnable={false} collapsed={collapsed} toggleCollapsed={handleToggleCollapsed} />;
