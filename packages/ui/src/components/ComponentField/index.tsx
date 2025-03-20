@@ -148,7 +148,7 @@ export const ComponentField: FC<ComponentFieldProps> = (props) => {
         expandIcon={({ isActive }) => <IconArrowDown isActive={isActive} />}
         expandIconPosition="end"
         size="small"
-        items={items}
+        items={items as any[]}
         style={{ backgroundColor: 'transparent' }}
       />
     </div>

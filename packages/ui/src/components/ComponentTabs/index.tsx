@@ -4,7 +4,7 @@ import { NaslComponent } from '../../types/component';
 import styles from './index.module.less';
 import classNames from 'classnames';
 import { IconAdd, IconMore } from '../icons';
-import { add, camelCase, upperFirst } from 'lodash';
+import { camelCase, upperFirst } from 'lodash';
 import { useComponentContext } from '../../hooks';
 
 export interface ComponentTabsProps {
