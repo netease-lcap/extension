@@ -26,7 +26,7 @@
   "dependencies": {
   },
   "devDependencies": {
-    "@lcap/builder": "alpha",
+    "@lcap/builder": "1.6.0-alpha.8",
     "@chromatic-com/storybook": "^3.2.2",
     "@nasl/types": "^0.1.10",
     "@storybook/addon-essentials": "^8.4.6",
@@ -40,7 +40,7 @@
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "autoprefixer": "^10.4.16",
     "fs-extra": "^11.2.0",
-    "lcap-ide-server-proxy": "^0.1.0-beta",
+    "lcap-ide-server-proxy": "^0.1.1-beta",
     "storybook": "^8.4.6",
     "typescript": "~5.6.2",
     "vite": "^6.0.1",

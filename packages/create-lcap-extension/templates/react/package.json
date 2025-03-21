@@ -26,7 +26,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@lcap/builder": "alpha",
+    "@lcap/builder": "1.6.0-alpha.8",
     "@nasl/types": "^0.1.10",
     "@storybook/addon-essentials": "^7.6.17",
     "@storybook/addon-interactions": "^7.6.17",
@@ -41,7 +41,7 @@
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.18",
     "jsdom": "^23.0.1",
-    "lcap-ide-server-proxy": "^0.1.0-beta",
+    "lcap-ide-server-proxy": "^0.1.1-beta",
     "less": "^4.2.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",

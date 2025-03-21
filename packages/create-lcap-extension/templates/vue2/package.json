@@ -29,7 +29,7 @@
   "dependencies": {
   },
   "devDependencies": {
-    "@lcap/builder": "alpha",
+    "@lcap/builder": "1.6.0-alpha.8",
     "@nasl/types": "^0.1.10",
     "@lcap/storybook-vue-vite": "^7.6.17",
     "@lcap/vite-plugin-vue2": "^1.0.0",
@@ -47,7 +47,7 @@
     "autoprefixer": "^10.4.16",
     "jest-serializer-vue-tjw": "^3.20.0",
     "jsdom": "^23.0.1",
-    "lcap-ide-server-proxy": "^0.1.0-beta",
+    "lcap-ide-server-proxy": "^0.1.1-beta",
     "marked": "^12.0.1",
     "rimraf": "^5.0.5",
     "storybook": "^7.6.17",
