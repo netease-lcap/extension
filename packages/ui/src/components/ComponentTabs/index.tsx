@@ -141,7 +141,7 @@ export const ComponentTabs: FC<ComponentTabsProps> = ({ component, activeKey, on
     right: (
       <AddSubComponent name={component.name} />
     ),
-  }), []);
+  }), [component.name]);
 
   return (
     <Tabs
