@@ -8,6 +8,7 @@ export default defineConfig({
   description: "前端依赖库是指开发者自行开发或引入的组件、逻辑，用于满足定制化需求和功能扩展。这些库可被用于自定义界面样式、交互效果、组件功能，或者整合特定的第三方服务（例如微信SDK、钉钉SDK），并且能够被导入到IDE平台中供开发使用）",
   head: [
     ['link', { ref: 'shortcut icon', type: 'image/x-icon', href: 'logo.png?' }],
+    ['meta', { 'http-equiv': 'Cross-Origin-Opener-Policy', content: 'cross-origin' }],
   ],
   themeConfig: {
     logo: '/logo.png',
@@ -52,8 +53,8 @@ export default defineConfig({
         items: [
           { text: '开发指南', link: '/frontend/component/index.md' },
           { text: '组件配置（api.ts）描述编写', link: '/frontend/component/api.md' },
-          { 
-            text: '页面编辑适配说明', 
+          {
+            text: '页面编辑适配说明',
             collapsed: false,
             items: [
               { text: '页面设计器适配说明', link: '/frontend/component/ide/index.md' },
@@ -62,7 +63,7 @@ export default defineConfig({
               { text: 'modal&drawer&messager配置说明', link: '/frontend/component/ide/modal.md' },
               { text: 'popover说明', link: '/frontend/component/ide/popover.md' },
               { text: '表达式API说明与示例', link: '/frontend/component/ide/expression.md' },
-            ] 
+            ]
           },
           { text: '区块示例', link: '/frontend/component/block.md' },
           {
