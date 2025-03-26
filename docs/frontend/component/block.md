@@ -152,10 +152,10 @@ import { VTCodeGroup, VTCodeGroupTab } from '../../.vitepress/components'
     npm run dev
     ```
 
-3.  新建终端执行命令，开始批量截图。端口号需要和dev服务一致。执行结束后在组件目录中会自动生成文件夹screenshots 并包含截图。
+3.  新建终端执行命令，开始批量截图。端口号需要和dev服务一致，`<folder>`指组件文件夹名称，例如 cwd-capslue。执行结束后在组件目录中会自动生成文件夹screenshots 并包含截图。
 
     ```sh
-    npx lcap-scripts screenshot --port 8008
+    npx lcap-scripts screenshot <folder> --port 8008
     ```
 
 
