@@ -8,7 +8,7 @@ export default defineConfig({
   description: "前端依赖库是指开发者自行开发或引入的组件、逻辑，用于满足定制化需求和功能扩展。这些库可被用于自定义界面样式、交互效果、组件功能，或者整合特定的第三方服务（例如微信SDK、钉钉SDK），并且能够被导入到IDE平台中供开发使用）",
   head: [
     ['link', { ref: 'shortcut icon', type: 'image/x-icon', href: 'logo.png?' }],
-    ['meta', { 'http-equiv': 'Cross-Origin-Opener-Policy', content: 'cross-origin' }],
+    ['meta', { 'http-equiv': 'Cross-Origin-Resource-Policy', content: 'cross-origin' }],
   ],
   themeConfig: {
     logo: '/logo.png',
