@@ -1,5 +1,6 @@
 import { createContext, useCallback, useEffect, useContext, useState } from 'react';
 import { MaterialSchema, ProjectMetaInfo, getProjectMetaInfo, getProjectSchema } from '../services';
+import { onlyEditor } from '../utils/env';
 
 const helpModalSrcMap = {
   ComponentInfo: 'https://netease-lcap.github.io/extension/frontend/component/api.html#_1-%E7%BB%84%E4%BB%B6%E6%8F%8F%E8%BF%B0',
@@ -49,7 +50,11 @@ export const useProjectContextProvider = () => {
   const openHelpModal = useCallback((key?: keyof typeof helpModalSrcMap) => {
     setHelpModalVisible(true);
     if (key && helpModalSrcMap[key]) {
-      setHelpSrc(helpModalSrcMap[key]);
+      if (onlyEditor) {
+        window.top?.postMessage({ from: 'lcap-api-editor', type: 'openHelpModal', data: helpModalSrcMap[key] }, '*');
+      } else {
+        setHelpSrc(helpModalSrcMap[key]);
+      }
     }
   }, []);
 

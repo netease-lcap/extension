@@ -7,8 +7,7 @@ import { theme } from './styles/theme';
 import { useProjectContextProvider, ProjectContext } from './hooks/useProjectContext'
 import { HelpModal } from './components/HelpModal';
 import { initMessage } from './utils/message';
-
-const onlyEditor = new URL(location.href).searchParams.get('editor') === '1';
+import { onlyEditor } from './utils/env';
 
 function App() {
   const {
@@ -26,7 +25,7 @@ function App() {
       <ProjectContext.Provider value={projectContextValue as any}>
         <AppLayout hiddenHeader={onlyEditor}>
           <ComponentApiEditor hiddenPreview={onlyEditor} />
-          <HelpModal src={helpSrc} visible={helpModalVisible} onClose={closeHelpModal} />
+          {!onlyEditor && <HelpModal src={helpSrc} visible={helpModalVisible} onClose={closeHelpModal} />}
         </AppLayout>
       </ProjectContext.Provider>
       {messageContextHolder}
