@@ -68,7 +68,21 @@ import { VTCodeGroup, VTCodeGroupTab } from '../../.vitepress/components'
 
 ### 3.2 代理资源到本地
 
-1.  安装代理插件，如[XSwitch](https://chromewebstore.google.com/detail/xswitch/idkjhjggpffolpidfkikidcokdkdaogg?hl=zh-CN\&utm_source=ext_sidebar)。
+1.  安装代理插件，如XSwitch。
+  
+    <details>
+        <summary title="如何将XSwitch添加至Chrome扩展程序">
+            点击展开：如何将XSwitch添加至Chrome扩展程序
+        </summary>
+
+    1. 下载[XSwitch](https://static-vusion.nos-eastchina1.126.net/tutorial/%E6%96%87%E6%A1%A3%E4%B8%AD%E5%BF%83%E9%99%84%E4%BB%B6/%E5%89%8D%E7%AB%AF%E6%89%A9%E5%B1%95%E5%BC%80%E5%8F%91/XSwitch-1.17.1_0.zip)并进行解压。
+
+    2. 访问`chrome://extensions/`管理扩展程序，开启开发者模式，点击“加载已解压的扩展程序”，选择项目文件夹，完成安装。
+
+        <img src="../../images/tiaoshi_202504021145_1.png" class="imgStyle" style="" />
+
+    </details>
+   
 2.  配置代理插件。
 
     ```markdown
@@ -115,3 +129,21 @@ import { VTCodeGroup, VTCodeGroupTab } from '../../.vitepress/components'
 <img src="../../images/IDEneitiaoshiyilaiku_202412021735_7.png" class="imgStyle" style="" />
 
 
+<style>
+/* 折叠块加边框、背景色、边距 */
+  details {
+      border: 1px solid #679CF8; /* 添加边框 */
+      border-radius: 6px;
+      background-color: #F8FCFF; /* 添加底色 */
+      padding: 10px 40px 10px 40px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  /* 折叠块标题不需要内边距 */
+  details summary {  
+    margin: 0 0 0 -20px;
+    font-weight: bold;
+    color: #679CF8;
+    cursor: pointer;
+  }
+  </style>

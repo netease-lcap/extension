@@ -110,12 +110,14 @@ outline: deep
 
 选配，若存在无法将data-nodepath 传入顶层DOM节点，可以通过设置此项绕行，绕行是通过向具体组件内部放入一个能够根据css选择器向上查找DOM节点的组件X。书写格式为：
 
-    "selector": [
-        {
-            "expression": String,
-            "cssSelector": String
-        },
-    ]
+```typescript
+"selector": [
+    {
+        "expression": String,
+        "cssSelector": String
+    },
+]
+```
 
 selector 中可以为包含 expression 和 cssSelector 的对象或对象的数组。
 
