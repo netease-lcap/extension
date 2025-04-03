@@ -58,7 +58,7 @@ export const HelpModal = ({ visible, src = defaultSrc, onClose }: HelpModalProps
   }, [disabled, isWindowed]);
 
   const handleResize = useCallback(
-    (e: any, direction: any, p: any, d: any) => {
+    (_e: any, _direction: any, _p: any, d: any) => {
       setResizing(false);
 
       setSize({
