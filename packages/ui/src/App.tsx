@@ -1,5 +1,5 @@
 
-import { ConfigProvider, message } from 'antd';
+import { ConfigProvider, Modal, message } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { AppLayout } from './layouts';
 import { ComponentApiEditor } from './views';
@@ -17,7 +17,8 @@ function App() {
     ...projectContextValue
   } = useProjectContextProvider();
   const [messageApi, messageContextHolder] = message.useMessage();
-  initMessage(messageApi);
+  const [modal, contextHolder] = Modal.useModal();
+  initMessage(messageApi, modal);
 
 
   return (
@@ -29,6 +30,7 @@ function App() {
         </AppLayout>
       </ProjectContext.Provider>
       {messageContextHolder}
+      {contextHolder}
     </ConfigProvider>
   )
 }
