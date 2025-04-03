@@ -12,6 +12,7 @@ export interface ComponentFieldProps {
   style?: CSSProperties;
   className?: string;
   children?: React.ReactNode;
+  defaultOpen?: boolean;
   group?: string;
   onMove?: (source: { name: string, group: string }, target: { name?: string, group: string }) => void;
 }
@@ -30,6 +31,7 @@ export const ComponentField: FC<ComponentFieldProps> = (props) => {
     children,
     className,
     style = {},
+    defaultOpen = false,
     ...restProps
   } = props;
 
@@ -147,6 +149,7 @@ export const ComponentField: FC<ComponentFieldProps> = (props) => {
         ref={ref}
         expandIcon={({ isActive }) => <IconArrowDown isActive={isActive} />}
         expandIconPosition="end"
+        defaultActiveKey={defaultOpen ? ['1'] : []}
         size="small"
         items={items as any[]}
         style={{ backgroundColor: 'transparent' }}

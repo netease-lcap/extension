@@ -44,7 +44,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(import.meta.url, './src'),
+      '@': path.resolve(__dirname, './src'),
     },
   },
 });
