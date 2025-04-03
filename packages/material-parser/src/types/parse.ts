@@ -9,6 +9,10 @@ export interface MaterialParseOptions {
   tempDir?: string;
   /** NPM client */
   npmClient?: string;
+  /** 是否为本地包 */
+  isLocal?: boolean;
+  /** 本地包路径 */
+  file?: string;
 }
 
 export interface MaterialScanMeta {

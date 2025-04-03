@@ -1,5 +1,5 @@
 import spawn from 'cross-spawn-promise';
-import { ensureDir, ensureFile, writeFile } from 'fs-extra';
+import { ensureDir, ensureFile, writeFile, existsSync, copyFileSync } from 'fs-extra';
 import { join, resolve } from 'path';
 import { uid } from 'uid';
 import { debug } from './utils/debug';
@@ -22,12 +22,27 @@ export async function createFakePackage(params: {
   workDir: string;
   pkgName: string;
   pkgVersion: string;
+  isLocal?: boolean;
+  file?: string;
   npmClient?: string;
 }): Promise<void> {
   // 创建临时组件包
   const { workDir } = params;
   const pkgJsonFilePath = join(workDir, 'package.json');
   await ensureFile(pkgJsonFilePath);
+
+  let versionTag = params.pkgVersion || 'latest';
+  if (params.isLocal) {
+    if (!params.file || !existsSync(params.file)) {
+      throw new Error(`本地包路径不存在: ${params.file}`);
+    }
+
+    const tempFilePath = join(workDir, `${params.pkgName}-temp.tgz`);
+
+    copyFileSync(params.file, tempFilePath);
+    versionTag = tempFilePath;
+  }
+
   await writeFile(
     pkgJsonFilePath,
     JSON.stringify(
@@ -36,7 +51,7 @@ export async function createFakePackage(params: {
         version: params.pkgVersion || '0.0.0',
         private: true,
         dependencies: {
-          [params.pkgName]: params.pkgVersion || 'latest',
+          [params.pkgName]: versionTag,
           typesync: 'latest',
         },
       },
@@ -111,6 +126,8 @@ export default async function localize(options: MaterialParseOptions): Promise<{
     pkgVersion: version,
     workDir,
     npmClient,
+    isLocal: options.isLocal,
+    file: options.file,
   });
 
   return {
