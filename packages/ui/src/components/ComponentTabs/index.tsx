@@ -15,14 +15,17 @@ export interface ComponentTabsProps {
 }
 
 const AddSubComponent = ({ name: componentName }: { name?: string }) => {
-  const { updateComponent } = useComponentContext();
+  const { updateComponent, componentList } = useComponentContext();
   const [open, setOpen] = useState(false);
   const [adding, setAdding] = useState(false);
   const [value, setValue] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const handleOpenChange = (op: boolean) => {
+    console.log('handleOpenChange', op);
     if (op) {
       setValue('');
+      setError(null);
     }
 
     setOpen(op);
@@ -31,11 +34,17 @@ const AddSubComponent = ({ name: componentName }: { name?: string }) => {
   const handleConfirm = useCallback(async() => {
     const name = upperFirst(camelCase(value.trim()));
     if (!name || !componentName) {
-      setOpen(false);
+      setError('请输入组件名称');
       return;
     }
 
     setValue(name);
+
+    if (componentList.some((item) => (item.name === name) || (item.children && item.children.some((child) => child.name === name)))) {
+      setError('组件名称已存在');
+      return;
+    }
+
     setAdding(true);
 
     await updateComponent({
@@ -48,7 +57,7 @@ const AddSubComponent = ({ name: componentName }: { name?: string }) => {
     });
     setAdding(false);
     setOpen(false);
-  }, [value, setOpen, updateComponent, componentName]);
+  }, [value, setOpen, updateComponent, componentName, componentList]);
 
   const close = useCallback(() => setOpen(false), []);
 
@@ -58,15 +67,17 @@ const AddSubComponent = ({ name: componentName }: { name?: string }) => {
         <Input
           placeholder={`请输入组件名称 (例如： ${componentName}Item)`}
           value={value}
+          status={error ? 'error' : undefined}
           onChange={(e) => setValue(e.target.value)}
         />
         <Flex justify="flex-end" align="center" gap={8} className={styles.footer}>
           <Button onClick={close}>取消</Button>
           <Button type="primary" loading={adding} onClick={handleConfirm}>确定</Button>
         </Flex>
+        {error && <div className={styles.error}>{error}</div>}
       </div>
     )
-  }, [value, close, handleConfirm, componentName, adding]);
+  }, [value, close, handleConfirm, componentName, adding, error]);
 
   return (
     <div className={styles.addTab}>

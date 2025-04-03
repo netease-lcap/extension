@@ -16,7 +16,11 @@
 .tabItem {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+
+  .name {
+    flex: 1;
+  }
 }
 
 .badge {
@@ -28,6 +32,7 @@
   justify-content: center;
   font-size: 8px;
   margin-right: 4px;
+  flex-shrink: 0;
 
   &.primary {
     background-color: #3377FF;
@@ -63,12 +68,27 @@
   box-shadow: 0px 6px 16px 0px rgba(0, 0, 0, 0.08);
   width: 300px;
   padding: 12px;
+  position: relative;
 
   .footer {
     display: flex;
     align-items: center;
     margin-top: 12px;
     justify-content: flex-end;
+  }
+
+  .error {
+    background-color: rgba(242, 73, 87, 1);
+    position: absolute;
+    left: 12px;
+    top: 44px;
+    max-width: 200px;
+    min-width: 92px;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
   }
 }
 
@@ -81,6 +101,7 @@
   height: 24px;
   width: 16px;
   border-radius: 4px;
+  flex-shrink: 0;
   &:hover {
     background-color: rgba(29, 33, 41, 0.08);
     color: rgba(29, 33, 41, 1);
