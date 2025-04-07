@@ -1,7 +1,7 @@
 {
   "name": "vue3_demo",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.0",
   "lcapIdeVersion": "3.12",
   "main": "dist-theme/index.js",
   "module": "dist-theme/index.mjs",
