@@ -9,10 +9,10 @@ import { VTCodeGroup, VTCodeGroupTab } from '../.vitepress/components'
 
 ## create-lcap-extension
 
-执行 `npm create lcap-extension@alpha` 命令初始化依赖库目录
+执行 `npm create lcap-extension@beta` 命令初始化依赖库目录
 
 ``` bash
-npm create lcap-extension@alpha
+npm create lcap-extension@beta
 
 输入依赖库名称
 选择依赖库模板
