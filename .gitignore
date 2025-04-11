@@ -29,3 +29,5 @@ manifest.json
 # other library
 
 docs/.vitepress/cache
+
+.copy.json
