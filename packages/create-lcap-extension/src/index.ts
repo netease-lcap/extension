@@ -8,6 +8,8 @@ import colors from 'picocolors';
 import minimist from 'minimist';
 import { genFromNpmPkg } from './pkg';
 import { resolveMetaInfo, type FrameworkType } from './meta';
+import { copy } from './copy';
+import { initSetter } from './setter';
 
 const cliArgs = minimist(process.argv.slice(2));
 
@@ -344,15 +346,6 @@ function formatTargetDir(targetDir: string | undefined) {
   return targetDir?.trim().replace(/\/+$/g, '');
 }
 
-function copy(src: string, dest: string) {
-  const stat = fs.statSync(src);
-  if (stat.isDirectory()) {
-    copyDir(src, dest);
-  } else {
-    fs.copyFileSync(src, dest);
-  }
-}
-
 function isValidPackageName(projectName: string) {
   return /^(?:@[a-z\d\-*~][a-z\d\-*._~]*\/)?[a-z\d\-~][a-z\d\-._~]*$/.test(
     projectName,
@@ -366,15 +359,6 @@ function toValidPackageName(projectName: string) {
     .replace(/\s+/g, '-')
     .replace(/^[._]/, '')
     .replace(/[^a-z\d\-~]+/g, '-');
-}
-
-function copyDir(srcDir: string, destDir: string) {
-  fs.mkdirSync(destDir, { recursive: true });
-  for (const file of fs.readdirSync(srcDir)) {
-    const srcFile = path.resolve(srcDir, file);
-    const destFile = path.resolve(destDir, file);
-    copy(srcFile, destFile);
-  }
 }
 
 function isEmpty(path: string) {
@@ -404,6 +388,12 @@ function pkgFromUserAgent(userAgent: string | undefined) {
   };
 }
 
-init().catch((e) => {
-  console.error(e);
-});
+if (cliArgs.setter) {
+  initSetter(process.cwd()).catch((e) => {
+    console.error(e);
+  });
+} else {
+  init().catch((e) => {
+    console.error(e);
+  });
+}
