@@ -30,8 +30,9 @@ export const PublishModal = ({ open, onClose }: PublishModalProps) => {
     if (success) {
       messageApi.success('发布成功');
       onClose();
-      setPublishing(false);
     }
+
+    setPublishing(false);
   };
 
   const handleCancel = () => {
