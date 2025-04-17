@@ -19,7 +19,7 @@ export const startWatcherSocket = () => {
   socket.onclose = () => {
     getModalApi().warning({
       title: '连接已断开',
-      content: '请重新支持项目中 play 命令后刷新页面',
+      content: '请重新执行项目中 play 命令后刷新页面',
       onOk: () => {
         window.location.reload();
       },
