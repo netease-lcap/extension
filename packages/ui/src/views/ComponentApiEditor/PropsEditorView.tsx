@@ -97,8 +97,9 @@ const AddProp = ({
       });
 
       setVisible(false);
+      onAdd(name);
     },
-    [component?.props, component?.name, updateComponent],
+    [component?.props, component?.name, updateComponent, onAdd],
   );
 
   const handleAddSchemaProp = useCallback(
