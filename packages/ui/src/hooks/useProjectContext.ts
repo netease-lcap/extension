@@ -22,7 +22,7 @@ export const ProjectContext = createContext<ProjectContextType>({
   openHelpModal: () => {},
 });
 
-export const useProjectContextProvider = () => {
+export const useProjectContextProvider = (onOpenHelpModal?: (url: string, key?: string) => void) => {
   const [metaInfo, setMetaInfo] = useState<ProjectMetaInfo>();
   const [schema, setSchema] = useState<MaterialSchema>();
   const [helpModalVisible, setHelpModalVisible] = useState(false);
@@ -50,13 +50,17 @@ export const useProjectContextProvider = () => {
   const openHelpModal = useCallback((key?: keyof typeof helpModalSrcMap) => {
     setHelpModalVisible(true);
     if (key && helpModalSrcMap[key]) {
-      if (onlyEditor) {
-        window.top?.postMessage({ from: 'lcap-api-editor', type: 'openHelpModal', data: helpModalSrcMap[key] }, '*');
+      if (onOpenHelpModal) {
+        onOpenHelpModal(helpModalSrcMap[key], key);
       } else {
-        setHelpSrc(helpModalSrcMap[key]);
+        if (onlyEditor) {
+          window.top?.postMessage({ from: 'lcap-api-editor', type: 'openHelpModal', data: helpModalSrcMap[key] }, '*');
+        } else {
+          setHelpSrc(helpModalSrcMap[key]);
+        }
       }
     }
-  }, []);
+  }, [onOpenHelpModal]);
 
   const closeHelpModal = useCallback(() => {
     setHelpModalVisible(false);

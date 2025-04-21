@@ -35,6 +35,11 @@ export const stopWatcherSocket = () => {
   socket.close();
 };
 
+export const executeHandler = (message: string) => {
+  handlers.forEach((handler) => {
+    handler(message);
+  });
+};
 
 export const addMessageHandler = (handler: MessageHandler) => {
   handlers.push(handler);

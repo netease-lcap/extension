@@ -22,13 +22,13 @@ import { upperFirst } from 'lodash';
 import styles from './index.module.less';
 
 export interface APIEditorProps {
-  collapsed: boolean;
+  collapsed?: boolean;
   collapseEnable?: boolean;
-  toggleCollapsed: () => void;
+  toggleCollapsed?: () => void;
 }
 
 const minSize = 32;
-export const APIEditor = ({ collapsed, toggleCollapsed, collapseEnable = true }: APIEditorProps) => {
+export const APIEditor = ({ collapsed = false, toggleCollapsed, collapseEnable = true }: APIEditorProps) => {
   const [modal, modalContextHolder] = Modal.useModal();
   const [componentSizes, setComponentSizes] = useState([100, 0]);
   const [apiDetailSizes, setApiDetailSizes] = useState([100, 0]);

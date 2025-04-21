@@ -7,7 +7,7 @@ export interface HttpResponse<T> {
   data: T;
 }
 
-export const http = Axios.create({
+let http = Axios.create({
   baseURL: '',
   validateStatus(status) {
     return status === 200;
@@ -24,6 +24,11 @@ function handleResponse<T>(response: AxiosResponse<HttpResponse<T>>) {
 }
 
 export default {
+  async setInstance(instance: any) {
+    if (instance) {
+      http = instance;
+    }
+  },
   async get<T>(url: string, config?: AxiosRequestConfig) {
     const response = await http.get<HttpResponse<T>>(url, config);
 

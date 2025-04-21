@@ -1,10 +1,10 @@
 {
   "name": "@lcap/extension-ui",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "main": "node/index.js",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/build.mjs",
     "watch": "vite build --watch",
     "lint": "eslint .",
     "prepublishOnly": "npm run build",
@@ -13,7 +13,8 @@
   "files": [
     "dist",
     "node",
-    "README.md"
+    "README.md",
+    "es"
   ],
   "repository": {
     "type": "git",
