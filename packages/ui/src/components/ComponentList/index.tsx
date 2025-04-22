@@ -1,4 +1,5 @@
-import { FC, HTMLAttributes, MouseEvent } from 'react';
+import { FC, HTMLAttributes, MouseEvent, useCallback } from 'react';
+import { Tooltip } from 'antd';
 import classNames from 'classnames';
 import styles from './index.module.less';
 import { IconAddCircle, IconRemove } from '../icons';
@@ -46,6 +47,28 @@ export const ComponentList: FC<ComponentListProps> = (props: ComponentListProps)
     onAdd(name);
   };
 
+  const renderAddAction = useCallback((component: any) => {
+    if (action !== 'add') {
+      return null;
+    }
+
+    const actionElement = (
+      <span className={`${styles.action} ${styles.add}`} onClick={component.disabled ? undefined : (e) => handleAdd(e, component.name)}>
+        <IconAddCircle />
+      </span>
+    );
+
+    if (component.disabled) {
+      return (
+        <Tooltip title="该组件已添加">
+          {actionElement}
+        </Tooltip>
+      );
+    }
+
+    return actionElement;
+  }, [action, handleAdd]);
+
   return (
     <div className={rootClass} {...rest}>
       {
@@ -56,7 +79,7 @@ export const ComponentList: FC<ComponentListProps> = (props: ComponentListProps)
       {
         componentList.map((component) => {
           return (
-            <div key={component.name} onClick={() => handleClick(component.name)} className={classNames(styles.componentItem, { [styles.active]: selectable && value === component.name })}>
+            <div key={component.name} onClick={() => handleClick(component.name)} className={classNames(styles.componentItem, { [styles.active]: selectable && value === component.name, [styles.disabled]: component.disabled })}>
               <span className={styles.componentName}>{component.name}</span>
               <div className={styles.actions}>
                 {
@@ -66,13 +89,7 @@ export const ComponentList: FC<ComponentListProps> = (props: ComponentListProps)
                     </span>
                   )
                 }
-                {
-                  action === 'add' && (
-                    <span className={`${styles.action} ${styles.add}`} onClick={(e) => handleAdd(e, component.name)}>
-                      <IconAddCircle />
-                    </span>
-                  )
-                }
+                {renderAddAction(component)}
               </div>
             </div>
           );

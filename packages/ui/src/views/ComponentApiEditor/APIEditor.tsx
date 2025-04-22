@@ -111,14 +111,23 @@ export const APIEditor = ({ collapsed = false, toggleCollapsed, collapseEnable =
     )
   }, [toggleCollapsed, componentList]);
 
-  const handleRemoveComponent = (name: string) => {
+  const handleRemoveComponent = useCallback((name: string) => {
+    const component = componentList.find((component) => component.name === name);
+
+    if (!component) {
+      return;
+    }
+
+    const isNpmComponent = !!component.sourceName;
+
     modal.confirm({
       title: `确定删除组件“${name}”吗？`,
+      content: isNpmComponent ? '该组件来自npm包，删除后可在下方npm包组件列表中重新添加。' : '删除后，组件将无法在组件列表中显示',
       onOk: () => {
         removeComponent(name);
       },
     });
-  };
+  }, [removeComponent, componentList]);
 
   const handleRemoveChildComponent = useCallback((name: string) => {
     if (!component) {
@@ -164,6 +173,10 @@ export const APIEditor = ({ collapsed = false, toggleCollapsed, collapseEnable =
     modal,
   ]);
 
+  const hasNpmComponent = useMemo(() => {
+    return hiddenList.length > 0;
+  }, [hiddenList]);
+
   return (
     <ComponentContext.Provider value={contextValue as any}>
       <div className={`${styles.editor}  ${collapsed ? styles.collapsed : ''}`}>
@@ -179,10 +192,11 @@ export const APIEditor = ({ collapsed = false, toggleCollapsed, collapseEnable =
                 </div>
               </div>
             </Allotment.Pane>
-            <Allotment.Pane minSize={minSize}>
-              <div className={styles.configListPanel}>
-                <div className={`${styles.listPanelHeader} ${styles.collapse}`} onClick={handleComponentClick}>
-                  <span className={styles.title}>隐藏组件 ({hiddenList.length})</span>
+            {hasNpmComponent && (
+              <Allotment.Pane minSize={minSize}>
+                <div className={styles.configListPanel}>
+                  <div className={`${styles.listPanelHeader} ${styles.collapse}`} onClick={handleComponentClick}>
+                  <span className={styles.title}>NPM包内组件 ({hiddenList.length})</span>
                   <div className={`${styles.action} ${componentSizes[1] > minSize ? styles.up : ''}`}>
                     <IconArrowDown />
                   </div>
@@ -191,7 +205,8 @@ export const APIEditor = ({ collapsed = false, toggleCollapsed, collapseEnable =
                   <ComponentList action="add" onAdd={addComponent} componentList={hiddenList} selectable={false} />
                 </div>
               </div>
-            </Allotment.Pane>
+              </Allotment.Pane>
+            )}
           </Allotment>
         </div>
         <div className={styles.componentDetail}>

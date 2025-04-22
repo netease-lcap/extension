@@ -24,8 +24,16 @@ export const useComponentList = () => {
       return [];
     }
 
-    return schema.components.filter((item) => {
-      return !componentList.find((component) => component.sourceName === item.name);
+    return schema.components.map((item) => {
+      const comp = componentList.find((component) => component.sourceName === item.name);
+      if (comp) {
+        return {
+          ...item,
+          disabled: true,
+        };
+      }
+
+      return item;
     });
   }, [componentList, schema]);
 
