@@ -1,4 +1,4 @@
-
+import { useEffect } from 'react';
 import { ConfigProvider, Modal, message } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { AppLayout } from './layouts';
@@ -8,6 +8,7 @@ import { useProjectContextProvider, ProjectContext } from './hooks/useProjectCon
 import { HelpModal } from './components/HelpModal';
 import { initMessage } from './utils/message';
 import { onlyEditor } from './utils/env';
+import { healthCheck } from './services/project';
 
 function App() {
   const {
@@ -19,6 +20,33 @@ function App() {
   const [messageApi, messageContextHolder] = message.useMessage();
   const [modal, contextHolder] = Modal.useModal();
   initMessage(messageApi, modal);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      healthCheck().then((res) => {
+        if (!res) {
+          clearInterval(timer);
+          modal.confirm({
+            title: 'API 服务未启动',
+            content: '请重新执行项目中 play 命令后刷新页面',
+            centered: true,
+            onOk: () => {
+              window.location.reload();
+            },
+            onClose: () => {
+              window.location.reload();
+            },
+            onCancel: () => {
+              window.location.reload();
+            }
+          });
+        }
+      });
+    }, 5000);
+    return () => {
+      clearInterval(timer);
+    }
+  }, []);
 
 
   return (

@@ -31,6 +31,20 @@ export interface LcapConfig {
   password: string;
 }
 
+export async function healthCheck() {
+  try {
+    const response = await http.get<string>('/api/health');
+
+    if (!response || !response.data) {
+      return false;
+    }
+
+    return response.data === 'ok';
+  } catch (error) {
+    return false;
+  }
+}
+
 export async function getProjectMetaInfo() {
   const response = await http.get<ProjectMetaInfo>('/api/project/meta');
 

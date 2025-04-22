@@ -1,5 +1,3 @@
-import { getModalApi } from './message';
-
 export type MessageHandler = (message: string) => void;
 
 const handlers: MessageHandler[] = [];
@@ -16,15 +14,6 @@ export const startWatcherSocket = () => {
   const address = protocol + window.location.host + window.location.pathname + '/ws';
   socket = new WebSocket(address);
   socket.onmessage = handleMessage;
-  socket.onclose = () => {
-    getModalApi().warning({
-      title: '连接已断开',
-      content: '请重新执行项目中 play 命令后刷新页面',
-      onOk: () => {
-        window.location.reload();
-      },
-    });
-  }
 };
 
 export const stopWatcherSocket = () => {
