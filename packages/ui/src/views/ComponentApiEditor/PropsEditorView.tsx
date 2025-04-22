@@ -357,6 +357,7 @@ export const PropsEditorView = () => {
 
       modal.confirm({
         title: `确定删除属性 ”${name}“ 吗？`,
+        centered: true,
         onOk: async () => {
           await updateComponent({
             type: 'remove',

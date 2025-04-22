@@ -67,7 +67,7 @@ export const PublishModal = ({ open, onClose }: PublishModalProps) => {
 
   return (
     <>
-      <Modal title="发布到资产中心" open={open} onOk={handleOk} onCancel={handleCancel} okButtonProps={{ style: { minWidth: 60 }, loading: publishing }} cancelButtonProps={{ style: { minWidth: 60 } }}>
+      <Modal centered title="发布到资产中心" open={open} onOk={handleOk} onCancel={handleCancel} okButtonProps={{ style: { minWidth: 60 }, loading: publishing }} cancelButtonProps={{ style: { minWidth: 60 } }}>
         <Form form={form} layout="vertical">
           <Form.Item required={true} rules={[{ required: true, message: '请输入发布平台地址' }]} label="发布平台地址" name="platform">
             <Input />

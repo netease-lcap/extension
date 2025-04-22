@@ -163,6 +163,7 @@ export const EventsEditorView = () => {
 
     modal.confirm({
       title: `确定删除事件 ”${name}“ 吗？`,
+      centered: true,
       onOk: async () => {
         await updateComponent({
           type: 'remove',

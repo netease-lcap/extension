@@ -123,6 +123,7 @@ export const APIEditor = ({ collapsed = false, toggleCollapsed, collapseEnable =
     modal.confirm({
       title: `确定删除组件“${name}”吗？`,
       content: isNpmComponent ? '该组件来自npm包，删除后可在下方npm包组件列表中重新添加。' : '删除后，组件将无法在组件列表中显示',
+      centered: true,
       onOk: () => {
         removeComponent(name);
       },
@@ -136,6 +137,7 @@ export const APIEditor = ({ collapsed = false, toggleCollapsed, collapseEnable =
 
     modal.confirm({
       title: `确定删除子组件“${name}”吗？`,
+      centered: true,
       onOk: async () => {
         await updateComponent({
           type: 'remove',

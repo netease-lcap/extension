@@ -162,6 +162,7 @@ export const MethodsEditorView = () => {
 
     modal.confirm({
       title: `确定删除方法 ”${name}“ 吗？`,
+      centered: true,
       onOk: async () => {
         await updateComponent({
           type: 'remove',

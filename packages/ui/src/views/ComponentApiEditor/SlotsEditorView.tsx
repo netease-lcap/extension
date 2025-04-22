@@ -226,6 +226,7 @@ export const SlotsEditorView = () => {
 
     modal.confirm({
       title: `确定删除插槽 ”${name}“ 吗？`,
+      centered: true,
       onOk: async () => {
         await updateComponent(getSlotOptionActions({
           type: 'remove',

@@ -102,6 +102,7 @@ export const ReadablePropsEditorView = () => {
 
     modal.confirm({
       title: `确定删除变量 ”${name}“ 吗？`,
+      centered: true,
       onOk: async () => {
         await updateComponent({
           type: 'remove',
