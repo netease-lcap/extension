@@ -4,7 +4,7 @@ export const SetterList = [
     value: 'InputSetter',
   },
   {
-    label: '切换设置器',
+    label: '开关设置器',
     value: 'SwitchSetter',
   },
   {
