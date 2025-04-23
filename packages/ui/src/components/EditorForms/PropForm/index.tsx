@@ -91,24 +91,22 @@ export const PropForm = ({ propData }: PropFormProps) => {
     }
 
     value = JSON.stringify(value);
+
+    const data: any = {
+      setter: value,
+    };
+
     if (tsType) {
-      const data: any = {
-        setter: value,
-      };
-
-      if (tsType) {
-        data.tsType = tsType;
-      }
-
-      updateComponent({
-        type: 'update',
-        module: 'prop',
-        name: component.name,
-        propName: propData.name,
-        data,
-      });
-      return;
+      data.tsType = tsType;
     }
+
+    updateComponent({
+      type: 'update',
+      module: 'prop',
+      name: component.name,
+      propName: propData.name,
+      data,
+    });
   }, [component?.name, propData.name, updateComponent, component?.typeMap.prop]);
 
   const handleRequestChange = useCallback((name: keyof PropDeclaration, value: any) => {
