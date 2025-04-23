@@ -1,6 +1,6 @@
 {
   "name": "@lcap/extension-ui",
-  "version": "1.0.0-beta.4",
+  "version": "1.0.0-beta.5",
   "main": "node/index.js",
   "scripts": {
     "dev": "vite",
