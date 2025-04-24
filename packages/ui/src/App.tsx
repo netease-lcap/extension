@@ -40,6 +40,8 @@ function App() {
               window.location.reload();
             }
           });
+
+          window.top?.postMessage({ from: 'lcap-api-editor', type: 'health-check-failed', data: null }, '*');
         }
       });
     }, 5000);
