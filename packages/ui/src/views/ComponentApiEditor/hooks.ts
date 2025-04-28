@@ -44,6 +44,13 @@ export const useComponentList = () => {
   };
 };
 
+const log = (data: any) => {
+  try {
+    window.top?.postMessage({ from: 'lcap-api-editor', type: 'log', data: data }, '*');
+  } catch (e) {
+  }
+}
+
 export const useComponentControl = (componentList: ComponentMetaInfo[], loadComponentList: () => void) => {
   const [selected, setSelected] = useState<string>('');
   const [component, setComponent] = useState<NaslComponent | null>(null);
@@ -59,12 +66,22 @@ export const useComponentControl = (componentList: ComponentMetaInfo[], loadComp
   const handleAdd = useCallback(async (name: string) => {
     await createComponent(name);
     loadComponentList();
+
+    log({
+      type: 'addComponent',
+      name,
+    });
   }, [loadComponentList]);
 
 
   const handleRemove = useCallback(async (name: string) => {
     await removeComponent(name);
     loadComponentList();
+
+    log({
+      type: 'removeComponent',
+      name,
+    });
   }, [loadComponentList]);
 
   const loadComponent = useCallback(async (name: string) => {
@@ -161,6 +178,12 @@ export const useComponentControl = (componentList: ComponentMetaInfo[], loadComp
 
     const actions = Array.isArray(options) ? options : [options];
     const successed = await updateComponent({
+      tsPath,
+      actions: actions,
+    });
+
+    log({
+      type: 'updateComponent',
       tsPath,
       actions: actions,
     });
