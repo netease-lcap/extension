@@ -288,6 +288,7 @@ const PropGroup = ({
                 defaultOpen={defaultOpenName === prop.name}
                 group={group}
                 name={prop.name}
+                title={prop.title}
                 onRemove={onRemove}
                 onMove={onMove}>
                 <PropForm propData={prop} />

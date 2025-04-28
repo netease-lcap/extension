@@ -1,5 +1,5 @@
 import { useMemo, FC, CSSProperties, useCallback, useRef, useEffect } from 'react';
-import { Collapse, Button } from 'antd';
+import { Collapse, Button, Tooltip } from 'antd';
 import { useDrop, useDrag } from 'react-dnd';
 import type { Identifier } from 'dnd-core';
 import classNames from 'classnames';
@@ -8,6 +8,7 @@ import { IconTrash, IconDragHandle, IconArrowDown } from '../icons';
 
 export interface ComponentFieldProps {
   name: string;
+  title?: string;
   onRemove?: (name: string) => void;
   style?: CSSProperties;
   className?: string;
@@ -25,6 +26,7 @@ interface DragItem {
 export const ComponentField: FC<ComponentFieldProps> = (props) => {
   const {
     name,
+    title,
     group = '',
     onRemove = () => {},
     onMove = () => {},
@@ -89,6 +91,8 @@ export const ComponentField: FC<ComponentFieldProps> = (props) => {
   const opacity = isDragging ? 0.5 : 1;
 
   const items = useMemo(() => {
+    const label = `${name}${title ? `（${title}）` : ''}`;
+
     return [
       {
         key: '1',
@@ -101,6 +105,7 @@ export const ComponentField: FC<ComponentFieldProps> = (props) => {
             lineHeight: '20px',
             padding: '4px 12px 4px 4px',
             alignItems: 'center',
+            gap: 8,
           },
           body: {
             padding: 16,
@@ -112,7 +117,9 @@ export const ComponentField: FC<ComponentFieldProps> = (props) => {
             <span className={styles.drag} ref={dragHandleRef}>
               <IconDragHandle />
             </span>
-            <span>{name}</span>
+            <Tooltip mouseEnterDelay={0.5} title={label}>
+              <span className={styles.name}>{label}</span>
+            </Tooltip>
             <Button
               type="text"
               className={styles.remove}

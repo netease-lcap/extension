@@ -1,6 +1,6 @@
 import { useEffect, useContext, useCallback, useRef } from 'react';
 import { Button, Form, Input, Radio } from 'antd';
-import { pick } from 'lodash';
+import { pick, omit } from 'lodash';
 import { JSONEditorView } from '../../components/JSONEditorView';
 import { useComponentContext } from '../../hooks/useComponentContext';
 import { IconHelpVariant } from '../../components/icons';
@@ -44,7 +44,7 @@ export const BaseInfo = ({ removeSubComponent }: { removeSubComponent: (name: st
       type: 'update',
       module: 'info',
       name: component?.name,
-      data: form.getFieldsValue(),
+      data: omit(form.getFieldsValue(), ['name']),
     });
     changedRef.current = false;
   }, [component?.name, form, updateComponent]);
