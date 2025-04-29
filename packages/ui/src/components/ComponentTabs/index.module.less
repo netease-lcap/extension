@@ -10,6 +10,27 @@
     .ant-tabs-nav-add {
       border: none !important;
     }
+
+     .ant-tabs-nav .ant-tabs-tab {
+      padding-top: 3px !important;
+      padding-bottom: 3px !important;
+    }
+
+    .ant-tabs-nav .ant-tabs-tab-active {
+      border-top-color: transparent !important;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background-color: #3377FF;
+        border-radius: 3px 3px 0 0;
+      }
+    }
   }
 }
 
