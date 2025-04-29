@@ -33,7 +33,7 @@
     "@codemirror/state": "^6.5.2",
     "@codemirror/view": "^6.36.4",
     "@eslint/js": "^9.21.0",
-    "@nasl/types": "^0.1.11",
+    "@nasl/types": "^0.1.12",
     "@types/lodash": "^4.14.202",
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
