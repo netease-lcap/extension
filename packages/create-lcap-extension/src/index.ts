@@ -87,91 +87,101 @@ async function init() {
     return;
   }
 
-  try {
-    result = await prompts(
-      [
-        {
-          type: () => cliArgs.name ? null : 'text',
-          name: 'projectName',
-          message: reset('请输入依赖库包名：'),
-          initial: snakeCase(formatTargetDir(cliArgs.name)) || (pkgMetaInfo?.name ? `cwx_${snakeCase(pkgMetaInfo.name)}` : defaultTargetDir),
-          validate: (value) => {
-            return !!value;
-          },
-          onState: (state) => {
-            targetDir = snakeCase(formatTargetDir(state.value)) || defaultTargetDir;
-          },
-        },
-        {
-          type: () =>
-            !fs.existsSync(targetDir) || isEmpty(targetDir) ? null : 'select',
-          name: 'overwrite',
-          message: () =>
-            (targetDir === '.'
-              ? '当前目录'
-              : `目标目录 "${targetDir}"`) +
-            ` 已经存在. 请选择接下来的操作：`,
-          initial: 0,
-          choices: [
-            {
-              title: '取消创建',
-              value: 'no',
+  if (cliArgs.prompt) {
+    try {
+      result = JSON.parse(cliArgs.prompt);
+    } catch(e) {
+      console.log(red(`解析 prompt 参数错误`));
+      console.log(e);
+      return;
+    }
+  } else {
+    try {
+      result = await prompts(
+        [
+          {
+            type: () => cliArgs.name ? null : 'text',
+            name: 'projectName',
+            message: reset('请输入依赖库包名：'),
+            initial: snakeCase(formatTargetDir(cliArgs.name)) || (pkgMetaInfo?.name ? `cwx_${snakeCase(pkgMetaInfo.name)}` : defaultTargetDir),
+            validate: (value) => {
+              return !!value;
             },
-            {
-              title: '删除当前目录，并继续',
-              value: 'yes',
+            onState: (state) => {
+              targetDir = snakeCase(formatTargetDir(state.value)) || defaultTargetDir;
             },
-            {
-              title: '忽略文件，并继续',
-              value: 'ignore',
-            },
-          ],
-        },
-        {
-          type: (_, { overwrite }: { overwrite?: string }) => {
-            if (overwrite === 'no') {
-              throw new Error(red('✖') + ' 已取消');
-            }
-            return null;
           },
-          name: 'overwriteChecker',
-        },
+          {
+            type: () =>
+              !fs.existsSync(targetDir) || isEmpty(targetDir) ? null : 'select',
+            name: 'overwrite',
+            message: () =>
+              (targetDir === '.'
+                ? '当前目录'
+                : `目标目录 "${targetDir}"`) +
+              ` 已经存在. 请选择接下来的操作：`,
+            initial: 0,
+            choices: [
+              {
+                title: '取消创建',
+                value: 'no',
+              },
+              {
+                title: '删除当前目录，并继续',
+                value: 'yes',
+              },
+              {
+                title: '忽略文件，并继续',
+                value: 'ignore',
+              },
+            ],
+          },
+          {
+            type: (_, { overwrite }: { overwrite?: string }) => {
+              if (overwrite === 'no') {
+                throw new Error(red('✖') + ' 已取消');
+              }
+              return null;
+            },
+            name: 'overwriteChecker',
+          },
+          {
+            type: () => (isValidPackageName(getProjectName()) ? null : 'text'),
+            name: 'packageName',
+            message: reset('包名：'),
+            initial: () => toValidPackageName(getProjectName()),
+            validate: (dir) =>
+              isValidPackageName(dir) || 'Invalid package.json name',
+          },
+          {
+            type: 'text',
+            name: 'title',
+            message: reset('请输入依赖库中文名：'),
+          },
+          {
+            type: () => pkgMetaInfo && pkgMetaInfo.framework !== 'unknow' ? null : 'select',
+            name: 'template',
+            message: reset('请选择模板:'),
+            initial: 0,
+            choices: TEMPLATES.map((t) => {
+              const frameworkColor = t.color;
+              return {
+                title: frameworkColor(t.display || t.name),
+                value: t.name,
+              };
+            }),
+          },
+        ],
         {
-          type: () => (isValidPackageName(getProjectName()) ? null : 'text'),
-          name: 'packageName',
-          message: reset('包名：'),
-          initial: () => toValidPackageName(getProjectName()),
-          validate: (dir) =>
-            isValidPackageName(dir) || 'Invalid package.json name',
+          onCancel: () => {
+            throw new Error(red('✖') + ' 已取消');
+          },
         },
-        {
-          type: 'text',
-          name: 'title',
-          message: reset('请输入依赖库中文名：'),
-        },
-        {
-          type: () => pkgMetaInfo && pkgMetaInfo.framework !== 'unknow' ? null : 'select',
-          name: 'template',
-          message: reset('请选择模板:'),
-          initial: 0,
-          choices: TEMPLATES.map((t) => {
-            const frameworkColor = t.color;
-            return {
-              title: frameworkColor(t.display || t.name),
-              value: t.name,
-            };
-          }),
-        },
-      ],
-      {
-        onCancel: () => {
-          throw new Error(red('✖') + ' 已取消');
-        },
-      },
-    );
-  } catch (cancelled: any) {
-    console.log(cancelled.message);
-    return;
+      );
+    } catch (cancelled: any) {
+      console.log(cancelled.message);
+      return;
+    }
   }
 
   // user choice associated with prompts
