@@ -11,7 +11,7 @@ const handleMessage = (message: MessageEvent) => {
 let socket: WebSocket;
 export const startWatcherSocket = () => {
   const protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-  const address = protocol + window.location.host + window.location.pathname + '/ws';
+  const address = protocol + window.location.host + '/ws';
   socket = new WebSocket(address);
   socket.onmessage = handleMessage;
 };
