@@ -3,11 +3,12 @@ import { defineConfig } from 'vitepress';
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   lang: 'zh-CN',
-  title: "Codewave 扩展开发",
+  title: "CodeWave 扩展开发",
   base: '/extension/',
   description: "前端依赖库是指开发者自行开发或引入的组件、逻辑，用于满足定制化需求和功能扩展。这些库可被用于自定义界面样式、交互效果、组件功能，或者整合特定的第三方服务（例如微信SDK、钉钉SDK），并且能够被导入到IDE平台中供开发使用）",
   head: [
     ['link', { ref: 'shortcut icon', type: 'image/x-icon', href: 'logo.png?' }],
+    ['meta', { 'http-equiv': 'Cross-Origin-Resource-Policy', content: 'cross-origin' }],
   ],
   themeConfig: {
     logo: '/logo.png',
@@ -50,9 +51,20 @@ export default defineConfig({
       }, {
         text: '组件接入',
         items: [
-          { text: '概述', link: '/frontend/component/index.md' },
+          { text: '开发指南', link: '/frontend/component/index.md' },
           { text: '组件配置（api.ts）描述编写', link: '/frontend/component/api.md' },
-          { text: '页面编辑适配说明', link: '/frontend/component/ide.md' },
+          {
+            text: '页面编辑适配说明',
+            collapsed: false,
+            items: [
+              { text: '页面设计器适配说明', link: '/frontend/component/ide/index.md' },
+              { text: 'element配置说明', link: '/frontend/component/ide/element.md' },
+              { text: 'container说明', link: '/frontend/component/ide/container.md' },
+              { text: 'modal&drawer&messager配置说明', link: '/frontend/component/ide/modal.md' },
+              { text: 'popover说明', link: '/frontend/component/ide/popover.md' },
+              { text: '表达式API说明与示例', link: '/frontend/component/ide/expression.md' },
+            ]
+          },
           { text: '区块示例', link: '/frontend/component/block.md' },
           {
             text: '平台能力适配',
@@ -63,10 +75,10 @@ export default defineConfig({
               { text: '函数属性', link: '/frontend/component/platform/function.md' },
               { text: '事件转换', link: '/frontend/component/platform/event.md' },
               { text: '数据源', link: '/frontend/component/platform/data-source.md' },
-              { text: '插槽', link: '/frontend/component/platform/slot.md' },
-              { text: '子组件', link: '/frontend/component/platform/child.md' },
-              { text: '表单', link: '/frontend/component/platform/form.md' },
-              { text: '可访问性', link: '/frontend/component/platform/accessibility.md' },
+              { text: '插槽处理', link: '/frontend/component/platform/slot.md' },
+              { text: '父组件和子组件', link: '/frontend/component/platform/child.md' },
+              { text: '表单组件能力适配', link: '/frontend/component/platform/form.md' },
+              { text: '可访问属性', link: '/frontend/component/platform/accessibility.md' },
             ]
           },
           {
@@ -120,7 +132,7 @@ export default defineConfig({
     ],
     footer: {
       message: '',
-      copyright: '版权所有 © 2024-present Codewave develop team'
+      copyright: '版权所有 © 2024-present CodeWave develop team'
     },
     docFooter: {
       prev: '上一页',

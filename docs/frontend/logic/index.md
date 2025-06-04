@@ -2,16 +2,25 @@
 outline: deep
 ---
 
-# 扩展系统逻辑
+# 逻辑开发指南
 
-## 目录结构
+## 1. 初始化逻辑
 
+在[创建依赖库](../get-started/init.md)之后, 执行 lcap create 命令可选择创建逻辑：
+
+<img src="../../images/luojikaifazhinan_202411211758_1.jpg" class="imgStyle" style="" />
+
+创建逻辑时，需要设置逻辑名称（逻辑使⽤小驼峰的⽅式命名，如demoLogic），逻辑别名以及逻辑的适用终端，默认选择为PC端。如下：
+
+<img src="../../images/luojikaifazhinan_202411211758_2.png" class="imgStyle" style="" />
+
+### 逻辑目录
 ```
 - logics
-  ---- index.ts      # index.ts export 函数
+    ---- index.ts      # index.ts export 函数
 ```
 
-## 编写逻辑
+## 2. 编写逻辑
 
 ```typescript
 import '@nasl/types';
@@ -54,23 +63,28 @@ export async function asyncExecuteTask(count: nasl.core.Integer, ...taskList: na
 }
 ```
 
-## 逻辑编写规范
-需要使用 nasl 提供的类型来进行定义
+### 逻辑编写规范
 
-* 使用 `JSDoc` `@NaslLogic` 注释来标识是需要接入平台的函数，其他注解来描述该逻辑
-  * `@type` 绑定端 `pc` `h5` `both`
-  * `@title` 逻辑标题
-  * `@description` 逻辑描述
-  * `@typeParam` 类型描述
-  * `@param` 参数描述，（设置了参数名称会根据名称匹配，默认根据参数index 匹配）
-  * `@returns` 返回值描述
+- 需要使用 `nasl` 提供的类型来进行定义
 
-## 支持可变参数
+
+
+- 使用 JSDoc `@NaslLogic` 注释来标识是需要接入平台的函数，其他注解来描述该逻辑
+
+    - `@type` 绑定端 `pch5both`
+    - `@title` 逻辑标题
+    - `@description` 逻辑描述
+    - `@typeParam` 类型描述
+    - `@param` 参数描述，（设置了参数名称会根据名称匹配，默认根据参数index 匹配）
+    - `@returns` 返回值描述
+
+### 支持可变参数
+
 开发依赖库逻辑支持使用可变参数，调用逻辑时可灵活添加入参。环境要求：IDE版本为3.8及以上版本，node >= 18，lcap 版本 > 0.4.x。
 
-代码示例：
+**代码示例**
 
-该方法的入参使用可变参数String… str，可接收若干个String类型的参数，返回参数拼接结果。
+该方法的入参使用可变参数String... str，可接收若干个String类型的参数，返回参数拼接结果。
 
 ```typescript
 /**
@@ -81,24 +95,38 @@ export async function asyncExecuteTask(count: nasl.core.Integer, ...taskList: na
  * @returns 字符串拼接结果
  */
 export function concatenateStrings(...args: nasl.collection.List<nasl.core.String>): nasl.core.String {
-  return args.join("");
+    return args.join("");
 }
 ```
 
-效果演示：
+**效果演示**
 
 在平台IDE中使用该依赖库逻辑时，可点击【添加可变参数】按钮，追加一个输入参数。
 
-![](/images/logic1.gif)
+<img src="../../images/luojikaifazhinan_202411211758_3.gif" class="imgStyle" style="" />
 
 返回结果示例：ABC
 
-![](/images/logic2.png)
+<img src="../../images/luojikaifazhinan_202411211758_4.png" class="imgStyle" style="" />
 
-## 支持泛型
+**注意事项**
+
+- 可变参数可以和泛型、高阶函数混合使用。
+- 可变参数的本质是数组。
+- 可变参数必须作为方法的最后一个参数。
+- 可变参数只能出现一次。例如该方法是不合法的：
+
+```typescript
+export function concatenateStrings(...args: nasl.collection.List<nasl.core.String>,...strs: nasl.collection.List<nasl.core.Integer>): nasl.core.String {
+
+}
+```
+
+### 支持泛型
+
 开发依赖库逻辑支持逻辑的入参和返回值使用泛型，可以更灵活地编写通用代码。环境要求：IDE版本为3.8及以上版本，node >= 18，lcap 版本 > 0.4.x。
 
-代码示例：
+**代码示例**
 
 入参中使用泛型类型，返回值也使用该类型。当入参为List时，在平台IDE中调用该逻辑时可选择数据类型为List。
 
@@ -110,23 +138,24 @@ export function concatenateStrings(...args: nasl.collection.List<nasl.core.Strin
  * @param list 列表
  * @returns 列表
  */
-export function filterNull<T>(list: nasl.collection.List<T>): nasl.collection.List<T>{
-  return list.filter(n => !!n);
+export function filterNull<T>(list: nasl.collection.List<T>): nasl.collection.List<T> {
+    return list.filter(n => !!n);
 }
 ```
 
-效果演示：
+**效果演示**
 
-![](/images/logic3.png)
+<img src="../../images/luojikaifazhinan_202411211758_5.png" class="imgStyle" style="" />
 
-注意事项：
+**注意事项**
 
-* 泛型可以和高阶函数、可变参数混合使用。
+- 泛型可以和高阶函数、可变参数混合使用。
 
-## 支持高阶函数
+### 支持高阶函数
+
 开发依赖库逻辑支持高阶函数，编写声明为逻辑的方法时，允许使用其他函数作为入参，在平台IDE中使用该依赖库逻辑时，可将其他逻辑作为依赖库逻辑的入参。环境要求：IDE版本为3.8及以上版本，node >= 18，lcap 版本 > 0.4.x。
 
-代码示例：
+**代码示例**
 
 ```typescript
 /**
@@ -136,35 +165,36 @@ export function filterNull<T>(list: nasl.collection.List<T>): nasl.collection.Li
  * @param count 一次并发支持任务数量
  * @param task  并发任务列表
  */
-export async function asyncExecuteTask<T(count: nasl.core.Integer, ...taskList: nasl.collection.List<() => Promise<T>>): Promise<nasl.collection.List<T>> {
-  const asyncTaskCount = count || 5;
-  let waitExecuteTasks = [...taskList];
-  const results: nasl.collection.List<T>= [];
-  while (waitExecuteTasks.length > 0) {
-    let executeTasks;
-    if (taskList.length > asyncTaskCount) {
-      executeTasks = waitExecuteTasks.slice(0, asyncTaskCount);
-    } else {
-      executeTasks = waitExecuteTasks;
+export async function asyncExecuteTask<T>(count: nasl.core.Integer, ...taskList: nasl.collection.List<() => Promise<T>>): Promise<nasl.collection.List<T>> {
+    const asyncTaskCount = count || 5;
+    let waitExecuteTasks = [...taskList];
+    const results: nasl.collection.List<T> = [];
+    while (waitExecuteTasks.length > 0) {
+        let executeTasks;
+        if (taskList.length > asyncTaskCount) {
+            executeTasks = waitExecuteTasks.slice(0, asyncTaskCount);
+        } else {
+            executeTasks = waitExecuteTasks;
+        }
+
+        results.push(...(await Promise.all(executeTasks.map((fn) => Promise.resolve(fn())))));
+        waitExecuteTasks = waitExecuteTasks.slice(executeTasks.length);
     }
 
-    results.push(...(await Promise.all(executeTasks.map((fn) => Promise.resolve(fn())))));
-    waitExecuteTasks = waitExecuteTasks.slice(executeTasks.length);
-  }
-
-  return results;
+    return results;
 }
 ```
-效果演示：
 
-![](/images/logic4.png)
+**效果演示**
+
+<img src="../../images/luojikaifazhinan_202411211758_6.png" class="imgStyle" style="" />
 
 可添加子逻辑作为入参。
 
 子逻辑是定义在逻辑内部的逻辑，需要将逻辑作为入参时可快捷创建子逻辑并进行修改。子逻辑可以使用父逻辑中的局部变量。
 
-![](/images/logic5.png)
+<img src="../../images/luojikaifazhinan_202411211758_7.png" class="imgStyle" style="" />
 
-注意事项：
+**注意事项**
 
-* 高阶函数可以和可变参数、泛型混合使用。
+- 高阶函数可以和可变参数、泛型混合使用。

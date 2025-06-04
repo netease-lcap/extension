@@ -8,13 +8,23 @@ import { VTCodeGroup, VTCodeGroupTab } from '../../../.vitepress/components'
 
 # 数据源
 
-平台数据属性统一为 `dataSource` 属性，可以直接绑定后端逻辑，获取远程数据
+## 1. 功能说明
 
-一下已选择器组件为例
+平台数据属性统一为dataSource属性，可以直接绑定后端逻辑，获取远程数据。
 
-## `api.ts` 增加数据源相关属性
+以下以选择器组件为例：
 
-```ts
+<img src="../../../images//shujuyuan_202411211021_1.png" class="imgStyle" style="" />
+
+## 2. 功能实现
+
+### 2.1 增加数据源相关属性
+
+向 api.ts 文件中写入数据源相关属性。
+
+以下以选择器组件为例：包含“数据源”、“数据类型”、“文本字段”、“值字段”属性以及重新加载数据源的组件逻辑(reload)。
+
+```typescript
 @Component({
   title: '选择器',
   description: '选择器',
@@ -57,7 +67,8 @@ export class SelectOptions<T, V> extends ViewComponentOptions {
       concept: "PropertySelectSetter"
     }
   })
-  textField: (item: T) => any = ((item: T) => item.text) as any;
+  textField: (item: T) => any;
+
 
   @Prop({
     group: '数据属性',
@@ -71,18 +82,19 @@ export class SelectOptions<T, V> extends ViewComponentOptions {
 }
 ```
 
-## 组件内部加载数据 & 渲染
+### 2.2 组件内部加载数据和渲染
+
 
 <VTCodeGroup>
   <VTCodeGroupTab label="Vue2">
 
-  [Element UI Select](https://element.eleme.cn/#/zh-CN/component/select) 支持数据源示例
+  参考[Element UI Select](https://element.eleme.cn/#/zh-CN/component/select)支持数据源示例。
 
-  ```vue
+  ```typescript
   <template>
   <el-select v-bind="$attrs" v-on="$listeners" :loading="loading">
     <template v-if="!!dataSource">
-       <el-option
+      <el-option
         v-for="item in list"
         :key="lodashGet(item, valueField)"
         :label="lodashGet(item, textField)"
@@ -160,8 +172,9 @@ export class SelectOptions<T, V> extends ViewComponentOptions {
   </VTCodeGroupTab>
   <VTCodeGroupTab label="React">
 
-  [Ant Design Select](https://ant-design.antgroup.com/components/select-cn) 支持数据源示例
-  ```tsx
+  参考[Ant Design Select](https://ant-design.antgroup.com/components/select-cn)支持数据源示例。
+
+  ```typescript
   import React, { useState, useEffect, useImperativeHandle, useMemo } from 'react';
   import { Select } from 'antd';
   import lodashGet from 'lodash/get';
@@ -244,8 +257,5 @@ export class SelectOptions<T, V> extends ViewComponentOptions {
     );
   });
   ```
-
   </VTCodeGroupTab>
 </VTCodeGroup>
-
-

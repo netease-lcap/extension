@@ -42,6 +42,8 @@ git clone https://github.com/netease-lcap/ui-libraries.git
 3.9             release/v3.9.0
 3.10            release/v3.10.0
 3.11            release/v3.11.0
+3.12            release/v3.12.0
+3.13            release/v3.13.0
 ```
 
 切换到对应分支之后，执行 `pnpm i`  安装包；
@@ -166,14 +168,47 @@ npm install -g lcap@latest
 - `password` 登录密码
 1. 在组件目路执行命令发布
 
-```
-npm run build && npx lcap-scripts deploy
+```sh
+npm run build # 构建
+
+npx lcap-scripts deploy # 推送资源
 ```
 
 风险：
 
 - 每次平台进行更新后都需要再次发布来覆盖平台的资源更新；
 - 无法同步平台组件库的新增功能；
+
+## 自定义基础组件图标 <Badge type="tip" text="^3.13.0" />
+
+### 功能说明
+
+自定义在IDE右侧组件列表中展示的组件图标。
+
+![](/images/component-panel-icon.png){data-zoomable}
+
+### 实现步骤
+
+1. 在项目文件根目录下创建文件夹 `assets` ，在文件夹下添加 `.svg` 格式图标文件。
+
+![](/images/file-icon1.png){width=300px}
+
+2. `api.ts` 中，通过 `@Component` 装饰器定义图标 `icon`，`icon` 对应的文件支持根据 `assets` 匹配路径。
+
+```typescript
+@Component({
+  // ...
+  icon: 'demo.svg',
+})
+```
+
+### 发布图片资源
+
+```sh
+npm run build # 构建
+
+npx lcap-scripts deploy --images
+```
 
 ## 相关链接
 

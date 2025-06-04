@@ -1,4 +1,4 @@
-import ComponentPreivew from 'virtual:lcap-theme-component-previews.js';
+import ComponentPreview from 'virtual:lcap-theme-component-previews.js';
 
 export default {
   title: '主题配置预览',
@@ -14,9 +14,9 @@ export const Components = {
     return {
       props: Object.keys(argTypes),
       components: {
-        ComponentPreivew,
+        ComponentPreview,
       },
-      template: '<ComponentPreivew v-bind="$props" />',
+      template: '<ComponentPreview v-bind="$props" />',
     };
   },
 };
