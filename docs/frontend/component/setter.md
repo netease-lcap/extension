@@ -52,6 +52,7 @@ lcapPlugin({
   //...
   concept: 'CustomSetter', // 固定名称
   name: 'ExInputSetter', // 自定义组件的名称 配置再entries下的key
+  argumentMap: {}, // 自定义setter的其他属性
 })
 //...
 ```
