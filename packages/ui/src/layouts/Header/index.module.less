@@ -1,0 +1,54 @@
+.header {
+  height: 44px;
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 100%;
+}
+
+.source,
+.titleInfo {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.divider {
+  border-color: #4C4C4C;
+  height: 14px;
+}
+
+.source {
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  > *:last-child {
+    margin-left: 12px;
+  }
+}
+
+.btn {
+  background-color: rgba(255, 255, 255, .1);
+  color: #fff;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, .2) !important;
+  }
+}

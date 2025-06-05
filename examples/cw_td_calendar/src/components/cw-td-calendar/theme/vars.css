@@ -1,0 +1,15 @@
+/**
+ * @component cw-td-calendar
+ */
+.t-calendar {
+  /**
+   * @type color
+   * @desc 主文本颜色色
+   */
+  --td-text-color-primary: rgba(0, 0, 0, 0.9);
+  /**
+   * @type color
+   * @desc 主色
+   */
+  --td-color-primary: #0052d9;
+}

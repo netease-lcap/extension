@@ -1,0 +1,44 @@
+{
+  "name": "@lcap/parse-cli",
+  "version": "1.0.0-alpha.1",
+  "description": "codewaver parser cli",
+  "main": "index.mjs",
+  "files": [
+    "index.mjs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netease-lcap/extension.git"
+  },
+  "keywords": [
+    "parse",
+    "codewave"
+  ],
+  "author": "NetEase CodeWave FE Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/netease-lcap/extension/issues"
+  },
+  "homepage": "https://github.com/netease-lcap/extension#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "lcap-parse": "./index.mjs"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@lcap/material-parser": "workspace:*",
+    "commander": "^13.0.0",
+    "fs-extra": "^11.3.0",
+    "picocolors": "^1.1.1",
+    "semver": "^7.6.3"
+  },
+  "engines": {
+    "node": ">=18.20.0",
+    "npm": ">=9.6.0"
+  }
+}

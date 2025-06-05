@@ -30,4 +30,5 @@ manifest.json
 
 docs/.vitepress/cache
 
+# play
 .copy.json

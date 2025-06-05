@@ -89,6 +89,7 @@ export default defineConfig({
               { text: '国际化', link: '/frontend/component/i18n.md' },
               { text: '图标库扩展', link: '/frontend/component/icon.md' },
               { text: '实体自动化行为', link: '/frontend/component/nasl-generate.md' },
+              { text: '自定义属性设置器', link: '/frontend/component/setter.md' },
             ],
           },
           { text: 'View Component API 书写指南和规范', link: '/frontend/component/nasl-view-component.md' },

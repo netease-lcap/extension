@@ -1,24 +1,20 @@
 {
   "name": "vue3_demo",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.0.0",
   "lcapIdeVersion": "3.12",
+  "main": "dist-theme/index.js",
+  "module": "dist-theme/index.mjs",
   "files": [
     "dist-theme"
   ],
-  "exports": {
-    ".": {
-      "import": "./dist-theme/index.mjs",
-      "require": "./dist-theme/index.cjs",
-      "default": "./dist-theme/index.js"
-    }
-  },
   "scripts": {
     "dev": "npm run start",
     "start": "storybook dev -p 8008",
     "build": "lcap-scripts build",
     "create": "lcap-scripts create",
     "watch": "lcap-scripts watch",
+    "play": "lcap-scripts play",
     "release": "lcap publish",
     "test": "vitest"
   },
@@ -30,9 +26,9 @@
   "dependencies": {
   },
   "devDependencies": {
-    "@lcap/builder": "^1.4.0",
+    "@lcap/builder": "^1.6.0",
     "@chromatic-com/storybook": "^3.2.2",
-    "@nasl/types": "^0.1.10",
+    "@nasl/types": "^0.1.14",
     "@storybook/addon-essentials": "^8.4.6",
     "@storybook/addon-interactions": "^8.4.6",
     "@storybook/addon-onboarding": "^8.4.6",
@@ -43,12 +39,13 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "autoprefixer": "^10.4.16",
-    "vue": "^3.5.13",
     "fs-extra": "^11.2.0",
+    "lcap-ide-server-proxy": "^0.1.2-beta",
     "storybook": "^8.4.6",
     "typescript": "~5.6.2",
     "vite": "^6.0.1",
     "vitest": "^1.1.0",
+    "vue": "^3.5.13",
     "vue-tsc": "^2.1.10"
   },
   "peerDependencies": {

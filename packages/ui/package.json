@@ -1,0 +1,70 @@
+{
+  "name": "@lcap/extension-ui",
+  "version": "1.0.0",
+  "main": "node/index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build && node scripts/build.mjs",
+    "watch": "vite build --watch",
+    "lint": "eslint .",
+    "prepublishOnly": "npm run build",
+    "preview": "vite preview"
+  },
+  "files": [
+    "dist",
+    "node",
+    "README.md",
+    "es"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netease-lcap/extension.git"
+  },
+  "keywords": [
+    "ui",
+    "codewave"
+  ],
+  "author": "NetEase CodeWave FE Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@ant-design/icons": "^5.6.1",
+    "@codemirror/lang-javascript": "^6.2.3",
+    "@codemirror/lang-json": "^6.0.1",
+    "@codemirror/state": "^6.5.2",
+    "@codemirror/view": "^6.36.4",
+    "@eslint/js": "^9.21.0",
+    "@nasl/types": "^0.1.12",
+    "@types/lodash": "^4.14.202",
+    "@types/react": "^19.0.12",
+    "@types/react-dom": "^19.0.4",
+    "@types/react-resizable": "^3.0.8",
+    "@vitejs/plugin-react": "^4.3.4",
+    "allotment": "^1.20.3",
+    "antd": "^5.24.3",
+    "axios": "^1.8.1",
+    "classnames": "^2.5.1",
+    "codemirror": "^6.0.1",
+    "dnd-core": "^16.0.1",
+    "eslint": "^9.21.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^15.15.0",
+    "json5": "^2.2.3",
+    "less": "^4.2.0",
+    "lodash": "^4.17.21",
+    "normalize.css": "^8.0.1",
+    "react": "^19.0.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-dom": "^19.0.0",
+    "react-draggable": "^4.4.6",
+    "re-resizable": "^6.11.2",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.24.1",
+    "uid": "^2.0.2",
+    "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "send": "^1.1.0"
+  }
+}

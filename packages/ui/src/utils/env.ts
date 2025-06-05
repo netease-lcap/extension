@@ -1,0 +1,1 @@
+export const onlyEditor = new URL(location.href).searchParams.get('editor') === '1';

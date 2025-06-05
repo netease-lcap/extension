@@ -1,7 +1,7 @@
 {
   "name": "cw_td_calendar",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "lcapIdeVersion": "3.12",
   "files": [
     "dist-theme"
@@ -32,8 +32,8 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.2",
-    "@lcap/builder": "^1.4.0",
-    "@nasl/types": "^0.1.10",
+    "@lcap/builder": "^1.5.0-beta.9",
+    "@nasl/types": "^0.1.11",
     "@storybook/addon-essentials": "^8.4.6",
     "@storybook/addon-interactions": "^8.4.6",
     "@storybook/addon-onboarding": "^8.4.6",

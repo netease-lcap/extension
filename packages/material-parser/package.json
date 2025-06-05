@@ -1,0 +1,92 @@
+{
+  "name": "@lcap/material-parser",
+  "version": "1.0.0",
+  "description": "Lcap material parser",
+  "main": "lib/index.js",
+  "typings": "./lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "postbuild": "copyfiles -u 1 \"src/**/*.json\" lib/",
+    "watch": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "test": "vitest --silent"
+  },
+  "files": [
+    "lib",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netease-lcap/extension.git"
+  },
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "node": "./lib/index.js",
+      "require": "./lib/index.js",
+      "import": "./lib/index.js"
+    }
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@types/debug": "^4.1.12",
+    "@types/fs-extra": "^11.0.4",
+    "@types/jsdom": "^21.1.7",
+    "@types/lodash": "^4.14.202",
+    "@types/node": "^22.10.5",
+    "copyfiles": "^2.4.1",
+    "rollup": "^4.30.1",
+    "unbuild": "^3.2.0",
+    "vitest": "^1.1.0"
+  },
+  "dependencies": {
+    "@babel/core": "^7.26.5",
+    "@babel/generator": "^7.26.5",
+    "@babel/parser": "^7.26.5",
+    "@babel/runtime":  "^7.26.5",
+    "@babel/types": "^7.26.5",
+    "@vue/compiler-dom": "^3.2.0",
+    "@vue/compiler-sfc": "^3.2.0",
+    "@types/semver": "^7.5.8",
+    "ast-types": "^0.16.1",
+    "esm-resolve": "^1.0.8",
+    "consola": "^3.4.0",
+    "cross-spawn-promise": "^0.10.2",
+    "debug": "^4.4.0",
+    "estree-to-babel": "^3.1.0",
+    "find-config": "^1.0.0",
+    "fs-extra": "^8.1.0",
+    "jsdom": "^23.0.1",
+    "hash-sum": "^2.0.0",
+    "lodash": "^4.17.15",
+    "lru-cache": "^8.0.3",
+    "neo-async": "^2.6.1",
+    "node-dir": "^0.1.10",
+    "ora": "^5.4.1",
+    "parse-prop-types": "^0.3.0",
+    "react-docgen-typescript": "^2.2.2",
+    "recast": "^0.23.9",
+    "safe-eval": "^0.4.1",
+    "semver": "^7.6.3",
+    "strip-indent": "^3.0.0",
+    "ts-map": "^1.0.3",
+    "typescript": "^5.7.3",
+    "uid": "^2.0.2",
+    "vm2": "3.9.19",
+    "doctrine": "^3.0.0",
+    "vue-inbrowser-compiler-independent-utils": "^4.69.0"
+  },
+  "keywords": [
+    "CodeWave",
+    "Vue",
+    "React"
+  ],
+  "author": "NetEase CodeWave FE Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/netease-lcap/extension/issues"
+  },
+  "homepage": "https://github.com/netease-lcap/extension#readme"
+}

@@ -5,6 +5,13 @@ import spawn from 'cross-spawn';
 import { snakeCase } from 'lodash-es';
 import prompts from 'prompts';
 import colors from 'picocolors';
+import minimist from 'minimist';
+import { genFromNpmPkg } from './pkg';
+import { resolveMetaInfo, type FrameworkType } from './meta';
+import { copy } from './copy';
+import { initSetter } from './setter';
+
+const cliArgs = minimist(process.argv.slice(2));
 
 const {
   blue,
@@ -34,8 +41,18 @@ type Template = {
 
 const TEMPLATES: Template[] = [
   {
+    name: 'vue2',
+    display: 'Vue2 依赖库',
+    color: green,
+  },
+  {
     name: 'vue3',
     display: 'Vue3 依赖库',
+    color: green,
+  },
+  {
+    name: 'react',
+    display: 'React 依赖库',
     color: green,
   },
 ];
@@ -50,95 +67,131 @@ async function init() {
     'projectName' | 'overwrite' | 'packageName' | 'title' | 'template'
   >;
 
+  if (cliArgs.name) {
+    targetDir = snakeCase(formatTargetDir(cliArgs.name));
+  }
+
+  let pkgMetaInfo: { name: string, version: string, framework: (FrameworkType | 'unknow') } | undefined;
   try {
-    result = await prompts(
-      [
-        {
-          type: 'text',
-          name: 'projectName',
-          message: reset('请输入依赖库包名：'),
-          initial: defaultTargetDir,
-          validate: (value) => {
-            return !!value;
-          },
-          onState: (state) => {
-            targetDir = snakeCase(formatTargetDir(state.value)) || defaultTargetDir;
-          },
-        },
-        {
-          type: () =>
-            !fs.existsSync(targetDir) || isEmpty(targetDir) ? null : 'select',
-          name: 'overwrite',
-          message: () =>
-            (targetDir === '.'
-              ? '当前目录'
-              : `目标目录 "${targetDir}"`) +
-            ` 已经存在. 请选择接下来的操作：`,
-          initial: 0,
-          choices: [
-            {
-              title: '取消创建',
-              value: 'no',
-            },
-            {
-              title: '删除当前目录，并继续',
-              value: 'yes',
-            },
-            {
-              title: '忽略文件，并继续',
-              value: 'ignore',
-            },
-          ],
-        },
-        {
-          type: (_, { overwrite }: { overwrite?: string }) => {
-            if (overwrite === 'no') {
-              throw new Error(red('✖') + ' 已取消');
-            }
-            return null;
-          },
-          name: 'overwriteChecker',
-        },
-        {
-          type: () => (isValidPackageName(getProjectName()) ? null : 'text'),
-          name: 'packageName',
-          message: reset('包名：'),
-          initial: () => toValidPackageName(getProjectName()),
-          validate: (dir) =>
-            isValidPackageName(dir) || 'Invalid package.json name',
-        },
-        {
-          type: 'text',
-          name: 'title',
-          message: reset('请输入依赖库中文名：'),
-        },
-        {
-          type: 'select',
-          name: 'template',
-          message: reset('请选择模板:'),
-          initial: 0,
-          choices: TEMPLATES.map((t) => {
-            const frameworkColor = t.color;
-            return {
-              title: frameworkColor(t.display || t.name),
-              value: t.name,
-            };
-          }),
-        },
-      ],
-      {
-        onCancel: () => {
-          throw new Error(red('✖') + ' 已取消');
-        },
-      },
-    );
-  } catch (cancelled: any) {
-    console.log(cancelled.message);
+    if (cliArgs.npm) {
+      pkgMetaInfo = await resolveMetaInfo(cliArgs.npm);
+    }
+  } catch(e) {
+    console.log(red(`解析 npm 包错误，找不到包 ${cliArgs.npm} 或包版本错误`));
+    console.log(e);
     return;
   }
 
+  if (pkgMetaInfo?.framework === 'unknow') {
+    console.log(red(`找不到 ${cliArgs.npm} 的框架信息，无法匹配项目模板`));
+    return;
+  }
+
+  if (cliArgs.prompt) {
+    try {
+      result = JSON.parse(cliArgs.prompt);
+    } catch(e) {
+      console.log(red(`解析 prompt 参数错误`));
+      console.log(e);
+      return;
+    }
+  } else {
+    try {
+      result = await prompts(
+        [
+          {
+            type: () => cliArgs.name ? null : 'text',
+            name: 'projectName',
+            message: reset('请输入依赖库包名：'),
+            initial: snakeCase(formatTargetDir(cliArgs.name)) || (pkgMetaInfo?.name ? `cwx_${snakeCase(pkgMetaInfo.name)}` : defaultTargetDir),
+            validate: (value) => {
+              return !!value;
+            },
+            onState: (state) => {
+              targetDir = snakeCase(formatTargetDir(state.value)) || defaultTargetDir;
+            },
+          },
+          {
+            type: () =>
+              !fs.existsSync(targetDir) || isEmpty(targetDir) ? null : 'select',
+            name: 'overwrite',
+            message: () =>
+              (targetDir === '.'
+                ? '当前目录'
+                : `目标目录 "${targetDir}"`) +
+              ` 已经存在. 请选择接下来的操作：`,
+            initial: 0,
+            choices: [
+              {
+                title: '取消创建',
+                value: 'no',
+              },
+              {
+                title: '删除当前目录，并继续',
+                value: 'yes',
+              },
+              {
+                title: '忽略文件，并继续',
+                value: 'ignore',
+              },
+            ],
+          },
+          {
+            type: (_, { overwrite }: { overwrite?: string }) => {
+              if (overwrite === 'no') {
+                throw new Error(red('✖') + ' 已取消');
+              }
+              return null;
+            },
+            name: 'overwriteChecker',
+          },
+          {
+            type: () => (isValidPackageName(getProjectName()) ? null : 'text'),
+            name: 'packageName',
+            message: reset('包名：'),
+            initial: () => toValidPackageName(getProjectName()),
+            validate: (dir) =>
+              isValidPackageName(dir) || 'Invalid package.json name',
+          },
+          {
+            type: 'text',
+            name: 'title',
+            message: reset('请输入依赖库中文名：'),
+          },
+          {
+            type: () => pkgMetaInfo && pkgMetaInfo.framework !== 'unknow' ? null : 'select',
+            name: 'template',
+            message: reset('请选择模板:'),
+            initial: 0,
+            choices: TEMPLATES.map((t) => {
+              const frameworkColor = t.color;
+              return {
+                title: frameworkColor(t.display || t.name),
+                value: t.name,
+              };
+            }),
+          },
+        ],
+        {
+          onCancel: () => {
+            throw new Error(red('✖') + ' 已取消');
+          },
+        },
+      );
+    } catch (cancelled: any) {
+      console.log(cancelled.message);
+      return;
+    }
+  }
+
   // user choice associated with prompts
-  const { overwrite, packageName, title, template } = result;
+  let { overwrite, packageName, title } = result;
+
+  let template = result.template;
+
+  if (pkgMetaInfo && (pkgMetaInfo.framework as any) !== 'unknow') {
+    template = pkgMetaInfo.framework;
+  }
 
   const root = path.join(cwd, targetDir);
 
@@ -203,7 +256,7 @@ async function init() {
 
   const replaceTemplateList = [{
     reg: /\{\{LIBRARY_NAME\}\}/g,
-    text: packageName,
+    text: packageName || getProjectName(),
   }]
 
   const write = (file: string, content?: string) => {
@@ -239,6 +292,42 @@ async function init() {
 
   write('package.json', JSON.stringify(pkg, null, 2) + '\n');
 
+  if (template === 'vue2') {
+    const entry = path.join(root, 'src', 'index.ts');
+    if (fs.existsSync(entry)) {
+      let entryContent = fs.readFileSync(entry, 'utf-8').toString();
+      replaceTemplateList.forEach(({ reg, text }) => {
+        entryContent = entryContent?.replace(reg, text);
+      });
+
+      fs.writeFileSync(entry, entryContent, 'utf-8');
+    }
+  }
+
+  if (template !== 'vue3') {
+    const answers = await prompts([
+      {
+        type: 'confirm',
+        name: 'useLcap',
+        message: '是否添加 CodeWave 基础组件包?',
+        initial: false,
+      }
+    ]);
+
+    if (answers.useLcap) {
+      spawn.sync('lcap', ['install'], {
+        cwd: root,
+        stdio: 'inherit',
+      });
+    }
+  }
+
+  if (pkgMetaInfo) {
+    console.log('\n' + green('创建成功! ') + `目录 ${targetDir}，准备安装包，解析 ${pkgMetaInfo.name}${pkgMetaInfo.version ? `@${pkgMetaInfo.version}` : ''}\n`);
+    await genFromNpmPkg(root, pkgMetaInfo);
+    return;
+  }
+
   const cdProjectName = path.relative(cwd, root);
   console.log('\n' + green('创建成功! ') + '👉 请使用以下命令:\n');
   if (root !== cwd) {
@@ -267,15 +356,6 @@ function formatTargetDir(targetDir: string | undefined) {
   return targetDir?.trim().replace(/\/+$/g, '');
 }
 
-function copy(src: string, dest: string) {
-  const stat = fs.statSync(src);
-  if (stat.isDirectory()) {
-    copyDir(src, dest);
-  } else {
-    fs.copyFileSync(src, dest);
-  }
-}
-
 function isValidPackageName(projectName: string) {
   return /^(?:@[a-z\d\-*~][a-z\d\-*._~]*\/)?[a-z\d\-~][a-z\d\-._~]*$/.test(
     projectName,
@@ -289,15 +369,6 @@ function toValidPackageName(projectName: string) {
     .replace(/\s+/g, '-')
     .replace(/^[._]/, '')
     .replace(/[^a-z\d\-~]+/g, '-');
-}
-
-function copyDir(srcDir: string, destDir: string) {
-  fs.mkdirSync(destDir, { recursive: true });
-  for (const file of fs.readdirSync(srcDir)) {
-    const srcFile = path.resolve(srcDir, file);
-    const destFile = path.resolve(destDir, file);
-    copy(srcFile, destFile);
-  }
 }
 
 function isEmpty(path: string) {
@@ -327,6 +398,12 @@ function pkgFromUserAgent(userAgent: string | undefined) {
   };
 }
 
-init().catch((e) => {
-  console.error(e);
-});
+if (cliArgs.setter) {
+  initSetter(process.cwd()).catch((e) => {
+    console.error(e);
+  });
+} else {
+  init().catch((e) => {
+    console.error(e);
+  });
+}

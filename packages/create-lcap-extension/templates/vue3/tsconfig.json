@@ -15,6 +15,7 @@
     "noEmit": true,
     "jsx": "preserve",
     "jsxFactory": "h",
+    "jsxImportSource": "vue",
     /* Linting */
     "strict": true,
     "noUnusedLocals": false,
@@ -31,6 +32,7 @@
     }
   },
   "include": [
+    "./node_modules/@lcap/builder/typings.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
     "ide/**/*.ts",
