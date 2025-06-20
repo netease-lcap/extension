@@ -26,7 +26,7 @@
   "dependencies": {
   },
   "devDependencies": {
-    "@lcap/builder": "^1.6.0",
+    "@lcap/builder": "^1.6.1-beta.1",
     "@chromatic-com/storybook": "^3.2.2",
     "@nasl/types": "^0.1.14",
     "@storybook/addon-essentials": "^8.4.6",
@@ -46,9 +46,11 @@
     "vite": "^6.0.1",
     "vitest": "^1.1.0",
     "vue": "^3.5.13",
+    "vue-router": "^4.5.0",
     "vue-tsc": "^2.1.10"
   },
   "peerDependencies": {
-    "vue": "^3.5.0"
+    "vue": "^3.5.0",
+    "vue-router": "^4.5.0"
   }
 }

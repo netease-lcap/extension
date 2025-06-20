@@ -10,6 +10,7 @@ import { genFromNpmPkg } from './pkg';
 import { resolveMetaInfo, type FrameworkType } from './meta';
 import { copy } from './copy';
 import { initSetter } from './setter';
+import { addPackageDependencies } from './addPkg';
 
 const cliArgs = minimist(process.argv.slice(2));
 
@@ -304,8 +305,10 @@ async function init() {
     }
   }
 
-  if (template !== 'vue3') {
-    const answers = await prompts([
+  let answers: { useLcap: boolean } = { useLcap: false };
+
+  if (!cliArgs.prompt) {
+    answers = await prompts([
       {
         type: 'confirm',
         name: 'useLcap',
@@ -313,13 +316,15 @@ async function init() {
         initial: false,
       }
     ]);
+  }
 
-    if (answers.useLcap) {
-      spawn.sync('lcap', ['install'], {
-        cwd: root,
-        stdio: 'inherit',
-      });
-    }
+  if (answers.useLcap) {
+    spawn.sync('lcap', ['install'], {
+      cwd: root,
+      stdio: 'inherit',
+    });
+
+    addPackageDependencies(root);
   }
 
   if (pkgMetaInfo) {
