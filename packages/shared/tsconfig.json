@@ -2,10 +2,10 @@
   "include": ["src", "__tests__"],
   "exclude": [],
   "compilerOptions": {
-    "outDir": "lib",
+    "outDir": "esm",
     "target": "ES2022",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "allowJs": true,
     "strict": true,
     "lib": ["esnext"],

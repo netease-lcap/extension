@@ -81,7 +81,7 @@ const AddSubComponent = ({ name: componentName }: { name?: string }) => {
 
   return (
     <div className={styles.addTab}>
-      <Dropdown open={open} onOpenChange={handleOpenChange} trigger={['click']} placement="bottomCenter" dropdownRender={renderDropdownMenu}>
+      <Dropdown open={open} onOpenChange={handleOpenChange} trigger={['click']} placement="bottom" dropdownRender={renderDropdownMenu}>
         <IconAdd />
       </Dropdown>
     </div>

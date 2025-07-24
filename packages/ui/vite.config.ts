@@ -1,4 +1,5 @@
 import { defineConfig, PluginOption } from 'vite';
+import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import path from 'path';
 import fs from 'fs';
 import react from '@vitejs/plugin-react';
@@ -37,6 +38,9 @@ export default defineConfig({
   plugins: [
     react(),
     copyDist(),
+    nodePolyfills({
+      include: ['path'],
+    }),
   ],
   base: './',
   build: {

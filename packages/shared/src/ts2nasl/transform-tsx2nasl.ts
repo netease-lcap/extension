@@ -14,7 +14,7 @@ import {
   Expression,
 } from '@babel/types';
 import reactStyleToCSS from 'react-style-object-to-css';
-import { kebabCase, lowerFirst } from 'lodash-es';
+import { kebabCase, lowerFirst } from 'lodash';
 import { getNodeCode } from './utils';
 import transformExpression2Nasl from './transform-expression2nasl';
 import transformFunc2Nasl from './transform-func2nasl';

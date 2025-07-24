@@ -3,6 +3,7 @@ import traverse from '@babel/traverse';
 import generate from '@babel/generator';
 import { format } from 'prettier/standalone';
 import typescript from 'prettier/plugins/typescript';
+import estree from 'prettier/plugins/estree';
 import type {
   MaterialComponentEvent,
   MaterialComponentMethod,
@@ -16,7 +17,7 @@ import {
   omit,
   pick,
   upperFirst,
-} from 'lodash-es';
+} from 'lodash';
 import {
   evalOptions,
   getAPIPropAST,
@@ -686,7 +687,7 @@ export default async function updateAPIFile(rootPath: string, tsPath: string, ac
 
   code = await format(code, {
     parser: 'typescript',
-    plugins: [typescript],
+    plugins: [typescript, estree],
     printWidth: 80,
     tabWidth: 2,
     useTabs: false,

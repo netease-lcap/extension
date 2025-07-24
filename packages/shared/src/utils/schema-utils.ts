@@ -10,7 +10,7 @@ import type {
   MaterialComponentSlot,
   MaterialComponentMethod,
 } from '@lcap/material-parser';
-import { isNil, kebabCase, upperFirst } from 'lodash-es';
+import { isNil, kebabCase, upperFirst } from 'lodash';
 
 const eventRegex = /^on[A-Z].*/;
 const slotRegex = /^slot[A-Z].*/;

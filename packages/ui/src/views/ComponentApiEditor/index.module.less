@@ -53,7 +53,7 @@
 
 .panelHeader {
   padding: 0 4px;
-  height: 32px;
+  min-height: 32px;
   display: flex;
   align-items: center;
   background-color: #F7F8FA;
@@ -77,6 +77,16 @@
 
 .detailPanel .panelHeader {
   padding-left: 16px;
+  border-bottom: none;
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
 }
 
 .listPanelHeader {

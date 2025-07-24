@@ -1,8 +1,9 @@
 import * as babelTypes from '@babel/types';
 import traverse from '@babel/traverse';
 import generate from '@babel/generator';
-import { lowerFirst } from 'lodash-es';
+import { lowerFirst } from 'lodash';
 import { buildParse } from './babel-parser';
+import logger from './logger';
 
 export const babelParser = buildParse();
 

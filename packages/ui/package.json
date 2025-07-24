@@ -1,6 +1,6 @@
 {
   "name": "@lcap/extension-ui",
-  "version": "1.0.0",
+  "version": "1.1.0-beta.1",
   "main": "node/index.js",
   "scripts": {
     "dev": "vite",
@@ -33,6 +33,7 @@
     "@codemirror/state": "^6.5.2",
     "@codemirror/view": "^6.36.4",
     "@eslint/js": "^9.21.0",
+    "@lcap/extension-shared": "workspace:*",
     "@nasl/types": "^0.1.12",
     "@types/lodash": "^4.14.202",
     "@types/react": "^19.0.12",
@@ -53,16 +54,17 @@
     "less": "^4.2.0",
     "lodash": "^4.17.21",
     "normalize.css": "^8.0.1",
+    "re-resizable": "^6.11.2",
     "react": "^19.0.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.0.0",
     "react-draggable": "^4.4.6",
-    "re-resizable": "^6.11.2",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "uid": "^2.0.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vite-plugin-node-polyfills": "^0.24.0"
   },
   "dependencies": {
     "send": "^1.1.0"

@@ -7,6 +7,7 @@ import genNaslComponentConfig, { NaslViewComponentOptions } from './nasl-view-co
 import updateAPIFile, { APIUpdateOptions } from './utils/api-update';
 import getNaslLogics from './nasl-logics';
 import { removeComponentFiles } from './utils/remove-component';
+import { addTypeMap } from './utils/add-type';
 
 export interface ExtensionServiceOptions {
   rootPath: string;
@@ -39,7 +40,7 @@ export class ExtensionService {
     return getNaslLogics(rootPath || this.options.rootPath);
   }
 
-  async getNaslViewComponent(options: Partial<NaslViewComponentOptions> & { apiPath: string, assetsPublicPath: string }) {
+  async getNaslViewComponent(options: Partial<NaslViewComponentOptions> & { apiPath: string, assetsPublicPath: string }, useInAPIEditor: boolean = false) {
     if (!options.apiPath) {
       throw new Error('apiPath is required');
     }
@@ -53,7 +54,13 @@ export class ExtensionService {
       options.libInfo = [projectInfo.name, projectInfo.version].join('@');
     }
 
-    return genNaslComponentConfig(options as NaslViewComponentOptions);
+    const component = await genNaslComponentConfig(options as NaslViewComponentOptions);
+
+    if (useInAPIEditor) {
+      return addTypeMap(component);
+    }
+
+    return component;
   }
 
   async getNaslComponentMetaList(rootPath?: string, parseAPI: boolean = false) {

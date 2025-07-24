@@ -168,7 +168,7 @@ export default function transformFunc2NaslLogic(node: babelTypes.ExportNamedDecl
 
           if (defaultValue) {
             p.defaultValue = defaultValue;
-          } else if (param.optional) {
+          } else if ((param as any).optional) {
             p.defaultValue = {
               concept: 'DefaultValue',
               expression: typeAnnotation.typeKind === 'function'

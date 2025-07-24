@@ -12,12 +12,12 @@ import { APIUpdateOptions } from '../../types/component';
 
 export const groups = [
   '数据属性',
-  '高级属性',
   '主要属性',
   '交互属性',
+  '工具属性',
   '状态属性',
   '样式属性',
-  '工具属性',
+  '高级属性',
 ];
 
 const IconArrowRight = ({ isActive }: { isActive?: boolean }) => {

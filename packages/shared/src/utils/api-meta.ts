@@ -1,7 +1,7 @@
 import path from 'path';
 import * as babelTypes from '@babel/types';
 import traverse from '@babel/traverse';
-import { upperFirst, camelCase, isNil } from 'lodash-es';
+import { upperFirst, camelCase, isNil } from 'lodash';
 import { glob, readFile } from './file-system';
 import type { ComponentMetaInfo } from '../types/nasl';
 import { babelParser, evalOptions } from './babel-utils';
