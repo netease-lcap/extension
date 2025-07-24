@@ -1,6 +1,6 @@
 {
   "name": "@lcap/parse-cli",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0",
   "description": "codewaver parser cli",
   "main": "index.mjs",
   "files": [
