@@ -1,0 +1,65 @@
+{
+  "name": "@lcap/extension-shared",
+  "version": "1.0.0",
+  "description": "Lcap extension shared utils",
+  "main": "lib/index.js",
+  "typings": "./lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "test": "vitest --silent",
+    "test:dev": "vitest"
+  },
+  "files": [
+    "lib",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netease-lcap/extension.git"
+  },
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "node": "./lib/index.js",
+      "require": "./lib/index.js",
+      "import": "./lib/index.js"
+    },
+    "./*": {
+      "types": "./lib/*",
+      "node": "./lib/*",
+      "require": "./lib/*",
+      "import": "./lib/*"
+    }
+  },
+  "devDependencies": {
+    "@lcap/material-parser": "^1.0.0",
+    "@types/babel__core": "^7.20.5",
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^20.19.9",
+    "typescript": "^5.8.3",
+    "vitest": "^1.6.0"
+  },
+  "keywords": [
+    "CodeWave",
+    "Vue",
+    "React"
+  ],
+  "author": "NetEase CodeWave FE Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/netease-lcap/extension/issues"
+  },
+  "homepage": "https://github.com/netease-lcap/extension#readme",
+  "dependencies": {
+    "@babel/generator": "^7.26.5",
+    "@babel/parser": "^7.26.7",
+    "@babel/traverse": "^7.28.0",
+    "@babel/types": "^7.26.7",
+    "@nasl/types": "^0.1.14",
+    "lodash-es": "^4.17.21",
+    "prettier": "^3.6.2",
+    "react-style-object-to-css": "^1.1.2"
+  }
+}

@@ -1,0 +1,70 @@
+import { Logger, setLogger } from './utils/logger';
+import { FileSystem } from './types/fs';
+import { setFileSystem } from './utils/file-system';
+import { getComponentMetaInfos } from './utils/api-meta';
+import { getProjectInfo, getLcapUIComponentList, getSourceSchema } from './project';
+import genNaslComponentConfig, { NaslViewComponentOptions } from './nasl-view-component';
+import updateAPIFile, { APIUpdateOptions } from './utils/api-update';
+import getNaslLogics from './nasl-logics';
+import { removeComponentFiles } from './utils/remove-component';
+
+export interface ExtensionServiceOptions {
+  rootPath: string;
+  logger: Logger;
+  fileSystem: FileSystem;
+}
+
+export class ExtensionService {
+  private options: ExtensionServiceOptions;
+
+  constructor(options: ExtensionServiceOptions) {
+    this.options = options;
+    setLogger(options.logger);
+    setFileSystem(options.fileSystem);
+  }
+
+  async getProjectInfo(rootPath?: string) {
+    return getProjectInfo(rootPath || this.options.rootPath);
+  }
+
+  async getLcapUIComponentList(rootPath?: string) {
+    return getLcapUIComponentList(rootPath || this.options.rootPath);
+  }
+
+  async getSourceSchema(rootPath?: string) {
+    return getSourceSchema(rootPath || this.options.rootPath);
+  }
+
+  async getNaslLogics(rootPath?: string) {
+    return getNaslLogics(rootPath || this.options.rootPath);
+  }
+
+  async getNaslViewComponent(options: Partial<NaslViewComponentOptions> & { apiPath: string, assetsPublicPath: string }) {
+    if (!options.apiPath) {
+      throw new Error('apiPath is required');
+    }
+
+    if (!options.rootPath) {
+      options.rootPath = this.options.rootPath;
+    }
+
+    if (!options.libInfo) {
+      const projectInfo = await this.getProjectInfo(options.rootPath);
+      options.libInfo = [projectInfo.name, projectInfo.version].join('@');
+    }
+
+    return genNaslComponentConfig(options as NaslViewComponentOptions);
+  }
+
+  async getNaslComponentMetaList(rootPath?: string, parseAPI: boolean = false) {
+    return getComponentMetaInfos(rootPath || this.options.rootPath, parseAPI);
+  }
+
+  async updateNaslViewComponent(tsPath: string, actions: APIUpdateOptions[], rootPath?: string) {
+    return updateAPIFile(rootPath || this.options.rootPath, tsPath, actions);
+  }
+
+  async removeNaslComponent(name: string, rootPath?: string) {
+    return removeComponentFiles(rootPath || this.options.rootPath, name);
+  }
+}

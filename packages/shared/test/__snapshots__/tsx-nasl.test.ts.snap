@@ -1,0 +1,37 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`snippet code to nasl 1`] = `"{"concept":"ViewElement","tag":"FormItem","name":"","bindAttrs":[],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[{"concept":"ViewElement","tag":"template","name":"","bindAttrs":[],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[{"concept":"ViewElement","tag":"Text","name":"","bindAttrs":[{"concept":"BindAttribute","name":"children","type":"string","value":"表单项"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]}],"slotTarget":"label"}]}"`;
+
+exports[`story nasl block react 1`] = `
+[
+  {
+    "name": "默认",
+    "template": "{"concept":"ViewElement","tag":"Form","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelWidth","type":"string","value":"140"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[{"concept":"ViewElement","tag":"Input","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单输入框"},{"concept":"BindAttribute","name":"name","type":"string","value":"name"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"Select","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单选择器"},{"concept":"BindAttribute","name":"name","type":"string","value":"age"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"Switch","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单开关"},{"concept":"BindAttribute","name":"name","type":"string","value":"switch"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"RadioGroup","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单单选组"},{"concept":"BindAttribute","name":"dataSource","type":"static","value":"['苹果', '香蕉', '橘子']"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"TreeSelect","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单树选择器"},{"concept":"BindAttribute","name":"name","type":"string","value":"tree"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"TextArea","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单多行输入"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"DatePicker","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单日期选择"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"DateRangePicker","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单日期范围选择"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"TimePicker","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单时间选择"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"TimeRangePicker","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单时间范围选择"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]}]}",
+  },
+  {
+    "name": "查询表单",
+    "template": "{"concept":"ViewElement","tag":"QueryForm","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelWidth","type":"static","value":"140"},{"concept":"BindAttribute","name":"defaultCollapsed","type":"static","value":"false"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[{"concept":"ViewElement","tag":"Input","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单输入框"},{"concept":"BindAttribute","name":"name","type":"string","value":"name"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"Select","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单选择器"},{"concept":"BindAttribute","name":"name","type":"string","value":"age"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"Switch","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单开关"},{"concept":"BindAttribute","name":"name","type":"string","value":"switch"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"TreeSelect","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单树选择器"},{"concept":"BindAttribute","name":"name","type":"string","value":"tree"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"TextArea","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单多行输入"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"DatePicker","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单日期选择"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"DateRangePicker","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单日期范围选择"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"TimePicker","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单时间选择"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]},{"concept":"ViewElement","tag":"TimeRangePicker","name":"","bindAttrs":[{"concept":"BindAttribute","name":"labelText","type":"string","value":"表单时间范围选择"}],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]}]}",
+  },
+  {
+    "name": "空表单",
+    "template": "{"concept":"ViewElement","tag":"Form","name":"","bindAttrs":[],"bindEvents":[],"bindDirectives":[],"bindRoles":[],"bindStyles":[],"children":[]}",
+  },
+]
+`;
+
+exports[`story nasl block vue2 1`] = `
+[
+  {
+    "name": "确认消息",
+    "template": "<template><el-message-box type="confirm" iconType="info" title="提示" :showCancelButton="true">       <template #default><el-text text="确认内容"></el-text></template>     </el-message-box></template>",
+  },
+  {
+    "name": "消息提示",
+    "template": "<template><el-message-box type="alert" iconType="warning" title="提示">       <template #default><el-text text="提示内容"></el-text></template>     </el-message-box></template>",
+  },
+  {
+    "name": "提交内容",
+    "template": "<template><el-message-box  title="提示" type="prompt" inputPlaceholder="请输入内容" :showCancelButton="true" :showClose="true">       <template #default><el-text text="请输入"></el-text></template>     </el-message-box></template>",
+  },
+]
+`;

@@ -1,0 +1,20 @@
+{
+  "include": ["src", "__tests__"],
+  "exclude": [],
+  "compilerOptions": {
+    "outDir": "lib",
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "allowJs": true,
+    "strict": true,
+    "lib": ["esnext"],
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "sourceMap": false,
+    "noImplicitAny": false,
+    "noUnusedLocals": true,
+    "esModuleInterop": true
+  },
+}
