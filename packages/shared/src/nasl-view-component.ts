@@ -184,7 +184,7 @@ export default async function genNaslComponentConfig({
   const drawings = await getDrawings(componentDir, assetsPath);
 
   try {
-    const blocks = genBlockConfig(
+    const blocks = await genBlockConfig(
       componentDir,
       { screenshots, drawings },
       framework,
