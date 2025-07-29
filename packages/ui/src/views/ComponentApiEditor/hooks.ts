@@ -8,7 +8,7 @@ export const useComponentList = () => {
   const [componentList, setComponentList] = useState<ComponentMetaInfo[]>([]);
 
   const loadComponentList = useCallback(() => {
-    getComponentList().then((list) => {
+    return getComponentList().then((list) => {
       setComponentList(list);
     });
   }, []);
@@ -48,10 +48,11 @@ const log = (data: any) => {
   try {
     window.top?.postMessage({ from: 'lcap-api-editor', type: 'log', data: data }, '*');
   } catch (e) {
+    console.error(e);
   }
 }
 
-export const useComponentControl = (componentList: ComponentMetaInfo[], loadComponentList: () => void) => {
+export const useComponentControl = (componentList: ComponentMetaInfo[], loadComponentList: () => void | Promise<void>) => {
   const [selected, setSelected] = useState<string>('');
   const [component, setComponent] = useState<NaslComponent | null>(null);
   const [editingName, setEditingName] = useState<string>(selected);
@@ -65,7 +66,7 @@ export const useComponentControl = (componentList: ComponentMetaInfo[], loadComp
 
   const handleAdd = useCallback(async (name: string) => {
     await createComponent(name);
-    loadComponentList();
+    await loadComponentList();
 
     log({
       type: 'addComponent',

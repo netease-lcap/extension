@@ -1,5 +1,6 @@
-import { FC, HTMLAttributes, MouseEvent, useCallback } from 'react';
+import { FC, HTMLAttributes, MouseEvent, useCallback, useState } from 'react';
 import { Tooltip } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import styles from './index.module.less';
 import { IconAddCircle, IconRemove } from '../icons';
@@ -12,7 +13,7 @@ export interface ComponentListProps extends HTMLAttributes<HTMLDivElement> {
   action?: 'remove' | 'add';
   onChange?: ((value: string) => void) | any;
   onRemove?: (name: string) => void;
-  onAdd?: (name: string) => void;
+  onAdd?: (name: string) => void | Promise<void>;
 }
 
 export const ComponentList: FC<ComponentListProps> = (props: ComponentListProps) => {
@@ -27,6 +28,7 @@ export const ComponentList: FC<ComponentListProps> = (props: ComponentListProps)
     className,
     ...rest
   } = props;
+  const [adding, setAdding] = useState(false);
   const rootClass = classNames(styles.componentList, className);
 
   const handleClick = (name: string) => {
@@ -41,15 +43,30 @@ export const ComponentList: FC<ComponentListProps> = (props: ComponentListProps)
     onRemove(name);
   };
 
-  const handleAdd = (e: MouseEvent, name: string) => {
+  const handleAdd = useCallback(async (e: MouseEvent, name: string) => {
     e.preventDefault();
     e.stopPropagation();
-    onAdd(name);
-  };
+    setAdding(true);
+    try {
+      await onAdd(name);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setAdding(false);
+    }
+  }, [onAdd]);
 
   const renderAddAction = useCallback((component: any) => {
     if (action !== 'add') {
       return null;
+    }
+
+    if (adding) {
+      return (
+        <span className={`${styles.action} ${styles.add}`}>
+          <LoadingOutlined />
+        </span>
+      );
     }
 
     const actionElement = (
@@ -67,7 +84,7 @@ export const ComponentList: FC<ComponentListProps> = (props: ComponentListProps)
     }
 
     return actionElement;
-  }, [action, handleAdd]);
+  }, [action, handleAdd, adding]);
 
   return (
     <div className={rootClass} {...rest}>
