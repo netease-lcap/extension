@@ -305,6 +305,7 @@ const PropGroup = ({
             fontSize: 12,
             fontWeight: 500,
             padding: '6px 8px',
+            alignItems: 'center',
           },
           body: {
             padding: 16,
