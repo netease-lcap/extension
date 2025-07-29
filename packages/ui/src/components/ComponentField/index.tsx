@@ -1,6 +1,6 @@
-import { useMemo, FC, CSSProperties, useCallback, useRef, useEffect } from 'react';
+import { useMemo, FC, CSSProperties, useCallback, useRef, useEffect, useState } from 'react';
 import { Collapse, Button, Tooltip } from 'antd';
-import { useDrop, useDrag } from 'react-dnd';
+import { useDrop, useDrag, XYCoord } from 'react-dnd';
 import type { Identifier } from 'dnd-core';
 import classNames from 'classnames';
 import styles from './index.module.less';
@@ -15,7 +15,7 @@ export interface ComponentFieldProps {
   children?: React.ReactNode;
   defaultOpen?: boolean;
   group?: string;
-  onMove?: (source: { name: string, group: string }, target: { name?: string, group: string }) => void;
+  onMove?: (source: { name: string, group: string }, target: { name?: string, group: string }, position?: 'up' | 'down') => void;
 }
 
 interface DragItem {
@@ -48,9 +48,7 @@ export const ComponentField: FC<ComponentFieldProps> = (props) => {
     [onRemove, name],
   );
 
-  const rootClassName = useMemo(() => {
-    return classNames(styles.componentField, className);
-  }, [className]);
+  const [position, setPosition] = useState<'up' | 'down'>('up');
 
   const [{ handlerId, isOver }, drop] = useDrop<
     DragItem,
@@ -64,13 +62,33 @@ export const ComponentField: FC<ComponentFieldProps> = (props) => {
         isOver: monitor.isOver(),
       };
     },
-    hover(item: DragItem) {
+    hover(item: DragItem, monitor) {
       if (!ref.current || item.name === name) {
         return;
       }
+
+
+      // Determine rectangle on screen
+      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+
+      // Get vertical middle
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+      // Determine mouse position
+      const clientOffset = monitor.getClientOffset();
+
+      // Get pixels to the top
+      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
+
+      setPosition(hoverClientY >= hoverMiddleY ? 'down' : 'up');
     },
     drop(item: DragItem) {
-      onMove({ name: item.name, group: item.group }, { name, group });
+      if (item.name === name) {
+        return;
+      }
+
+      onMove({ name: item.name, group: item.group }, { name, group }, position);
       item.group = group;
     },
   });
@@ -98,7 +116,7 @@ export const ComponentField: FC<ComponentFieldProps> = (props) => {
         key: '1',
         styles: {
           header: {
-            backgroundColor: isOver ? 'rgba(245, 245, 245, 0.7)' : 'transparent',
+            backgroundColor: 'transparent',
             color: 'rgba(29, 33, 41, 1)',
             fontSize: 12,
             fontWeight: 500,
@@ -109,7 +127,7 @@ export const ComponentField: FC<ComponentFieldProps> = (props) => {
           },
           body: {
             padding: 16,
-            backgroundColor: isOver ? 'rgba(245, 245, 245, 0.7)' : 'transparent',
+            backgroundColor: 'transparent',
           },
         },
         label: (
@@ -135,8 +153,16 @@ export const ComponentField: FC<ComponentFieldProps> = (props) => {
     children,
     name,
     handleRemove,
-    isOver,
+    title,
   ]);
+
+  const rootClassName = useMemo(() => {
+    return classNames(styles.componentField, className, {
+      [styles.isOver]: isOver,
+      [styles.modeUp]: isOver && position === 'up',
+      [styles.modeDown]: isOver && position === 'down',
+    });
+  }, [className, isOver, position]);
 
   useEffect(() => {
     drag(dragHandleRef.current);
@@ -159,7 +185,7 @@ export const ComponentField: FC<ComponentFieldProps> = (props) => {
         defaultActiveKey={defaultOpen ? ['1'] : []}
         size="small"
         items={items as any[]}
-        style={{ backgroundColor: 'transparent' }}
+        style={{ backgroundColor: 'transparent', overflow: 'hidden' }}
       />
     </div>
   );

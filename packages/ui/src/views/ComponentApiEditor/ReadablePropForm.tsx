@@ -114,22 +114,28 @@ export const ReadablePropsEditorView = () => {
     });
   }, [component?.name, updateComponent, modal]);
 
-  const handleMoveProp = useCallback(async (sourceItem: { group: string, name: string }, target: { group: string, name?: string }) => {
+  const handleMoveProp = useCallback(async (sourceItem: { group: string, name: string }, target: { group: string, name?: string }, position: 'up' | 'down' = 'up') => {
     if (!component || !component.name) {
       return;
     }
 
     const items = [...readableProps];
     const sourceIndex = items.findIndex((prop) => prop.name === sourceItem.name);
+    const srcItem = items[sourceIndex];
+
+    items.splice(sourceIndex, 1);
+
     const targetIndex = items.findIndex((prop) => prop.name === target.name);
 
-    if (sourceIndex === targetIndex || sourceIndex === -1 || targetIndex === -1) {
+    if (sourceIndex === -1 || targetIndex === -1) {
       return;
     }
 
-    const temp = items[sourceIndex];
-    items[sourceIndex] = items[targetIndex];
-    items[targetIndex] = temp;
+    if (position === 'up') {
+      items.splice(targetIndex, 0, srcItem);
+    } else {
+      items.splice(targetIndex + 1, 0, srcItem);
+    }
 
     setReadableProps(items);
     await updateComponent({

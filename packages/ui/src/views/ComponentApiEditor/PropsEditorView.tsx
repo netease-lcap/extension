@@ -234,6 +234,7 @@ interface PropGroupProps {
   onMove?: (
     source: { name: string; group: string },
     target: { name?: string; group: string },
+    position?: 'up' | 'down',
   ) => void;
   defaultOpenName?: string;
   items?: any[];
@@ -377,6 +378,7 @@ export const PropsEditorView = () => {
     async (
       sourceItem: { group: string; name: string },
       target: { group: string; name?: string },
+      position: 'up' | 'down' = 'up',
     ) => {
       if (
         sourceItem.name === target.name ||
@@ -394,17 +396,18 @@ export const PropsEditorView = () => {
         const sourceIndex = items.findIndex(
           (prop: any) => prop.name === sourceItem.name,
         );
+
+        items.splice(sourceIndex, 1);
+
         const targetIndex = items.findIndex(
           (prop: any) => prop.name === target.name,
         );
 
-        if (sourceIndex === targetIndex) {
-          return;
+        if (position === 'up') {
+          items.splice(targetIndex, 0, sourceItem);
+        } else {
+          items.splice(targetIndex + 1, 0, sourceItem);
         }
-
-        const temp = items[sourceIndex];
-        items[sourceIndex] = items[targetIndex];
-        items[targetIndex] = temp;
 
         map[sourceItem.group] = items;
         setGroupPropMap(map);
@@ -423,7 +426,13 @@ export const PropsEditorView = () => {
         }
 
         sourceGroupItems.splice(sourceItemIndex, 1);
-        targetGroupItems.splice(targetItemIndex, 0, sourceItem);
+
+        if (position === 'up' || !target.name) {
+          targetGroupItems.splice(targetItemIndex, 0, sourceItem);
+        } else {
+          targetGroupItems.splice(targetItemIndex + 1, 0, sourceItem);
+        }
+
         map[sourceItem.group] = sourceGroupItems;
         map[target.group] = targetGroupItems;
       }

@@ -175,22 +175,28 @@ export const EventsEditorView = () => {
     });
   }, [component?.name, updateComponent, modal]);
 
-  const handleMoveProp = useCallback(async (sourceItem: { group: string, name: string }, target: { group: string, name?: string }) => {
+  const handleMoveProp = useCallback(async (sourceItem: { group: string, name: string }, target: { group: string, name?: string }, position: 'up' | 'down' = 'up') => {
     if (!component || !component.name) {
       return;
     }
 
     const items = [...events];
     const sourceIndex = items.findIndex((event) => event.name === sourceItem.name);
+    const srcItem = items[sourceIndex];
+
+    items.splice(sourceIndex, 1);
+
     const targetIndex = items.findIndex((event) => event.name === target.name);
 
-    if (sourceIndex === targetIndex || sourceIndex === -1 || targetIndex === -1) {
+    if (sourceIndex === -1 || targetIndex === -1) {
       return;
     }
 
-    const temp = items[sourceIndex];
-    items[sourceIndex] = items[targetIndex];
-    items[targetIndex] = temp;
+    if (position === 'up') {
+      items.splice(targetIndex, 0, srcItem);
+    } else {
+      items.splice(targetIndex + 1, 0, srcItem);
+    }
 
     setEvents(items);
 

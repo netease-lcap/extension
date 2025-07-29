@@ -45,6 +45,10 @@
   }
 }
 
+.componentField {
+  position: relative;
+}
+
 .componentField:not(:last-child) {
   margin-bottom: 16px;
 
@@ -62,4 +66,22 @@
       margin-inline-end: unset !important;
     }
   }
+}
+
+.componentField.isOver.modeUp::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  border-top: 2px solid #3377ff;
+}
+
+.componentField.isOver.modeDown::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-bottom: 2px solid #3377ff;
 }
