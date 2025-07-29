@@ -16,7 +16,7 @@ async function buildUIComponent() {
           formats: ['es'],
         },
         rollupOptions: {
-          external: ['react', 'react-dom', 'antd'],
+          external: ['react', 'react/jsx-runtime', 'react-dom', 'antd'],
           output: {
             // 在 UMD 构建模式下为这些外部化的依赖
             // 提供一个全局变量
