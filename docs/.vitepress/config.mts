@@ -45,6 +45,10 @@ export default defineConfig({
             {
               text: 'IDE 内调试依赖库',
               link: '/frontend/get-started/debug.md'
+            },
+            {
+              text: '依赖库按需加载',
+              link: '/frontend/get-started/treeshake.md'
             }],
           },
         ],

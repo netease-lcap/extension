@@ -20,6 +20,7 @@ export default defineConfig(({ command }) => {
       lcapPlugin({
         type: 'extension',
         framework: 'vue3',
+        modules: {},
       }),
     ],
     resolve: {
