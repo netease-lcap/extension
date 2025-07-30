@@ -141,6 +141,64 @@ icon: nasl.core.String
 
 
 <VTCodeGroup>
+  <VTCodeGroupTab label="Vue3">
+    
+  ```vue
+  <template>
+    <div v-if="online" :class="$style.onlineIcon" v-html="svgContent" />
+    <el-icon v-else :name="name" />
+  </template>
+  <script setup lang="ts">
+  import { computed, onMounted, ref } from 'vue';
+
+  interface IconProps {
+    name?: string;
+  }
+
+  const props = defineProps<IconProps>();
+  const svgContent = ref('');
+
+  // 检查是否是SVG URL
+  const isSvgUrl = (name) => {
+    return name && name.indexOf('/') !== -1 && /\.svg/i.test(name);
+  };
+
+  const online = computed(() => isSvgUrl(props.name));
+
+  const fetchSvg = async () => {
+    if (!online)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(props.name);
+      const text = await response.text();
+      svgContent.value = text;
+    } catch (error) {
+      console.error('Failed to load SVG:', error);
+    }
+  };
+
+  onMounted(fetchSvg);
+  </script>
+  <style module>
+  .onlineIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .onlineIcon svg {
+    width: 1em;
+    height: 1em;
+    color: currentColor;
+    fill: currentColor;
+  }
+  </style>
+  ```
+  
+  </VTCodeGroupTab>
   <VTCodeGroupTab label="Vue2">
 
   推荐使用 [online-svg-icon](https://github.com/qingniao99/online-svg-icon-vue2/blob/main/src/index.vue) 组件

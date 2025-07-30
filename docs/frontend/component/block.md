@@ -70,7 +70,7 @@ import { VTCodeGroup, VTCodeGroupTab } from '../../.vitepress/components'
 区块示例中仅允许设置静态属性参数，不允许绑定函数或者绑定事件。
 
 <VTCodeGroup>
-  <VTCodeGroupTab label="Vue2">
+  <VTCodeGroupTab label="Vue">
 
   ```javascript
   // 以下为错误的示例

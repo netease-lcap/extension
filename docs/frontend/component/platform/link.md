@@ -42,6 +42,56 @@ hrefAndTo: nasl.core.String;
 组件内部需要对这两个属性增加对应的代码，使组件被点击时发生页面跳转。
 
 <VTCodeGroup>
+  <VTCodeGroupTab label="Vue3">
+  
+  ```vue
+  <template>
+    <a :href="linkURL" :target="target" @click="handleClick">链接</a>
+  </template>
+  <script setup lang="ts">
+  import { vue } from 'vue';
+  import { useRouter } from 'vue-router';
+
+  const props = defineProps<{
+    link?: string;
+    destination?: string;
+    target?: string;
+    replace?: boolean;
+  }>();
+
+  const emit = defineEmits(['click'])
+
+  const router = useRouter();
+
+  const linkURL = computed(() => props.destination || props.link);
+
+  const routerNavigate = (url) => {
+    if (props.replace) {
+      router.replace(url);
+      return;
+    }
+        
+    router.push(url);
+  };
+
+  const handleClick = (e) => {
+    emit('click', e);
+    
+    if (!props.destination || props.target === '_blank') {
+      return;
+    }
+
+    // 阻止默认行为
+    e.preventDefault();
+    e.returnValue = false;
+
+    // vue router 跳转
+    routerNavigate(props.destination);
+  };
+  </script>
+  ```
+
+  </VTCodeGroupTab>
   <VTCodeGroupTab label="Vue2">
 
   ```vue

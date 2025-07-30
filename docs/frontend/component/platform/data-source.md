@@ -86,6 +86,115 @@ export class SelectOptions<T, V> extends ViewComponentOptions {
 
 
 <VTCodeGroup>
+  <VTCodeGroupTab label="Vue3">
+
+  参考[Element Plus Select](https://element-plus.org/zh-CN/component/select.html)支持数据源示例。
+
+  ```typescript
+  // src/hooks/useDataSource.ts
+  import { defineExpose, ref, toRefs, watch, useAttrs } from 'vue';
+
+  /**
+   * @param props       组件参数
+   *
+   * @emits before-load dataSource 远程加载请求前
+   * @emits load        dataSource 远程加载请求后
+   *
+   * @return list       dataSource 返回的数据
+   * @return loading    加载状态
+   */
+  export const useDataSource = (props) => {
+    const {dataSource} = toRefs(props);
+    const attrs = useAttrs() as any;
+
+    const list = ref<Array<any>>([]);
+    const loading = ref(false);
+    watch(dataSource, () => {
+      loadList();
+    });
+    // dataSource 加载数据
+    const loadList = async () => {
+      if (typeof dataSource.value === 'function') {
+        loading.value = true;
+
+        if (attrs.onBeforeLoad) {
+          attrs.onBeforeLoad();
+        }
+
+        const data = await dataSource.value({});
+
+        list.value = normalizeData(data);
+        loading.value = false;
+        if (attrs.onLoad) {
+          attrs.onLoad();
+        }
+
+      } else {
+        list.value = normalizeData(dataSource.value);
+      }
+    };
+
+    /**
+     * 过滤data
+     * @param data
+     */
+    const normalizeData = (data) => {
+      if (Array.isArray(data)) {
+        return data;
+      }
+
+      if (typeof data === 'object' && Array.isArray(data.list)) {
+        return data.list;
+      }
+
+      return [];
+    };
+
+    loadList();
+
+    return {
+      list,
+      loading,
+      reload: loadList
+    };
+  }
+  ```
+
+  ```vue
+  <template>
+    <el-select v-bind="$attrs" :loading="loading">
+      <el-option
+        v-for="item in list"
+        :key="lodashGet(item, valueField)"
+        :label="lodashGet(item, textField)"
+        :value="lodashGet(item, valueField)"
+      >
+      </el-option>
+    </el-select>
+  </template>
+  <script setup lang="ts">
+  import lodashGet from 'lodash/get';
+  import { ElSelect, ElOption } from 'element-plus';
+  import { defineExpose } from 'vue';
+  import { useDataSource } from '@/hooks/useDataSource.ts';
+
+  const props = defineProps({
+    dataSource: [Array, Function, Object],
+    dataSchema: { type: String, default: 'entity' },
+    textField: { type: String, default: 'text' },
+    valueField: { type: String, default: 'value' },
+  });
+
+  const { list, loading, reload } = useDataSource(props);
+
+  defineExpose({
+    reload
+  });
+  </script>
+  ```
+
+  </VTCodeGroupTab>
+
   <VTCodeGroupTab label="Vue2">
 
   参考[Element UI Select](https://element.eleme.cn/#/zh-CN/component/select)支持数据源示例。
