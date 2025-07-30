@@ -28,7 +28,7 @@ export const ComponentList: FC<ComponentListProps> = (props: ComponentListProps)
     className,
     ...rest
   } = props;
-  const [adding, setAdding] = useState(false);
+  const [addings, setAddings] = useState<string[]>([]);
   const rootClass = classNames(styles.componentList, className);
 
   const handleClick = (name: string) => {
@@ -46,13 +46,13 @@ export const ComponentList: FC<ComponentListProps> = (props: ComponentListProps)
   const handleAdd = useCallback(async (e: MouseEvent, name: string) => {
     e.preventDefault();
     e.stopPropagation();
-    setAdding(true);
+    setAddings((prev) => [...prev, name]);
     try {
       await onAdd(name);
     } catch (e) {
       console.error(e);
     } finally {
-      setAdding(false);
+      setAddings((prev) => prev.filter((item) => item !== name));
     }
   }, [onAdd]);
 
@@ -61,7 +61,7 @@ export const ComponentList: FC<ComponentListProps> = (props: ComponentListProps)
       return null;
     }
 
-    if (adding) {
+    if (addings.includes(component.name)) {
       return (
         <span className={`${styles.action} ${styles.add}`}>
           <LoadingOutlined />
@@ -84,7 +84,7 @@ export const ComponentList: FC<ComponentListProps> = (props: ComponentListProps)
     }
 
     return actionElement;
-  }, [action, handleAdd, adding]);
+  }, [action, handleAdd, addings]);
 
   return (
     <div className={rootClass} {...rest}>
