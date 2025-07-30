@@ -30,26 +30,26 @@ outline: deep
 
     ```typescript
     export class UTabs<T, V> extends ViewComponent {
-    @Prop({
+      @Prop({
         title: '值',
-    })
-    value: V;
+      })
+      value: V;
 
-    @Prop({
+      @Prop({
         title: '禁用',
-    })
-    disabled: nasl.core.Boolean;
+      })
+      disabled: nasl.core.Boolean;
 
-    @Prop({
+      @Prop({
         title: '只读',
-    })
-    readonly: nasl.core.Boolean;
+      })
+      readonly: nasl.core.Boolean;
 
-    //...
+      //...
     }
     ```
 
-1.  通过组件同步sync\:state事件来同步内部状态。
+1.  通过组件同步 `sync:state` 事件来同步内部状态。
 
     ```typescript
     // sync mixin
@@ -57,44 +57,44 @@ outline: deep
 
     export type SyncOption = string | { [name: string]: string | (() => any) };
     export interface SyncOptionItem {
-    name: string;
-    stateKey: string;
-    computed?: () => any;
+      name: string;
+      stateKey: string;
+      computed?: () => any;
     }
 
     function createWatch(name: string): WatchOptionsWithHandler<any> {
-    return {
+      return {
         handler(val, oldVal) {
-        if (val === oldVal) {
+          if (val === oldVal) {
             return;
-        }
+          }
 
-        this.$emit('sync:state', name, val);
+          this.$emit('sync:state', name, val);
         },
         immediate: true,
-    };
+      };
     }
 
     function normalizeSyncOptions(options: SyncOption[]) {
-    const syncMap: { [key: string]: SyncOptionItem } = {};
-    const computedMap: { [key: string]: () => any } = {};
-    const watchMap: Record<string, WatchOptionsWithHandler<any>> = {};
+      const syncMap: { [key: string]: SyncOptionItem } = {};
+      const computedMap: { [key: string]: () => any } = {};
+      const watchMap: Record<string, WatchOptionsWithHandler<any>> = {};
 
-    options.forEach((option) => {
+      options.forEach((option) => {
         if (typeof option === 'string') {
-        syncMap[option] = {
+          syncMap[option] = {
             name: option,
             stateKey: option,
-        };
+          };
 
-        watchMap[option] = createWatch(option);
-        return;
+          watchMap[option] = createWatch(option);
+          return;
         }
 
         Object.keys(option).forEach((name) => {
-        const val = option[name];
+          const val = option[name];
 
-        if (typeof val === 'function') {
+          if (typeof val === 'function') {
             const stateKey = [name, 'sync'].join('__');
             syncMap[name] = {
             name,
@@ -104,37 +104,38 @@ outline: deep
             watchMap[stateKey] = createWatch(name);
             computedMap[stateKey] = val;
             return;
-        }
+          }
 
-        syncMap[name] = {
+          syncMap[name] = {
             name,
             stateKey: val,
-        };
-        watchMap[val] = createWatch(name);
+          };
+          watchMap[val] = createWatch(name);
         });
-    });
+      });
 
-    return {
+      return {
         syncMap,
         computedMap,
         watchMap,
-    };
+      };
     }
 
     export default (...options: SyncOption[]) => {
-    const {
+      const {
         syncMap,
         watchMap,
         computedMap,
-    } = normalizeSyncOptions(options);
-    return {
+      } = normalizeSyncOptions(options);
+
+      return {
         watch: {
-        ...watchMap,
+          ...watchMap,
         },
         computed: {
-        ...computedMap,
+          ...computedMap,
         },
-    } as ComponentOptions<any>;
+      } as ComponentOptions<any>;
     };
     ```
 
@@ -142,24 +143,24 @@ outline: deep
     import sync from './sync';
     // u-tabs.vue
     export default {
-    mixins: [
+      mixins: [
         sync({
-        value() {
+          value() {
             const itemVM = this.selectedVM;
             if (!itemVM) {
-            return this.value;
+              return this.value;
             }
 
             if (this.dataSource !== undefined) {
-            return this.$at(itemVM, this.valueField);
+              return this.$at(itemVM, this.valueField);
             }
 
             return itemVM.value;
-        },
-        readonly: 'readonly',
-        disabled: 'disabled',
+          },
+          readonly: 'readonly',
+          disabled: 'disabled',
         }),
-    ],
+      ],
     }
     ```
 

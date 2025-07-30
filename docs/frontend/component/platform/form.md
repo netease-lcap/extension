@@ -11,7 +11,7 @@ import { VTCodeGroup, VTCodeGroupTab } from '../../../.vitepress/components'
 在设计表单类组件时，需确保组件具备作为表单项的能力，主要包括以下两个方面：
 
 - [组件的值能够实现双向绑定](#值双向绑定处理​)；
-- [组件的值可以进行校验](#验证规则设置器对接)。
+- [组件的值可以进行校验](#组件支持表单校验)。
 
 <img src="../../../images/biaodan_202411211134_1.png" class="imgStyle" style="width:400px" />
 
@@ -44,15 +44,15 @@ import { VTCodeGroup, VTCodeGroupTab } from '../../../.vitepress/components'
     </template>
     <script>
     export default {
-    props: {
+      props: {
         value: String,
-    },
-    methods: {
+      },
+      methods: {
         handleInput(val) {
-        this.$emit('update:value', val);
-        this.$emit('input', val);
+          this.$emit('update:value', val);
+          this.$emit('input', val);
         },
-    }
+      }
     }
     </script>
     ```
@@ -75,119 +75,196 @@ import { VTCodeGroup, VTCodeGroupTab } from '../../../.vitepress/components'
     value: V;
     ```
 
-## 验证规则设置器对接
+## 组件支持表单校验
 
-### 1. 功能说明
+### Vue2 框架下表单验证支持
 
-当组件作为表单项时，通过属性对接验证规则设置器，用于设置表单项的验证规则。
+默认 `Vue2` 组件 `option` 中设置了 `model` 既可以支持表单验证， 例如：
 
-<img src="../../../images/biaodan_202411211134_5.png" class="imgStyle" style="width:400px" />
-
-### 2. 功能实现
-
-1.  向 api.ts 文件中写入对接验证规则设置器的属性。api.ts中默认识别rules后开启验证规则设置器。
-
-    ```typescript
-    @Prop({
-      group: '主要属性',
-      title: '验证规则',
-      description: '表单字段校验规则。',
-      setter: { concept: 'InputSetter' },
-      bindHide: true,
-    })
-    rules: nasl.core.String;
-    ```
-
-2.  需要使用@lcap/validator在组件内来实现验证功能。
-
-    <VTCodeGroup>
-      <VTCodeGroupTab label="Vue2">
-
-      参考[Element UI Form](https://element.eleme.cn/#/zh-CN/component/form)对接平台验证能力示例。
-
-      ```html
-      <template>
-      <el-form-item v-bind="$attrs" :rules="formRules">
-        <slot></slot>
-      </el-form-item>
-      </template>
-      <script>
-      import VusionValidator, { localizeRules } from '@lcap/validator';
-
-      export default {
-        props: {
-          rules: {
-            type: Array,
-            default: () => [],
-          },
-        },
-        computed: {
-          formRules() {
-            return this.rules.map((item) => {
-              return {
-                trigger: 'change',
-                validator: (r, val, callback) => { // 自定义验证规则
-                  const validator = new VusionValidator(undefined, localizeRules, [item]);
-                  validator.validate(val).then(() => {
-                    callback();
-                  }).catch((errorMessage) => {
-                    callback(new Error(errorMessage));
-                  });
-                },
-              },
-            })
-          }
-        }
-      };
-      </script>
-      ```
-      </VTCodeGroupTab>
-      <VTCodeGroupTab label="React">
-
-      参考[Ant Design Form](https://ant-design.antgroup.com/components/form-cn)对接平台验证能力示例。
-
-      ```typescript
-      import React from 'react';
-      import { Form } from 'antd';
-      import VusionValidator, { localizeRules } from '@lcap/validator';
-
-      const useFormRules = (rules = []) => {
-        return React.useMemo(() => {
-          return ruls.map((item) => {
-            return {
-              message: item.message,
-              required: item.required,
-              validateTrigger: ['onChange', 'onBlur'],
-              ...item,
-              validator: (rule, value) => {
-                const validator = new VusionValidator(undefined, localizeRules, [rule]);
-                return validator.validate(value);
-              },
-            };
-          });
-        }, [rules]);
-      };
-
-      export const FormItem = ({ rules = [], ...rest }) => {
-        return (
-          <Form.Item
-            {...rest}
-            rules={useFormRules(rules)}
-          />
-        );
-      }
-      ```
-      </VTCodeGroupTab>
-    </VTCodeGroup>
-
-<style>
- .highlight {
-      border: 1px solid #679CF8; /* 添加边框 */
-      border-radius: 6px;
-      background-color: #F8FCFF; /* 添加底色 */
-      padding: 10px 20px 10px 20px;
-      margin-bottom:20px;
-      margin-top:20px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+```vue
+<template>
+  <input :value="value" @input="handleInput" />
+</template>
+<script>
+export default {
+  model: {
+    prop: 'value',
+    event: 'update:value',
+  },
+  props: {
+    value: String,
+  },
+  methods: {
+    handleInput(val) {
+      this.$emit('update:value', val);
+      this.$emit('input', val);
+    },
   }
-</style>
+}
+</script>
+```
+
+### Vue3 / React 框架下表单验证支持
+
+Vue3 / React 框架下组件能默认支持表单验证，无需修改代码；
+
+
+### Vue2 CloudUI 下的表单验证支持
+
+(CloudUI)表单类组件支持验证
+
+需要同步值给负责验证的组件，步骤如下
+
+
+#### 创建mixins 相关文件
+
+
+```js
+// mixins/field.js
+const broadcast = function (condition, eventName, ...args) {
+  this.$children.forEach(($child) => {
+    if (condition($child)) $child.$emit(eventName, ...args);
+    else broadcast.apply($child, [condition, eventName].concat(args));
+  });
+};
+
+
+export default {
+  name: 'm-emitter',
+  methods: {
+    $dispatch(condition, eventName, ...args) {
+      if (typeof condition === 'string') {
+        const name = condition;
+        condition = ($parent) => $parent.$options.name === name;
+      }
+      let $parent = this.$parent || this.$root;
+      while ($parent && !condition($parent)) $parent = $parent.$parent;
+      $parent && $parent.$emit(eventName, ...args);
+    },
+    $broadcast(condition, eventName, ...args) {
+      if (typeof condition === 'string') {
+        const name = condition;
+        condition = ($child) => $child.$options.name === name;
+      }
+      broadcast.apply(this, [condition, eventName].concat(args));
+    },
+    $contact(condition, callback) {
+      if (typeof condition === 'string') {
+        const name = condition;
+        condition = ($parent) => $parent.$options.name === name;
+      }
+      let $parent = this.$parent || this.$root;
+      while ($parent && !condition($parent)) $parent = $parent.$parent;
+      return $parent && callback($parent);
+    },
+    $emitPrevent(name, $event, senderVM, ...args) {
+      let cancel = false;
+      this.$emit(
+        name,
+        Object.assign($event || {}, {
+          preventDefault: () => (cancel = true),
+        }),
+        senderVM,
+        ...args,
+      );
+      return cancel;
+    },
+  },
+};
+```
+
+
+```js
+// mixins/field.js
+/* eslint-disable no-unused-expressions */
+import MEmitter from './emitter';
+
+
+export default {
+  name: 'm-field',
+  isField: true,
+  mixins: [MEmitter],
+  data() {
+    return {
+      validatorVM: undefined,
+      formItemVM: undefined, // @compat
+    };
+  },
+  created() {
+    this.$dispatch(
+      ($parent) => ($parent.$options.name && $parent.$options.name.endsWith('u-form-item'))
+          || $parent.$options.isField || $parent.$options.isValidator,
+      'add-field-vm',
+      this,
+    );
+    this.$on('update', (value) => {
+      const validatorVM = this.validatorVM || this.formItemVM; // @compat
+      validatorVM && validatorVM.$emit('update', value);
+    });
+    this.$on('input', (value) => {
+      const validatorVM = this.validatorVM || this.formItemVM; // @compat
+      validatorVM && validatorVM.$emit('input', value);
+    });
+    this.$on('change', ($event) => {
+      const validatorVM = this.validatorVM || this.formItemVM; // @compat
+      validatorVM && validatorVM.$emit('change', $event);
+    });
+    this.$on('focus', () => {
+      const validatorVM = this.validatorVM || this.formItemVM; // @compat
+      validatorVM && validatorVM.$emit('focus');
+    });
+    this.$on('blur', () => {
+      const validatorVM = this.validatorVM || this.formItemVM; // @compat
+      validatorVM && validatorVM.$emit('blur');
+    });
+  },
+  destroyed() {
+    const validatorVM = this.validatorVM || this.formItemVM; // @compat
+    validatorVM && validatorVM.$emit('remove-field-vm', this);
+  },
+};
+```
+
+
+#### 引入mixins
+
+
+```vue
+// index.vue
+<template>
+  <div>
+    <input :value="value" @change="handleChange" @input="handleInput" @focus="handleFocus" @blur="handleBlur"` />
+  </div>
+</template>
+<script>
+import MField from './mixins/field';
+
+
+export default {
+  name: 'index',
+  mixins: [MField],
+  data() {
+    return {
+      value: '',
+    };
+  },
+  methods: {
+    handleChange(value) {
+      this.value = value;
+      this.$emit('change', { value });
+    },
+    handleInput(value) {
+      this.value = value;
+      this.$emit('update:value', value);
+      this.$emit('input', value);
+    },
+    handleFocus() {
+      this.$emit('focus');
+    },
+    handleBlur() {
+      this.$emit('blur');
+    },
+  },
+};
+</script>
+```
