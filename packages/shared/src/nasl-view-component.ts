@@ -78,7 +78,8 @@ async function getBlocksByDemo(
 
   const blocks: any[] = [];
 
-  for (const [file, index] of files) {
+  for (let index = 0; index < files.length; index++) {
+    const file = files[index];
     let content = await readFile(path.join(dir, file), 'utf-8');
     const matches = content.match(/<!--.*?-->/);
     let title = '';

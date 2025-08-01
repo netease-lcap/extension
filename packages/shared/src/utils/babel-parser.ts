@@ -1,4 +1,5 @@
 import * as babelParser from '@babel/parser';
+import * as babelTypes from '@babel/types';
 
 const defaultPlugins: babelParser.ParserOptions['plugins'] = [
   'jsx',
@@ -53,7 +54,7 @@ function buildOptions(parserOptions: babelParser.ParserOptions = {}) {
   return parserOpts;
 }
 
-export function buildParse(options: babelParser.ParserOptions = {}) {
+export function buildParse(options: babelParser.ParserOptions = {}): { parse: (src: string) => babelParser.ParseResult<babelTypes.File> } {
   const parserOpts = buildOptions(options);
 
   return {
