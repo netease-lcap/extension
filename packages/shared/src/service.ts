@@ -1,3 +1,6 @@
+import { format } from 'prettier/standalone';
+import typescript from 'prettier/plugins/typescript';
+import estree from 'prettier/plugins/estree';
 import { Logger, setLogger } from './utils/logger';
 import { FileSystem } from './types/fs';
 import { setFileSystem } from './utils/file-system';
@@ -13,6 +16,25 @@ export interface ExtensionServiceOptions {
   rootPath: string;
   logger: Logger;
   fileSystem: FileSystem;
+}
+
+async function formatCode(code: string) {
+  const result = await format(code, {
+    parser: 'typescript',
+    plugins: [typescript, estree],
+    printWidth: 80,
+    tabWidth: 2,
+    useTabs: false,
+    singleQuote: true,
+    vueIndentScriptAndStyle: false,
+    trailingComma: 'all',
+    bracketSpacing: true,
+    bracketSameLine: true,
+    arrowParens: 'always',
+    semi: true,
+  });
+
+  return result;
 }
 
 export class ExtensionService {
@@ -68,7 +90,7 @@ export class ExtensionService {
   }
 
   async updateNaslViewComponent(tsPath: string, actions: APIUpdateOptions[], rootPath?: string) {
-    return updateAPIFile(rootPath || this.options.rootPath, tsPath, actions);
+    return updateAPIFile(rootPath || this.options.rootPath, tsPath, actions, formatCode);
   }
 
   async removeNaslComponent(name: string, rootPath?: string) {

@@ -1,9 +1,6 @@
 import * as bt from '@babel/types';
 import traverse from '@babel/traverse';
 import generate from '@babel/generator';
-import { format } from 'prettier/standalone';
-import typescript from 'prettier/plugins/typescript';
-import estree from 'prettier/plugins/estree';
 import type {
   MaterialComponentEvent,
   MaterialComponentMethod,
@@ -646,7 +643,7 @@ export type APIUpdateOptions = APIUpdateInfoOptions
   | APIAddSlotOptions | APIAddReadablePropOptions
   | APIAddMethodOptions | APIOrderPropOptions;
 
-export default async function updateAPIFile(rootPath: string, tsPath: string, actions: APIUpdateOptions[]) {
+export default async function updateAPIFile(rootPath: string, tsPath: string, actions: APIUpdateOptions[], formatCode: (code: string) => Promise<string>) {
   if (!tsPath || !(await exists(tsPath))) {
     throw new Error(`未找到 api.ts 文件，${tsPath}`);
   }
@@ -685,20 +682,7 @@ export default async function updateAPIFile(rootPath: string, tsPath: string, ac
 
   let { code } = generate(ast);
 
-  code = await format(code, {
-    parser: 'typescript',
-    plugins: [typescript, estree],
-    printWidth: 80,
-    tabWidth: 2,
-    useTabs: false,
-    singleQuote: true,
-    vueIndentScriptAndStyle: false,
-    trailingComma: 'all',
-    bracketSpacing: true,
-    bracketSameLine: true,
-    arrowParens: 'always',
-    semi: true,
-  });
+  code = await formatCode(code);
 
   await writeFile(tsPath, code, 'utf-8');
 }
