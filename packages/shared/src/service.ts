@@ -71,9 +71,13 @@ export class ExtensionService {
       options.rootPath = this.options.rootPath;
     }
 
+    const projectInfo = await this.getProjectInfo(options.rootPath);
     if (!options.libInfo) {
-      const projectInfo = await this.getProjectInfo(options.rootPath);
       options.libInfo = [projectInfo.name, projectInfo.version].join('@');
+    }
+
+    if (!options.framework) {
+      options.framework = projectInfo.framework;
     }
 
     const component = await genNaslComponentConfig(options as NaslViewComponentOptions);
