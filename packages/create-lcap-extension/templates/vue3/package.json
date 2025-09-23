@@ -5,6 +5,8 @@
   "lcapIdeVersion": "3.12",
   "main": "dist-theme/index.js",
   "module": "dist-theme/index.mjs",
+  "title": "Vue 依赖库demo",
+  "description": "Vue 依赖库demo",
   "files": [
     "dist-theme"
   ],
