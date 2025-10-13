@@ -1,4 +1,5 @@
 import generate from '@babel/generator';
+import * as babelTypes from '@babel/types';
 
 export const getNodeCode = (node) => {
   try {
@@ -16,3 +17,8 @@ export const normalizeArray = (arr) => {
 
   return Array.isArray(arr) ? arr : [arr];
 };
+
+
+export function isPromise(node: babelTypes.TSType) {
+  return node && node.type === 'TSTypeReference' && node.typeName.type === 'Identifier' && node.typeName.name === 'Promise';
+}

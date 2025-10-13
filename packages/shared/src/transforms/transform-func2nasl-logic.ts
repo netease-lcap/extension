@@ -6,7 +6,8 @@ import type {
 } from '@nasl/types/nasl.ui.ast';
 import logger from '../utils/logger';
 import { getNodeCode } from '../utils/babel-utils';
-import { transformExpression2nasl, transformTsType2Nasl as transformTypeAnnotation } from '../ts2nasl';
+import { transformExpression2Nasl, transformTsType2Nasl as transformTypeAnnotation } from '../ts2nasl';
+import { isPromise } from '../ts2nasl/utils';
 
 export default function transformFunc2NaslLogic(node: babelTypes.ExportNamedDeclaration) {
   if (
@@ -152,7 +153,7 @@ export default function transformFunc2NaslLogic(node: babelTypes.ExportNamedDecl
           typeAnnotation = transformTypeAnnotation(param.left.typeAnnotation.typeAnnotation, typeNames);
           defaultValue = {
             concept: 'DefaultValue',
-            expression: transformExpression2nasl(param.right),
+            expression: transformExpression2Nasl(param.right),
             playground: [],
           };
         }
@@ -215,14 +216,7 @@ export default function transformFunc2NaslLogic(node: babelTypes.ExportNamedDecl
     }
 
     if (node.declaration.returnType && node.declaration.returnType.type === 'TSTypeAnnotation') {
-      const hasSubLogic = logic.params.findIndex((p) => p.typeAnnotation && p.typeAnnotation.typeKind === 'function') !== -1;
       const { typeAnnotation: tsType } = node.declaration.returnType as babelTypes.TSTypeAnnotation;
-
-      if (hasSubLogic && (tsType.type !== 'TSTypeReference' || tsType.typeName.type !== 'Identifier' || tsType.typeName.name !== 'Promise')) {
-        const errorMsg = `解析逻辑失败 ${logic.name}, 该逻辑含有高阶函数（用函数作为参数），返回值类型强制需要为 Promise!`;
-        logger.error(errorMsg);
-        throw new Error(errorMsg);
-      }
 
       const returnType = transformTypeAnnotation(tsType, typeNames);
 
@@ -243,5 +237,6 @@ export default function transformFunc2NaslLogic(node: babelTypes.ExportNamedDecl
   return {
     ...logic,
     type: logicComment.type,
+    sync: !node.declaration.async || !isPromise((node.declaration.returnType as babelTypes.TSTypeAnnotation)?.typeAnnotation),
   };
 }

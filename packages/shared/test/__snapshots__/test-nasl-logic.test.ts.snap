@@ -1,0 +1,282 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`test nasl logic 1`] = `
+[
+  {
+    "body": [],
+    "concept": "Logic",
+    "cron": "",
+    "description": "泛型示例-过滤列表中的 null 数据",
+    "name": "filterNull",
+    "overridable": false,
+    "params": [
+      {
+        "concept": "Param",
+        "description": "列表",
+        "name": "list",
+        "spread": false,
+        "typeAnnotation": {
+          "concept": "TypeAnnotation",
+          "ruleMap": {},
+          "typeArguments": [
+            {
+              "concept": "TypeAnnotation",
+              "ruleMap": {},
+              "typeArguments": [],
+              "typeKind": "typeParam",
+              "typeName": "T",
+              "typeNamespace": "",
+            },
+          ],
+          "typeKind": "generic",
+          "typeName": "List",
+          "typeNamespace": "nasl.collection",
+        },
+      },
+    ],
+    "playground": [],
+    "returns": [
+      {
+        "concept": "Return",
+        "description": "列表",
+        "name": "result",
+        "typeAnnotation": {
+          "concept": "TypeAnnotation",
+          "ruleMap": {},
+          "typeArguments": [
+            {
+              "concept": "TypeAnnotation",
+              "ruleMap": {},
+              "typeArguments": [],
+              "typeKind": "typeParam",
+              "typeName": "T",
+              "typeNamespace": "",
+            },
+          ],
+          "typeKind": "generic",
+          "typeName": "List",
+          "typeNamespace": "nasl.collection",
+        },
+      },
+    ],
+    "sync": true,
+    "title": "过滤列表",
+    "triggerType": "",
+    "type": "",
+    "typeParams": [
+      {
+        "concept": "TypeParam",
+        "displayName": "",
+        "name": "T",
+      },
+    ],
+    "variables": [],
+  },
+  {
+    "body": [],
+    "concept": "Logic",
+    "cron": "",
+    "description": "泛型示例-过滤列表中的 null 数据",
+    "name": "filter",
+    "overridable": false,
+    "params": [
+      {
+        "concept": "Param",
+        "description": "列表",
+        "name": "list",
+        "spread": false,
+        "typeAnnotation": {
+          "concept": "TypeAnnotation",
+          "ruleMap": {},
+          "typeArguments": [
+            {
+              "concept": "TypeAnnotation",
+              "ruleMap": {},
+              "typeArguments": [],
+              "typeKind": "typeParam",
+              "typeName": "T",
+              "typeNamespace": "",
+            },
+          ],
+          "typeKind": "generic",
+          "typeName": "List",
+          "typeNamespace": "nasl.collection",
+        },
+      },
+      {
+        "concept": "Param",
+        "description": undefined,
+        "name": "callback",
+        "spread": false,
+        "typeAnnotation": {
+          "concept": "TypeAnnotation",
+          "returnType": [
+            {
+              "concept": "TypeAnnotation",
+              "ruleMap": {},
+              "typeKind": "primitive",
+              "typeName": "Boolean",
+              "typeNamespace": "nasl.core",
+            },
+          ],
+          "ruleMap": {},
+          "sync": true,
+          "typeArguments": [
+            {
+              "concept": "TypeAnnotation",
+              "ruleMap": {},
+              "typeArguments": [],
+              "typeKind": "typeParam",
+              "typeName": "T",
+              "typeNamespace": "",
+            },
+          ],
+          "typeKind": "function",
+          "typeName": "",
+          "typeNamespace": "",
+        },
+      },
+    ],
+    "playground": [],
+    "returns": [
+      {
+        "concept": "Return",
+        "description": "列表",
+        "name": "result",
+        "typeAnnotation": {
+          "concept": "TypeAnnotation",
+          "ruleMap": {},
+          "typeArguments": [
+            {
+              "concept": "TypeAnnotation",
+              "ruleMap": {},
+              "typeArguments": [],
+              "typeKind": "typeParam",
+              "typeName": "T",
+              "typeNamespace": "",
+            },
+          ],
+          "typeKind": "generic",
+          "typeName": "List",
+          "typeNamespace": "nasl.collection",
+        },
+      },
+    ],
+    "sync": true,
+    "title": "过滤列表",
+    "triggerType": "",
+    "type": "",
+    "typeParams": [
+      {
+        "concept": "TypeParam",
+        "displayName": "",
+        "name": "T",
+      },
+    ],
+    "variables": [],
+  },
+  {
+    "body": [],
+    "concept": "Logic",
+    "cron": "",
+    "description": "泛型示例-过滤列表中的 null 数据",
+    "name": "filterAsync",
+    "overridable": false,
+    "params": [
+      {
+        "concept": "Param",
+        "description": "列表",
+        "name": "list",
+        "spread": false,
+        "typeAnnotation": {
+          "concept": "TypeAnnotation",
+          "ruleMap": {},
+          "typeArguments": [
+            {
+              "concept": "TypeAnnotation",
+              "ruleMap": {},
+              "typeArguments": [],
+              "typeKind": "typeParam",
+              "typeName": "T",
+              "typeNamespace": "",
+            },
+          ],
+          "typeKind": "generic",
+          "typeName": "List",
+          "typeNamespace": "nasl.collection",
+        },
+      },
+      {
+        "concept": "Param",
+        "description": undefined,
+        "name": "callback",
+        "spread": false,
+        "typeAnnotation": {
+          "concept": "TypeAnnotation",
+          "returnType": [
+            {
+              "concept": "TypeAnnotation",
+              "ruleMap": {},
+              "typeKind": "primitive",
+              "typeName": "Boolean",
+              "typeNamespace": "nasl.core",
+            },
+          ],
+          "ruleMap": {},
+          "sync": true,
+          "typeArguments": [
+            {
+              "concept": "TypeAnnotation",
+              "ruleMap": {},
+              "typeArguments": [],
+              "typeKind": "typeParam",
+              "typeName": "T",
+              "typeNamespace": "",
+            },
+          ],
+          "typeKind": "function",
+          "typeName": "",
+          "typeNamespace": "",
+        },
+      },
+    ],
+    "playground": [],
+    "returns": [
+      {
+        "concept": "Return",
+        "description": "列表",
+        "name": "result",
+        "typeAnnotation": {
+          "concept": "TypeAnnotation",
+          "ruleMap": {},
+          "typeArguments": [
+            {
+              "concept": "TypeAnnotation",
+              "ruleMap": {},
+              "typeArguments": [],
+              "typeKind": "typeParam",
+              "typeName": "T",
+              "typeNamespace": "",
+            },
+          ],
+          "typeKind": "generic",
+          "typeName": "List",
+          "typeNamespace": "nasl.collection",
+        },
+      },
+    ],
+    "sync": false,
+    "title": "过滤列表异步",
+    "triggerType": "",
+    "type": "",
+    "typeParams": [
+      {
+        "concept": "TypeParam",
+        "displayName": "",
+        "name": "T",
+      },
+    ],
+    "variables": [],
+  },
+]
+`;

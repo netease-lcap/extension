@@ -4,7 +4,7 @@ import type {
   StructureProperty,
   TypeAnnotation,
 } from '@nasl/types/nasl.ui.ast';
-import { getNodeCode } from './utils';
+import { getNodeCode, isPromise } from './utils';
 
 const isPrimitive = (name: string) => ['String', 'Integer', 'Decimal', 'Boolean', 'Date', 'Time', 'DateTime', 'Binary', 'Any'].includes(name);
 const getTypeKind = (typeParameters, primitive) => (typeParameters && typeParameters.params && typeParameters.params.length ? 'generic' : primitive ? 'primitive' : 'reference');
@@ -39,14 +39,13 @@ function transformTSTypeReference(node: babelTypes.TSTypeReference, typeNames): 
     }
 
     return {
-      typeKind: getTypeKind(typeParameters, primitive) as any,
+      typeKind: getTypeKind(typeParameters, primitive),
       typeName: namespace === 'nasl.core' && right.name === 'Integer' ? 'Long' : right.name,
       typeNamespace: namespace,
       concept: 'TypeAnnotation',
-      inferred: false,
-      ruleMap: new Map(),
+      ruleMap: {},
       typeArguments,
-    } as any;
+    };
   } else if (typeName.type === 'Identifier') {
     const primitive = isPrimitive(typeName.name);
 
@@ -60,10 +59,9 @@ function transformTSTypeReference(node: babelTypes.TSTypeReference, typeNames): 
         typeKind: 'typeParam',
         typeName: typeName.name,
         typeNamespace: '',
-        inferred: false,
-        ruleMap: new Map(),
+        ruleMap: {},
         typeArguments: [],
-      } as any;
+      };
     }
 
     const NaslTypes = ['Current', 'CurrentDynamic'];
@@ -84,14 +82,13 @@ function transformTSTypeReference(node: babelTypes.TSTypeReference, typeNames): 
     }
 
     return {
-      typeKind: getTypeKind(typeParameters, primitive) as any,
+      typeKind: getTypeKind(typeParameters, primitive),
       typeName: typeName.name,
       typeNamespace: NaslTypes.includes(typeName.name) ? 'nasl.ui' : '',
       concept: 'TypeAnnotation',
-      inferred: false,
-      ruleMap: new Map(),
+      ruleMap: {},
       typeArguments,
-    } as any;
+    };
   }
 
   return undefined;
@@ -105,10 +102,9 @@ function transformTSUnionType(node: babelTypes.TSUnionType, typeNames): TypeAnno
     typeName: '',
     typeNamespace: '',
     concept: 'TypeAnnotation',
-    inferred: false,
-    ruleMap: new Map(),
+    ruleMap: {},
     typeArguments,
-  } as any;
+  };
 }
 
 function transformTSFunctionType(node: babelTypes.TSFunctionType, typeNames): TypeAnnotation {
@@ -130,13 +126,13 @@ function transformTSFunctionType(node: babelTypes.TSFunctionType, typeNames): Ty
     });
   }
 
+  let sync = false;
   if (node.typeAnnotation && node.typeAnnotation.type === 'TSTypeAnnotation') {
     const tsType = node.typeAnnotation.typeAnnotation as babelTypes.TSType;
-    if (tsType.type !== 'TSTypeReference' || tsType.typeName.type !== 'Identifier' || tsType.typeName.name !== 'Promise') {
-      throw new Error('解析Ts 类型异常，用函数作为参数，返回值类型强制需要为 Promise!');
-    }
 
-    const typeAnnotation = transformTypeAnnotation(node.typeAnnotation.typeAnnotation, typeNames);
+    const typeAnnotation = transformTypeAnnotation(tsType, typeNames);
+    sync = !isPromise(tsType);
+
     if (typeAnnotation) {
       returnType.push(typeAnnotation);
     }
@@ -147,10 +143,10 @@ function transformTSFunctionType(node: babelTypes.TSFunctionType, typeNames): Ty
     typeKind: 'function',
     typeName: '',
     typeNamespace: '',
-    inferred: false,
-    ruleMap: new Map(),
+    ruleMap: {},
     typeArguments,
     returnType,
+    sync,
   } as any;
 }
 
@@ -185,10 +181,9 @@ function transformTSTypeLiteral(node: babelTypes.TSTypeLiteral, typeNames: strin
     typeKind: 'anonymousStructure',
     typeName: '',
     typeNamespace: '',
-    inferred: false,
-    ruleMap: new Map(),
+    ruleMap: {},
     properties,
-  } as any;
+  };
 }
 // eslint-disable-next-line consistent-return
 function transformTypeAnnotation(node: babelTypes.TSType, typeNames: string[] = []): TypeAnnotation | undefined {
@@ -201,6 +196,40 @@ function transformTypeAnnotation(node: babelTypes.TSType, typeNames: string[] = 
       return transformTSFunctionType(node, typeNames);
     case 'TSTypeLiteral':
       return transformTSTypeLiteral(node, typeNames);
+    case 'TSStringKeyword':
+      return {
+        concept: 'TypeAnnotation',
+        typeKind: 'primitive',
+        typeName: 'String',
+        typeNamespace: 'nasl.core',
+        ruleMap: {},
+      };
+    case 'TSNumberKeyword':
+      return {
+        concept: 'TypeAnnotation',
+        typeKind: 'primitive',
+        typeName: 'Number',
+        typeNamespace: 'nasl.core',
+        ruleMap: {},
+      };
+    case 'TSBooleanKeyword':
+      return {
+        concept: 'TypeAnnotation',
+        typeKind: 'primitive',
+        typeName: 'Boolean',
+        typeNamespace: 'nasl.core',
+        ruleMap: {},
+      };
+    case 'TSArrayType':
+      const ta = transformTypeAnnotation(node.elementType, typeNames);
+      return {
+        concept: 'TypeAnnotation',
+        typeKind: 'generic',
+        typeNamespace: 'nasl.collection',
+        typeName: 'List',
+        typeArguments: ta ? [ta] : [],
+        ruleMap: {},
+      };
     case 'TSVoidKeyword':
       return undefined;
     default:
