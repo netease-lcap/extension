@@ -28,7 +28,7 @@
   "dependencies": {
   },
   "devDependencies": {
-    "@lcap/builder": "^1.6.1",
+    "@lcap/builder": "^1.6.2-beta.1",
     "@chromatic-com/storybook": "^3.2.2",
     "@nasl/types": "^0.1.14",
     "@storybook/addon-essentials": "^8.4.6",
