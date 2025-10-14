@@ -166,19 +166,6 @@ export function transformExpression2Nasl(ast: Expression, namespace = '') {
         name: '',
         value: ast.value,
       };
-    case 'NumericLiteral':
-      return {
-        concept: 'NumericLiteral',
-        value: String(ast.value),
-        typeAnnotation: {
-          concept: 'TypeAnnotation',
-          typeKind: 'primitive',
-          typeName: String(ast.value).includes('.') ? 'Decimal' : 'Long',
-          typeNamespace: 'nasl.core',
-          inferred: false,
-          ruleMap: new Map(),
-        },
-      };
     case 'NullLiteral':
       return {
         concept: 'NullLiteral',
