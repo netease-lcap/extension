@@ -1,6 +1,6 @@
 {
   "name": "@lcap/extension-shared",
-  "version": "1.0.4-beta.2",
+  "version": "1.0.4",
   "description": "Lcap extension shared utils",
   "main": "lib/index.js",
   "typings": "./lib/index.d.ts",
