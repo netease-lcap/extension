@@ -5,6 +5,7 @@ import transformTSX2Nasl from './transform-tsx2nasl';
 
 export {
   transformExpression2Nasl,
+  transformExpression2Nasl as transformExpression2nasl,
   transformTsType2Nasl,
   transformFunc2Nasl,
   transformTSX2Nasl,
