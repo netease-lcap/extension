@@ -29,8 +29,8 @@
   "dependencies": {
   },
   "devDependencies": {
-    "@lcap/builder": "^1.6.2-beta.2",
-    "@nasl/types": "^0.1.14",
+    "@lcap/builder": "^1.6.2",
+    "@nasl/types": "^0.1.15",
     "@lcap/storybook-vue-vite": "^7.6.17",
     "@lcap/vite-plugin-vue2": "^1.0.0",
     "@storybook/addon-essentials": "^7.6.17",

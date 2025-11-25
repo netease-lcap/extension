@@ -26,8 +26,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@lcap/builder": "^1.6.2-beta.2",
-    "@nasl/types": "^0.1.14",
+    "@lcap/builder": "^1.6.2",
+    "@nasl/types": "^0.1.15",
     "@storybook/addon-essentials": "^7.6.17",
     "@storybook/addon-interactions": "^7.6.17",
     "@storybook/addon-links": "^7.6.17",

@@ -45,7 +45,7 @@
     "@babel/parser": "^7.28.0",
     "@babel/traverse": "^7.28.0",
     "@babel/types": "^7.28.2",
-    "@nasl/types": "^0.1.14",
+    "@nasl/types": "^0.1.15",
     "lodash": "^4.17.21",
     "prettier": "^3.6.2",
     "react-style-object-to-css": "^1.1.2"
